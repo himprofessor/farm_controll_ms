@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Saving extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'user_id',
+        'amount_saved',
+        'date_saved',
+        'remarks',
+    ];
 }
