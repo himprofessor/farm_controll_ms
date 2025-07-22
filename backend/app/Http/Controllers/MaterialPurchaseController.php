@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Material_Purchase;
 use Illuminate\Http\Request;
 
 class MaterialPurchaseController extends Controller
@@ -26,7 +25,7 @@ class MaterialPurchaseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Material_Purchase $material_Purchase)
+    public function show(string $id)
     {
         //
     }
@@ -34,7 +33,7 @@ class MaterialPurchaseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Material_Purchase $material_Purchase)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -42,7 +41,7 @@ class MaterialPurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Material_Purchase $material_Purchase)
+    public function destroy(string $id)
     {
         //
     }

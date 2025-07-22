@@ -5,20 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Borrowing extends Model
+class MaterialPurchase extends Model
 {
     use HasFactory;
 
     public function materials(){
         return $this->belongsTo(Material::class);
     }
+    public function supplires(){
+        return $this->belongsTo(Supplire::class);
+    }
+
 
     protected $fillable = [
         'quantity',
-        'purpose',
-        'borrowed_date',
-        'retunred_date',
+        'price_per_unit',
+        'total_cost',
+        'purchase_date',
         'material_id',
-        'user_id'
+        'supplire_id'
     ];
 }

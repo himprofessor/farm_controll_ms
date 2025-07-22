@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Equipment_Maintenance;
+use App\Models\EquipmentMaintenance;
 use Illuminate\Http\Request;
 
 class EquipmentMaintenanceController extends Controller
@@ -26,7 +26,7 @@ class EquipmentMaintenanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Equipment_Maintenance $equipment_Maintenance)
+    public function show(EquipmentMaintenance $equipmentMaintenance)
     {
         //
     }
@@ -34,7 +34,7 @@ class EquipmentMaintenanceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Equipment_Maintenance $equipment_Maintenance)
+    public function update(Request $request, EquipmentMaintenance $equipmentMaintenance)
     {
         //
     }
@@ -42,7 +42,7 @@ class EquipmentMaintenanceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Equipment_Maintenance $equipment_Maintenance)
+    public function destroy(EquipmentMaintenance $equipmentMaintenance)
     {
         //
     }
