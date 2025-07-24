@@ -1,6 +1,9 @@
 <?php
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\MaterialPurchaseController;
+use App\Http\Controllers\SupplireController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,5 +22,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// authentication
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-Route::resource('users', UserController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+});
+
+Route::resource('materials', MaterialController::class);
+Route::resource('supplires', SupplireController::class);
+Route::resource('material_purchases', MaterialPurchaseController::class);
+
+
