@@ -1,12 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
+import DashboardView from '../views/Dashboard.vue' 
+import SalaryManagement from '../views/SalaryManagement.vue'
 
 const routes = [
   {
     path: '/',
     name: 'dashboard',
     component: DashboardView
-  }
+  },
+   {
+    path: '/salary',
+    name: 'SalaryManagement',
+    component: SalaryManagement
+  },
 ]
 
 const router = createRouter({
