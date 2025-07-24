@@ -18,8 +18,9 @@ class Material extends Model
 
     protected $fillable = [
         'name',
+        'category',
         'unit',
         'quantity',
-        'reorder_level'
+        'reorder-level'
     ];
 }

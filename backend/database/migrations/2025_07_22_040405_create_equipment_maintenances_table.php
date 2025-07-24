@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('cost');
             $table->string('performed_by');
-            $table->foreignId('material_id')->constrained()->onDelete('cascade');
+            $table->foreignId('equipment_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
