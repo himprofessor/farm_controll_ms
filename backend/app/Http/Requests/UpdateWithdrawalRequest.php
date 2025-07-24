@@ -11,7 +11,7 @@ class UpdateWithdrawalRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateWithdrawalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'approval_status' => 'required|in:approved,rejected',
+            'approved_by' => 'required|exists:users,id',
+            'approved_at' => 'nullable|date',
+            'notes' => 'nullable|string|max:1000',
         ];
     }
 }

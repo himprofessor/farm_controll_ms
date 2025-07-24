@@ -35,9 +35,12 @@ class MaterialPurchaseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(MaterialPurchase $materialPurchase)
     {
-        //
+        return response()->json([
+            'message' => 'Material found!',
+            'data' => $materialPurchase
+        ], 200);
     }
 
     /**
@@ -51,8 +54,12 @@ class MaterialPurchaseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(MaterialPurchase $materialPurchase)
     {
-        //
+        $materialPurchase->delete();
+
+        return response()->json([
+            'message' => 'Material deleted successfully.'
+        ], 200);
     }
 }
