@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreMaterialPurchaseRequest;
+use App\Models\MaterialPurchase;
 use Illuminate\Http\Request;
 
 class MaterialPurchaseController extends Controller
@@ -11,15 +13,23 @@ class MaterialPurchaseController extends Controller
      */
     public function index()
     {
-        //
+        return MaterialPurchase::all();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreMaterialPurchaseRequest $request)
     {
-        //
+        $validated = $request->validated();
+         $validated['total_cost'] = $validated['quantity'] * $validated['price_per_unit'];
+
+        $material_pur = MaterialPurchase::create($validated);
+
+        return response()->json([
+            'message'=> 'material create successully..!',
+            'data'=>$material_pur
+        ], 201);
     }
 
     /**
