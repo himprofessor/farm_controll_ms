@@ -61,6 +61,7 @@ class SupplireController extends Controller
      */
     public function destroy(Supplire $supplire)
     {
+        $supplire->delete();
         return response()->json([
             'message'=> 'delete Success.!'
         ], 200);

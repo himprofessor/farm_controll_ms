@@ -11,7 +11,7 @@ class UpdateEquipmentMaintenanceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class UpdateEquipmentMaintenanceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'maintenance_date' => 'required|date',
+            'description' => 'required|string',
+            'cost' => 'required|numeric|min:0',
+            'performed_by' => 'required|string|max:255',
+            'equipment_id' => 'required|exists:equipment,id'
         ];
     }
 }

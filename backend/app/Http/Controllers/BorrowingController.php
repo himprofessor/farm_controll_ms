@@ -12,7 +12,7 @@ class BorrowingController extends Controller
      */
     public function index()
     {
-        //
+        return Borrowing::all();
     }
 
     /**
@@ -20,7 +20,14 @@ class BorrowingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validated();
+
+        $borrowing = Borrowing::create($validated);
+        return response()->json([
+            'message'=>'borrowing successfully.!',
+            'data'=>$borrowing
+        ], 201);
+
     }
 
     /**
@@ -28,7 +35,9 @@ class BorrowingController extends Controller
      */
     public function show(Borrowing $borrowing)
     {
-        //
+        return response()->json([
+            'data'=>$borrowing
+        ]);
     }
 
     /**
@@ -36,7 +45,13 @@ class BorrowingController extends Controller
      */
     public function update(Request $request, Borrowing $borrowing)
     {
-        //
+        $validated = $request->validated();
+
+        $borrowing->update($validated);
+        return response()->json([
+            'message'=>'update successfully.!',
+            'data'=>$borrowing
+        ], 200);
     }
 
     /**
@@ -44,6 +59,7 @@ class BorrowingController extends Controller
      */
     public function destroy(Borrowing $borrowing)
     {
-        //
+        $borrowing->delete();
+        return response()->json('delete successfully!');
     }
 }
