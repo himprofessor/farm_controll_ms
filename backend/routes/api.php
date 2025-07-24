@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SalaryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,9 +16,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+
+Route::apiResource('users', UserController::class);
+
+Route::prefix('salaries')->group(function () {
+    Route::get('/', [SalaryController::class, 'index']);
+    Route::post('/', [SalaryController::class, 'store']);
+    Route::put('/{id}', [SalaryController::class, 'update']);
+    Route::delete('/{id}', [SalaryController::class, 'destroy']);
 });
 
 
-Route::resource('users', UserController::class);
+
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});

@@ -6,26 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('base_salary', 10, 2);
-            $table->string('salary_month');
-            $table->enum('status', ['paid', 'unpaid'])->default('unpaid');
-            $table->decimal('paid_amount', 10, 2)->nullable();
-            $table->text('notes')->nullable();
+            $table->string('salary_month'); // e.g., "2025-07"
+            $table->enum('status', ['paid', 'unpaid', 'pending'])->default('unpaid');
+            $table->decimal('paid_amount', 10, 2)->default(0);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('salaries');
