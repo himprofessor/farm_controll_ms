@@ -18,7 +18,11 @@ return new class extends Migration
             $table->date('borrowed_date');
             $table->date('retunred_date')->nullable();
             $table->foreignId('material_id')->constrained()->onDelete('cascade');
+<<<<<<< HEAD
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+=======
+            $table->foreignId('staff_id')->constrained()->onDelete('cascade');
+>>>>>>> 35d2ca88b3636045e623314f506fa0d26581854e
             $table->timestamps();
         });
     }

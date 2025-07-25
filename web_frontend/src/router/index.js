@@ -5,8 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeScreen from '@/components/HomeScreen.vue';
 import Login from '@/components/Login.vue'; // use @ instead of relative path
 // import StaffManagement from '@/views/StaffManagement.vue';
-import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
-
+import DashboardView from '@/views/Dashboard.vue'  // Correct path based on your structure
 const routes = [
   {
     path: '/',
@@ -23,17 +22,12 @@ const routes = [
     name: 'Login',
     component: Login
   },
-  // {
-  //   path: '/Staff',
-  //   name: 'StaffManagement',
-  //   component: StaffManagement
-  // }
+
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
-
+export default router;
