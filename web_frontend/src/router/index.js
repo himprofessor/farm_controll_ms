@@ -1,22 +1,47 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
-// Use consistent aliasing
+import { createRouter, createWebHistory } from 'vue-router';
+import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
+import FinancialView from '@/views/FinancialView.vue';
+import InventoryManagement from '@/views/InventoryManagement.vue'
 import HomeScreen from '@/components/HomeScreen.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: HomeScreen
+    name:'HomeScreen',
+    component:HomeScreen
+
   },
- 
+  {
+    path: '/',
+    component: DefaultLayout, // Wrap all authenticated routes here
+    children: [
+      {
+        path: '', // Default child route (e.g., /dashboard)
+        name: 'dashboard',
+        component: () => import('@/views/Dashboard.vue'),
+      },
+      {
+        path: 'salary', // Now accessible at /salary (not /salary/)
+        name: 'SalaryManagement',
+        component: () => import('@/views/SalaryManagement.vue'),
+      },
+      {
+        path: 'financial',
+        name: 'financial',
+        component: FinancialView
+      },
+      {
+        path: 'inventory',
+        name: 'inventory',
+        component: InventoryManagement
+      }
+    ],
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
 });
 
 export default router;
-
-

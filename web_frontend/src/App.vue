@@ -1,3 +1,4 @@
+<!-- App.vue -->
 <template>
   <div class="min-h-screen bg-gray-100">
     <NavBar v-if="isAuthenticated" @logout="logout" />
@@ -20,3 +21,4 @@ const logout = () => {
   router.push('/');
 };
 </script>
+
