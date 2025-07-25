@@ -2,10 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
-<<<<<<< HEAD
-import InventoryManagement from '@/views/InventoryManagement.vue'
-=======
->>>>>>> Invetory_frontend
 
 const routes = [
   {
@@ -28,17 +24,6 @@ const routes = [
         component: () => import('@/views/SalaryManagement.vue'),
       },
       {
-<<<<<<< HEAD
-        path: 'financial',
-        name: 'financial',
-        component: FinancialView
-      },
-      {
-        path: 'inventory',
-        name: 'inventory',
-        component: InventoryManagement
-      }
-=======
         path: "/inventory",
         name: "inventory",
         component: InventoryManagement,
@@ -48,7 +33,6 @@ const routes = [
         name: "financial",
         component: FinancialView,
       },
->>>>>>> Invetory_frontend
     ],
   },
 ];
