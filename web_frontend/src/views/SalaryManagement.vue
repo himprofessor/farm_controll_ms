@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="p-6 bg-gray-100 rounded-lg shadow">
     <!-- Header -->
     <div class="mb-6">
       <h1 class="text-2xl font-bold text-gray-900">Salary Management</h1>
@@ -9,26 +9,20 @@
     <!-- Tabs -->
     <div class="border-b border-gray-200 mb-6">
       <nav class="-mb-px flex space-x-8">
-        <button
-          @click="activeTab = 'salaries'"
-          :class="[
-            'py-2 px-1 border-b-2 font-medium text-sm',
-            activeTab === 'salaries'
-              ? 'border-green-500 text-green-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          ]"
-        >
+        <button @click="activeTab = 'salaries'" :class="[
+          'py-2 px-1 border-b-2 font-medium text-sm',
+          activeTab === 'salaries'
+            ? 'border-green-500 text-green-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+        ]">
           Staff Salaries
         </button>
-        <button
-          @click="activeTab = 'withdrawals'"
-          :class="[
-            'py-2 px-1 border-b-2 font-medium text-sm',
-            activeTab === 'withdrawals'
-              ? 'border-green-500 text-green-600'
-              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-          ]"
-        >
+        <button @click="activeTab = 'withdrawals'" :class="[
+          'py-2 px-1 border-b-2 font-medium text-sm',
+          activeTab === 'withdrawals'
+            ? 'border-green-500 text-green-600'
+            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+        ]">
           Withdrawal Requests
         </button>
       </nav>
@@ -36,53 +30,26 @@
 
     <!-- Staff Salaries Tab -->
     <div v-if="activeTab === 'salaries'">
-      <div class="flex justify-between items-center mb-6">
-        <input
-          type="text"
-          placeholder="Search staff by name or role..."
-          class="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          v-model="searchQuery"
-        />
+      <div class="flex justify-between items-center mb-6  bg-white p-6 rounded-lg shadow ">
+        <input type="text" placeholder="Search staff by name or role..."
+          class="w-[800px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          v-model="searchQuery" />
+
         <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
           Process All Salaries
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <SalaryCard
-          v-for="staff in filteredStaff"
-          :key="staff.id"
-          :staff="staff"
-          @pay-salary="paySalary"
-          @view-details="viewDetails"
-        />
+        <SalaryCard v-for="staff in filteredStaff" :key="staff.id" :staff="staff" @pay-salary="paySalary"
+          @view-details="viewDetails" />
       </div>
     </div>
 
     <!-- Withdrawal Requests Tab -->
     <div v-if="activeTab === 'withdrawals'">
-      <div class="flex justify-between items-center mb-6">
-        <input
-          type="text"
-          placeholder="Search withdrawal requests..."
-          class="w-96 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          v-model="withdrawalSearch"
-        />
-        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-          <option>All Status</option>
-          <option>Pending</option>
-          <option>Approved</option>
-          <option>Completed</option>
-          <option>Rejected</option>
-        </select>
-      </div>
-
-      <WithdrawalTable
-        :withdrawals="filteredWithdrawals"
-        @approve="approveWithdrawal"
-        @reject="rejectWithdrawal"
-        @complete="completeWithdrawal"
-      />
+      <WithdrawalTable :withdrawals="filteredWithdrawals" @approve="approveWithdrawal" @reject="rejectWithdrawal"
+        @complete="completeWithdrawal" />
     </div>
   </div>
 </template>
