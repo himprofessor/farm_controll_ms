@@ -67,6 +67,8 @@
       @payment-processed="handlePaymentProcessed"
     />
   </div>
+
+  
 </template>
 
 <script>
