@@ -6,6 +6,11 @@ const routes = [
     path: '/',
     name: 'dashboard',
     component: DashboardView
+  },
+  {
+    path: '/salary',
+    name: 'salary',
+    component: () => import('../views/SalaryManagement.vue')  // Lazy loading the SalaryView component
   }
 ]
 
