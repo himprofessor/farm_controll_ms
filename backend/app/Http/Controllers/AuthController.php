@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -13,22 +12,24 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|string|email|unique:users,email',
+            'role' => 'required|in:admin',
+            'email' => 'required|string|email|unique:auth,email',
             'password' => 'required|string|confirmed',
         ]);
 
-        $user = User::create([
+        $auth = Auth::create([
             'name' => $fields['name'],
+            'role' => $fields['role'],
             'email' => $fields['email'],
             'password' => bcrypt($fields['password']),
         ]);
 
-        $token = $user->createToken('apptoken')->plainTextToken;
+        $token = $auth->createToken('apptoken')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
+            'auth' => $auth,
             'token' => $token,
-        ]);
+        ], 201);
     }
 
     public function login(Request $request)
@@ -38,16 +39,20 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('email', $fields['email'])->first();
+        $auth = Auth::where('email', $fields['email'])->first();
 
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response(['message' => 'Invalid credentials'], 401);
+        if (!$auth || !Hash::check($fields['password'], $auth->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('apptoken')->plainTextToken;
+        if ($auth->role !== 'admin') {
+            return response()->json(['message' => 'Access denied. Admins only.'], 403);
+        }
+
+        $token = $auth->createToken('apptoken')->plainTextToken;
 
         return response()->json([
-            'user' => $user,
+            'auth' => $auth,
             'token' => $token,
         ]);
     }
@@ -57,5 +62,31 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out']);
+    }
+
+    public function update(Request $request)
+    {
+        $auth = $request->user();
+
+        if ($auth->role !== 'admin') {
+            return response()->json(['message' => 'Only admins can update profile'], 403);
+        }
+
+        $fields = $request->validate([
+            'name' => 'sometimes|string',
+            'email' => 'sometimes|string|email|unique:auth,email,' . $auth->id,
+            'password' => 'sometimes|string|confirmed',
+        ]);
+
+        if (isset($fields['name'])) $auth->name = $fields['name'];
+        if (isset($fields['email'])) $auth->email = $fields['email'];
+        if (isset($fields['password'])) $auth->password = bcrypt($fields['password']);
+
+        $auth->save();
+
+        return response()->json([
+            'message' => 'Admin profile updated successfully',
+            'auth' => $auth,
+        ]);
     }
 }

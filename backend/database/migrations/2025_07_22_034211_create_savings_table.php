@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('savings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained()->onDelete('cascade');
             $table->decimal('amount_saved', 10, 2);
             $table->date('date_saved');
             $table->text('remarks')->nullable();

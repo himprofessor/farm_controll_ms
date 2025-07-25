@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
 import FinancialView from '@/views/FinancialView.vue';
+=======
+import { createRouter, createWebHistory } from 'vue-router'
+import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
+import InventoryManagement from '@/views/InventoryManagement.vue'
+>>>>>>> Invetory_frontend
 
 const routes = [
   {
@@ -10,6 +16,7 @@ const routes = [
   },
   {
     path: '/',
+<<<<<<< HEAD
     component: DefaultLayout, // Wrap all authenticated routes here
     children: [
       {
@@ -30,6 +37,17 @@ const routes = [
     ],
   },
 ];
+=======
+    name: 'dashboard',
+    component: DashboardView
+  },
+  {
+    path: '/inventory',
+    name: 'inventory',
+    component: InventoryManagement
+  }
+]
+>>>>>>> Invetory_frontend
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
