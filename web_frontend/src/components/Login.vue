@@ -4,7 +4,7 @@
 
             <!-- Header Section -->
             <div class="text-center mb-6">
-                <img src="../assets/Image/image2.png" alt="Farm Logo" class="mx-auto mb-2 w-10 h-10" />
+                <img src="../assets/image/image2.png" alt="Farm Logo" class="mx-auto mb-2 w-10 h-10" />
                 <h1 class="text-2xl font-bold text-green-600">Pig Farm Management System</h1>
                 <p class="text-lg text-green-600">Welcome! My account login.</p>
             </div>
