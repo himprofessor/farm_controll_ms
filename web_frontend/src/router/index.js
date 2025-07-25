@@ -1,23 +1,33 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '../views/Dashboard.vue' 
-import SalaryManagement from '../views/SalaryManagement.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
 
 const routes = [
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/views/Login.vue'), // No Sidebar
+  },
+  {
     path: '/',
-    name: 'dashboard',
-    component: DashboardView
+    component: DefaultLayout, // Wrap all authenticated routes here
+    children: [
+      {
+        path: '', // Default child route (e.g., /dashboard)
+        name: 'dashboard',
+        component: () => import('@/views/Dashboard.vue'),
+      },
+      {
+        path: 'salary', // Now accessible at /salary (not /salary/)
+        name: 'SalaryManagement',
+        component: () => import('@/views/SalaryManagement.vue'),
+      },
+    ],
   },
-   {
-    path: '/salary',
-    name: 'SalaryManagement',
-    component: SalaryManagement
-  },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
