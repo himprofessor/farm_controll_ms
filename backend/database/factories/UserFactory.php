@@ -19,9 +19,8 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'role' => $this->faker->randomElement(['admin', 'manager', 'employee']),
-            'password' => bcrypt('password'), 
+            'phone' => $this->faker->unique()->phoneNumber(),
+            'role' => $this->faker->randomElement(['manager', 'worker']),
             'remember_token' => Str::random(10),
         ];
     }
@@ -31,10 +30,4 @@ class UserFactory extends Factory
      *
      * @return $this
      */
-    public function unverified(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
-    }
 }

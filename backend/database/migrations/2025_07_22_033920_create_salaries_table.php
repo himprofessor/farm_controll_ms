@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained()->onDelete('cascade');
             $table->decimal('base_salary', 10, 2);
             $table->string('salary_month'); // e.g., "2025-07"
             $table->enum('status', ['paid', 'unpaid', 'pending'])->default('unpaid');
