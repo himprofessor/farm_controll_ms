@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
+import { createRouter, createWebHistory } from 'vue-router';
+import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
+import FinancialView from '@/views/FinancialView.vue';
 
 const routes = [
   {
@@ -9,10 +10,26 @@ const routes = [
   },
   {
     path: '/',
-    name: 'dashboard',
-    component: DashboardView
-  }
-]
+    component: DefaultLayout, // Wrap all authenticated routes here
+    children: [
+      {
+        path: '', // Default child route (e.g., /dashboard)
+        name: 'dashboard',
+        component: () => import('@/views/Dashboard.vue'),
+      },
+      {
+        path: 'salary', // Now accessible at /salary (not /salary/)
+        name: 'SalaryManagement',
+        component: () => import('@/views/SalaryManagement.vue'),
+      },
+      {
+        path: 'financial',
+        name: 'financial',
+        component: FinancialView
+      }
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
