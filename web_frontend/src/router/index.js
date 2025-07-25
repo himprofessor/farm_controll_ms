@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
 
 
 // Use consistent aliasing
 import HomeScreen from '@/components/HomeScreen.vue';
-// import Login from '@/components/Login.vue'; // use @ instead of relative path
+import Login from '@/components/Login.vue'; // use @ instead of relative path
 // import StaffManagement from '@/views/StaffManagement.vue';
+import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
 
 const routes = [
   {
@@ -13,11 +13,16 @@ const routes = [
     name: 'Home',
     component: HomeScreen
   },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login
-  // },
+ {
+    path: '/',
+    name: 'dashboard',
+    component: DashboardView
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
   // {
   //   path: '/Staff',
   //   name: 'StaffManagement',
@@ -26,10 +31,9 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
-});
+})
 
-export default router;
-
+export default router
 

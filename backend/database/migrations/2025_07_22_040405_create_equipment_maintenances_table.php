@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('equipment_maintenances', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('password')->nullable();
-            $table->enum('role', ['admin', 'manager', 'worker']);
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('email')->unique();
-            $table->rememberToken();
+            $table->date('maintenance_date');
+            $table->text('description');
+            $table->decimal('cost');
+            $table->string('performed_by');
+            $table->foreignId('equipment_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('equipment_maintenances');
     }
 };
