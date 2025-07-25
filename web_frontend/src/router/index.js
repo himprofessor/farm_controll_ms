@@ -9,21 +9,15 @@ const routes = [
   },
   {
     path: '/',
-    component: DefaultLayout, // Wrap all authenticated routes here
-    children: [
-      {
-        path: '', // Default child route (e.g., /dashboard)
-        name: 'dashboard',
-        component: () => import('@/views/Dashboard.vue'),
-      },
-      {
-        path: 'salary', // Now accessible at /salary (not /salary/)
-        name: 'SalaryManagement',
-        component: () => import('@/views/SalaryManagement.vue'),
-      },
-    ],
+    name: 'dashboard',
+    component: DashboardView
   },
-];
+  {
+    path: '/salary',
+    name: 'salary',
+    component: () => import('../views/SalaryManagement.vue')  // Lazy loading the SalaryView component
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
