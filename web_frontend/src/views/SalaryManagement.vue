@@ -30,26 +30,91 @@
 
     <!-- Staff Salaries Tab -->
     <div v-if="activeTab === 'salaries'">
-      <div class="flex justify-between items-center mb-6  bg-white p-6 rounded-lg shadow ">
-        <input type="text" placeholder="Search staff by name or role..."
+      <div class="flex justify-between items-center mb-6 bg-white p-6 rounded-lg shadow">
+        <input
+          type="text"
+          placeholder="Search staff by name or role..."
           class="w-[800px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          v-model="searchQuery" />
+          v-model="searchQuery"
+        />
 
-        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+        <button @click="processAllSalaries" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
           Process All Salaries
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <SalaryCard v-for="staff in filteredStaff" :key="staff.id" :staff="staff" @pay-salary="paySalary"
-          @view-details="viewDetails" />
+        <SalaryCard
+          v-for="staff in filteredStaff"
+          :key="staff.id"
+          :staff="staff"
+          @pay-salary="paySalary"
+          @view-details="openDetailsModal"
+        />
       </div>
     </div>
 
     <!-- Withdrawal Requests Tab -->
     <div v-if="activeTab === 'withdrawals'">
-      <WithdrawalTable :withdrawals="filteredWithdrawals" @approve="approveWithdrawal" @reject="rejectWithdrawal"
-        @complete="completeWithdrawal" />
+      <WithdrawalTable
+        :withdrawals="filteredWithdrawals"
+        @approve="approveWithdrawal"
+        @reject="rejectWithdrawal"
+        @complete="completeWithdrawal"
+      />
+    </div>
+
+    <!-- Details Modal -->
+    <div
+      v-if="showDetailsModal"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-lg w-full">
+        <h2 class="text-2xl font-semibold mb-4">{{ selectedEmployee.name }}'s Details</h2>
+        <div class="space-y-3">
+          <p><strong>ID:</strong> {{ selectedEmployee.id }}</p>
+          <p><strong>Position:</strong> {{ selectedEmployee.position }}</p>
+          <p><strong>Base Salary:</strong> {{ formatCurrency(selectedEmployee.baseSalary) }}</p>
+          <p><strong>Current Balance:</strong> {{ formatCurrency(selectedEmployee.currentBalance) }}</p>
+          <p><strong>Total Earned:</strong> {{ formatCurrency(selectedEmployee.totalEarned) }}</p>
+          <p><strong>Last Payment:</strong> {{ selectedEmployee.lastPayment }}</p>
+          <!-- Project-specific details (farm-related example) -->
+          <p><strong>Acres Managed:</strong> {{ selectedEmployee.acresManaged || 'N/A' }}</p>
+          <p><strong>Crops Overseen:</strong> {{ selectedEmployee.crops || 'N/A' }}</p>
+          <p><strong>Work Hours (Last Month):</strong> {{ selectedEmployee.workHours || 'N/A' }} hrs</p>
+        </div>
+        <button
+          @click="showDetailsModal = false"
+          class="mt-4 bg-green-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Success Modal for Processing Salaries -->
+    <div
+      v-if="showSuccessModal"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-md w-full">
+        <h2 class="text-2xl font-semibold mb-4">Salary Processing Complete</h2>
+        <div class="space-y-3">
+          <p>All staff salaries have been processed as of {{ currentDate }}.</p>
+          <ul>
+            <li v-for="staff in staff" :key="staff.id" class="flex justify-between">
+              <span>{{ staff.name }}</span>
+              <span>{{ formatCurrency(staff.baseSalary) }} paid</span>
+            </li>
+          </ul>
+        </div>
+        <button
+          @click="showSuccessModal = false"
+          class="mt-4 bg-green-500 hover:bg-red-600 text-white py-2 px-4 rounded-md"
+        >
+          Close
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -140,7 +205,10 @@ export default {
           status: 'Rejected',
           reason: 'Home renovation'
         }
-      ]
+      ],
+      showDetailsModal: false,
+      showSuccessModal: false,
+      selectedEmployee: {}
     }
   },
   computed: {
@@ -155,14 +223,22 @@ export default {
         withdrawal.staffMember.toLowerCase().includes(this.withdrawalSearch.toLowerCase()) ||
         withdrawal.reason.toLowerCase().includes(this.withdrawalSearch.toLowerCase())
       )
+    },
+    currentDate() {
+      return new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
     }
   },
   methods: {
     paySalary(staff) {
       console.log('Pay salary for:', staff)
     },
-    viewDetails(staff) {
-      console.log('View details for:', staff)
+    openDetailsModal(staff) {
+      this.selectedEmployee = staff
+      this.showDetailsModal = true
     },
     approveWithdrawal(withdrawal) {
       console.log('Approve withdrawal:', withdrawal)
@@ -172,7 +248,26 @@ export default {
     },
     completeWithdrawal(withdrawal) {
       console.log('Complete withdrawal:', withdrawal)
+    },
+    processAllSalaries() {
+      const currentDate = this.currentDate;
+      this.staff.forEach(staff => {
+        staff.currentBalance += staff.baseSalary;
+        staff.totalEarned += staff.baseSalary;
+        staff.lastPayment = currentDate;
+      });
+      this.showSuccessModal = true;
+    },
+    formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount)
     }
   }
 }
 </script>
+
+<style scoped>
+/* Add any scoped styles if needed */
+</style>
