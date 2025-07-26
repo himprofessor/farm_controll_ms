@@ -33,7 +33,7 @@
       <div class="flex justify-between items-center mb-6 bg-white p-6 rounded-lg shadow">
         <input
           type="text"
-          placeholder="Search staff by name or role..."
+          placeholder="Search staff by name, role, or base salary..."
           class="w-[800px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           v-model="searchQuery"
         />
@@ -213,16 +213,20 @@ export default {
   },
   computed: {
     filteredStaff() {
+      if (!this.searchQuery) {
+        return [...this.staff]; // Return all staff if searchQuery is empty
+      }
       return this.staff.filter(member =>
         member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        member.role.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
+        member.role.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        member.baseSalary.toString().includes(this.searchQuery)
+      );
     },
     filteredWithdrawals() {
       return this.withdrawals.filter(withdrawal =>
         withdrawal.staffMember.toLowerCase().includes(this.withdrawalSearch.toLowerCase()) ||
         withdrawal.reason.toLowerCase().includes(this.withdrawalSearch.toLowerCase())
-      )
+      );
     },
     currentDate() {
       return new Date().toLocaleDateString('en-US', {
@@ -234,20 +238,20 @@ export default {
   },
   methods: {
     paySalary(staff) {
-      console.log('Pay salary for:', staff)
+      console.log('Pay salary for:', staff);
     },
     openDetailsModal(staff) {
-      this.selectedEmployee = staff
-      this.showDetailsModal = true
+      this.selectedEmployee = { ...staff }; // Create a copy to avoid mutation issues
+      this.showDetailsModal = true;
     },
     approveWithdrawal(withdrawal) {
-      console.log('Approve withdrawal:', withdrawal)
+      console.log('Approve withdrawal:', withdrawal);
     },
     rejectWithdrawal(withdrawal) {
-      console.log('Reject withdrawal:', withdrawal)
+      console.log('Reject withdrawal:', withdrawal);
     },
     completeWithdrawal(withdrawal) {
-      console.log('Complete withdrawal:', withdrawal)
+      console.log('Complete withdrawal:', withdrawal);
     },
     processAllSalaries() {
       const currentDate = this.currentDate;
@@ -262,7 +266,7 @@ export default {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-      }).format(amount)
+      }).format(amount);
     }
   }
 }
