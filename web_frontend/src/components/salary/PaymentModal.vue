@@ -57,6 +57,7 @@
               class="block w-full pl-7 pr-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               placeholder="0.00"
               step="0.01"
+              min="0"
             >
           </div>
           <div class="flex space-x-2">
@@ -102,7 +103,7 @@
           @click="processPayment"
           class="px-4 py-2 text-sm font-medium text-white bg-green-500 border border-transparent rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center"
         >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
           </svg>
           Process Payment
@@ -131,7 +132,9 @@ export default {
         position: '',
         role: '',
         currentBalance: 0,
-        baseSalary: 0
+        baseSalary: 0,
+        totalEarned: 0,
+        lastPayment: ''
       })
     }
   },
@@ -155,26 +158,54 @@ export default {
       paymentAmount.value = amount
     }
 
-    const processPayment = () => {
+    const processPayment = async () => {
       if (!paymentAmount.value || isNaN(paymentAmount.value) || paymentAmount.value <= 0) {
         alert('Please enter a valid payment amount')
         return
       }
 
-      const paymentInfo = {
-        employeeId: props.employee.id,
-        employeeName: props.employee.name,
-        amount: parseFloat(paymentAmount.value),
-        note: paymentNote.value,
-        date: new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        })
-      }
+      const amount = parseFloat(paymentAmount.value)
+      const today = new Date().toISOString().split('T')[0]
 
-      emit('payment-processed', paymentInfo)
-      closeModal()
+      try {
+        // Simulate API call
+        const response = await mockApiCall({
+          employeeId: props.employee.id,
+          amount: amount,
+          note: paymentNote.value,
+          date: today
+        })
+
+        if (response.success) {
+          // Emit the complete updated employee data
+          emit('payment-processed', {
+            ...props.employee,
+            currentBalance: props.employee.currentBalance + amount,
+            totalEarned: props.employee.totalEarned + amount,
+            lastPayment: today
+          })
+          
+          alert('Payment processed successfully!')
+          closeModal()
+        } else {
+          alert('Payment failed: ' + response.message)
+        }
+      } catch (error) {
+        alert('Error processing payment: ' + error.message)
+      }
+    }
+
+    // Mock API function (replace with your actual API call)
+    const mockApiCall = (paymentData) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            success: true,
+            message: 'Payment successful',
+            data: paymentData
+          })
+        }, 500)
+      })
     }
 
     const formatCurrency = (amount) => {

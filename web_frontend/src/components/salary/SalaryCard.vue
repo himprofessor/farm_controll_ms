@@ -5,7 +5,9 @@
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
           <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+            </path>
           </svg>
         </div>
         <div>
@@ -15,7 +17,9 @@
       </div>
       <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
         <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+          </path>
         </svg>
       </div>
     </div>
@@ -44,31 +48,23 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="flex space-x-3">
-      <button
-        @click="openPaymentModal"
-        class="flex-1 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md transition-colors"
-      >
+    <div class="flex space-x-2">
+      <button @click="openPaymentModal"
+        class="flex items-center justify-center gap-1 flex-1 w-24 bg-green-500 hover:bg-green-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
         Pay Salary
       </button>
-      <button
-        @click="viewDetails"
-        class="text-blue-600 border border-blue-200 hover:bg-blue-50 bg-transparent font-medium py-2 px-4 rounded-md transition-colors"
-      >
+      <button @click="viewDetails"
+        class="text-blue-600 border border-blue-200 hover:bg-blue-50 bg-transparent font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
         Details
       </button>
     </div>
 
     <!-- Payment Modal -->
-    <PaymentModal
-      :is-open="showPaymentModal"
-      :employee="employee"
-      @close="showPaymentModal = false"
-      @payment-processed="handlePaymentProcessed"
-    />
+    <PaymentModal :is-open="showPaymentModal" :employee="employee" @close="showPaymentModal = false"
+      @payment-processed="handlePaymentProcessed" />
   </div>
 
-  
+
 </template>
 
 <script>
@@ -109,10 +105,10 @@ export default {
     handlePaymentProcessed(paymentInfo) {
       // Handle the payment processing
       console.log('Payment processed:', paymentInfo)
-      
+
       // You can emit this to parent component or handle via Vuex/Pinia
       this.$emit('payment-processed', paymentInfo)
-      
+
       // Show success message
       alert('Payment processed successfully!')
     },
