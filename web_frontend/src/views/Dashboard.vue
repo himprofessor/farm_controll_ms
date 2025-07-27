@@ -16,40 +16,67 @@
       <p class="text-gray-600">{{ texts.dashboardSubtitle }}</p>
     </div>
 
-    <!-- Stats Cards Row -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Top Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
       <StatsCard
         :title="texts.totalStaff.title"
         :value="texts.totalStaff.value"
         :change="texts.totalStaff.change"
         icon="users"
-        color="blue"
+        bg="bg-blue-600"
       />
       <StatsCard
         :title="texts.monthlyExpenses.title"
         :value="texts.monthlyExpenses.value"
         :change="texts.monthlyExpenses.change"
         icon="dollar"
-        color="red"
+        bg="bg-red-500"
       />
       <StatsCard
         :title="texts.inventoryItems.title"
         :value="texts.inventoryItems.value"
         :change="texts.inventoryItems.change"
         icon="box"
-        color="green"
+        bg="bg-green-600"
       />
       <StatsCard
         :title="texts.monthlyRevenue.title"
         :value="texts.monthlyRevenue.value"
         :change="texts.monthlyRevenue.change"
         icon="trending"
-        color="purple"
+        bg="bg-purple-600"
       />
     </div>
 
-    <!-- Bottom Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Bottom Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <StatsCard
+        :title="texts.salariesPaid.title"
+        :value="texts.salariesPaid.value"
+        :desc="texts.salariesPaid.desc"
+        icon="credit-card"
+        bg="bg-white"
+        textColor="text-green-700"
+      />
+      <StatsCard
+        :title="texts.activeBorrows.title"
+        :value="texts.activeBorrows.value"
+        :desc="texts.activeBorrows.desc"
+        icon="archive"
+        bg="bg-white"
+        textColor="text-purple-700"
+      />
+      <StatsCard
+        :title="texts.maintenanceCosts.title"
+        :value="texts.maintenanceCosts.value"
+        :desc="texts.maintenanceCosts.desc"
+        icon="settings"
+        bg="bg-white"
+        textColor="text-orange-700"
+      />
+    </div>
+     <!-- Bottom Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
       <RecentActivities />
       <LowStockAlerts />
     </div>
@@ -62,10 +89,10 @@ import StatsCard from '@/components/dashboard/StatsCard.vue'
 import RecentActivities from '@/components/dashboard/RecentActivities.vue'
 import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
 
-// Current language state: 'en' or 'kh'
+// Language state
 const currentLanguage = ref('en')
 
-// Text content for English and Khmer
+// Text content
 const textContent = {
   en: {
     dashboardTitle: "Dashboard",
@@ -89,6 +116,21 @@ const textContent = {
       title: "Monthly Revenue",
       value: "$18,750",
       change: "+8.1% from last month"
+    },
+    salariesPaid: {
+      title: "Salaries Paid",
+      value: "$0.00",
+      desc: "Total lifetime payments to staff"
+    },
+    activeBorrows: {
+      title: "Active Borrows",
+      value: "0",
+      desc: "Materials currently borrowed by staff"
+    },
+    maintenanceCosts: {
+      title: "Maintenance Costs",
+      value: "$0.00",
+      desc: "Total equipment maintenance expenses"
     }
   },
   kh: {
@@ -105,7 +147,7 @@ const textContent = {
       change: "+5.2% ពីខែមុន"
     },
     inventoryItems: {
-      title: "ធាតុក្នុងសារពើភណ្ឌ",
+      title: "ស្តុកទំនិញ",
       value: "156",
       change: "12 ការជូនដំណឹងស្តុកតិច"
     },
@@ -113,14 +155,26 @@ const textContent = {
       title: "ប្រាក់ចំណូលប្រចាំខែ",
       value: "$18,750",
       change: "+8.1% ពីខែមុន"
+    },
+    salariesPaid: {
+      title: "ប្រាក់ខែបានបង់",
+      value: "$0.00",
+      desc: "ការទូទាត់សរុបចំពោះបុគ្គលិក"
+    },
+    activeBorrows: {
+      title: "ការខ្ចីសកម្ម",
+      value: "០",
+      desc: "សម្ភារៈដែលកំពុងខ្ចី"
+    },
+    maintenanceCosts: {
+      title: "ថ្លៃថែទាំ",
+      value: "$0.00",
+      desc: "ចំណាយថែទាំឧបករណ៍សរុប"
     }
   }
 }
 
-// Reactive computed texts for current language
 const texts = computed(() => textContent[currentLanguage.value])
-
-// Toggle language between English and Khmer
 function toggleLanguage() {
   currentLanguage.value = currentLanguage.value === 'en' ? 'kh' : 'en'
 }
