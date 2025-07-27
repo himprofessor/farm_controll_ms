@@ -47,7 +47,7 @@ import { PlusIcon } from 'lucide-vue-next'
 
 import InventoryCard from '../components/inventory/InventoryCard.vue'
 import InventorSearchFilter from '../components/inventory/InventorySearchFilter.vue'
-import InventoryTable from '../components/inventory/InventoryTable.vue'
+
 import InventoryItemModel from '../components/inventory/InventoryItemModel.vue'
 import InventoryDelete from '../components/inventory/InventoryDelete.vue'
 import InventoryToast from '../components/inventory/InventoryToast.vue'
