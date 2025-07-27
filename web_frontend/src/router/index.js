@@ -3,19 +3,30 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
 
+
+// Use consistent aliasing
+import HomeScreen from '@/components/HomeScreen.vue';
+import Login from '@/components/Login.vue';
+
+// import StaffManagement from '@/views/StaffManagement.vue';
 const routes = [
   {
+    path: '/',
+    name: 'homescreen',
+    component: HomeScreen
+  },
+  {
     path: '/login',
-    name: 'Login',
-    component: () => import('@/views/Login.vue'), // No Sidebar
+    name: 'login',
+    component: Login
   },
   {
     path: '/',
     component: DefaultLayout, // Wrap all authenticated routes here
     children: [
       {
-        path: '', // Default child route (e.g., /dashboard)
-        name: 'dashboard',
+        path: 'dashboard', // Default child route (e.g., /dashboard)
+        name: 'Dashboard',
         component: () => import('@/views/Dashboard.vue'),
       },
       {
@@ -36,6 +47,7 @@ const routes = [
     ],
   },
 ];
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
