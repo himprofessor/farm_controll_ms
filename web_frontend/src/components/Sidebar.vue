@@ -1,12 +1,8 @@
 <template>
-  <div
-    class="w-64 h-screen bg-white shadow-lg flex flex-col fixed top-0 left-0 z-50"
-  >
+  <div class="w-64 h-screen bg-white shadow-lg flex flex-col fixed top-0 left-0 z-50">
     <!-- Logo -->
     <div class="bg-green-500 text-white p-4 flex items-center space-x-3">
-      <div
-        class="w-8 h-8 bg-white bg-opacity-20 rounded flex items-center justify-center"
-      >
+      <div class="w-8 h-8 bg-white bg-opacity-20 rounded flex items-center justify-center">
         <span class="text-lg font-bold">π</span>
       </div>
       <span class="text-lg font-semibold">Farm Control</span>
@@ -14,11 +10,7 @@
 
     <!-- Navigation -->
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <SidebarItem
-        v-for="item in navItems"
-        :key="item.label"
-        :item="item"
-      />
+      <SidebarItem v-for="item in navItems" :key="item.label" :item="item" />
     </nav>
 
     <!-- Language Toggle -->
