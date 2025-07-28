@@ -1,5 +1,7 @@
 <template>
-  <div class=" bg-gray-100 rounded-lg shadow">
+  <div class="flex min-h-screen bg-gray-50">
+    <!-- Sidebar Component -->
+    <Sidebar />
 
     <!-- Main Content -->
     <div class="flex-1 p-8">
@@ -9,33 +11,58 @@
           <h1 class="text-3xl font-bold text-gray-900">Inventory Management</h1>
           <p class="text-gray-600 mt-1">Track and manage farm inventory and supplies</p>
         </div>
-        <button @click="openAddModal"
-          class="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors">
+        <button 
+          @click="openAddModal"
+          class="bg-green-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-700 transition-colors"
+        >
           <PlusIcon class="w-4 h-4" />
           <span>Add Item</span>
         </button>
       </div>
 
       <!-- Summary Cards Component -->
-      <InventoryCard :total-items="totalItems" :low-stock-count="lowStockCount" :total-value="totalValue"
-        :categories-count="categoriesCount" />
+      <InventoryCard
+        :total-items="totalItems"
+        :low-stock-count="lowStockCount"
+        :total-value="totalValue"
+        :categories-count="categoriesCount"
+      />
 
       <!-- Search Filter Component -->
-      <InventorSearchFilter v-model:search-query="searchQuery" v-model:selected-category="selectedCategory" />
+      <InventorySearchFilter
+        v-model:search-query="searchQuery"
+        v-model:selected-category="selectedCategory"
+      />
 
       <!-- Inventory Table Component -->
-      <InventoryTable :items="filteredItems" @edit="editItem" @delete="deleteItem" />
+      <InventoryTable
+        :items="filteredItems"
+        @edit="editItem"
+        @delete="deleteItem"
+      />
     </div>
 
     <!-- Item Modal Component -->
-    <InventoryItemModel :show="showModal" :is-editing="isEditing" :form-data="formData" @close="closeModal"
-      @save="saveItem" />
+    <InventoryItemModel
+      :show="showModal"
+      :is-editing="isEditing"
+      :form-data="formData"
+      @close="closeModal"
+      @save="saveItem"
+    />
 
     <!-- Delete Modal Component -->
-    <InventoryDelete :show="showDeleteModal" @cancel="showDeleteModal = false" @confirm="confirmDelete" />
+    <InventoryDelete
+      :show="showDeleteModal"
+      @cancel="showDeleteModal = false"
+      @confirm="confirmDelete"
+    />
 
     <!-- Toast Component -->
-    <InventoryToast :show="showToast" :message="toastMessage" />
+    <InventoryToast
+      :show="showToast"
+      :message="toastMessage"
+    />
   </div>
 </template>
 
@@ -45,12 +72,12 @@ import { PlusIcon } from 'lucide-vue-next'
 
 // Import Components
 
-import InventoryCard from '../components/inventory/InventoryCard.vue'
-import InventorSearchFilter from '../components/inventory/InventorySearchFilter.vue'
-
-import InventoryItemModel from '../components/inventory/InventoryItemModel.vue'
-import InventoryDelete from '../components/inventory/InventoryDelete.vue'
-import InventoryToast from '../components/inventory/InventoryToast.vue'
+import InventoryItemModel from '@/components/inventory/InventoryItemModel.vue'
+import InventoryToast from '@/components/inventory/InventoryToast.vue'
+import InventoryDelete from '@/components/inventory/InventoryDelete.vue'
+import InventoryTable from '@/components/inventory/InventoryTable.vue'
+import InventorySearchFilter from '@/components/inventory/InventorySearchFilter.vue'
+import InventoryCard from '@/components/inventory/InventoryCard.vue'
 
 // Reactive Data
 const searchQuery = ref('')
@@ -153,18 +180,18 @@ const inventoryItems = ref([
 // Computed Properties
 const filteredItems = computed(() => {
   let items = inventoryItems.value
-
+  
   if (searchQuery.value) {
-    items = items.filter(item =>
+    items = items.filter(item => 
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       item.supplier.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   }
-
+  
   if (selectedCategory.value) {
     items = items.filter(item => item.category === selectedCategory.value)
   }
-
+  
   return items
 })
 
