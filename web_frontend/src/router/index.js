@@ -3,6 +3,7 @@ import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
 
+
 const routes = [
   {
     path: '/login',
@@ -32,7 +33,7 @@ const routes = [
         path: "financial",
         name: "financial",
         component: FinancialView,
-      },
+      }
     ],
   },
 ];
