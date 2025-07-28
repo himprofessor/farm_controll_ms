@@ -35,10 +35,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-Route::resource('users', UserController::class);
-    Route::put('/admin/update', [AuthController::class, 'update']);
-});
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
