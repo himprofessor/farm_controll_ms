@@ -3,15 +3,10 @@
   <div class="min-h-screen bg-gray-100">
     <NavBar v-if="isAuthenticated" @logout="logout" />
     <router-view />
-    </div>
-  <div class="flex">
-    <Sidebar />
-    <main class="flex-1 ml-64 p-6">
-      <!-- <router-view /> -->
-     </main>
   </div>
- 
   
+
+
 </template>
 
 <script setup>
@@ -28,9 +23,3 @@ const logout = () => {
   router.push('/');
 };
 </script>
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> dc7ff6ef6b1c6803027ea57cbc7e760362c4bf71
