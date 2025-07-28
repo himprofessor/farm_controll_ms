@@ -6,38 +6,18 @@
         <h1 class="text-2xl font-bold text-gray-900">Staff Management</h1>
         <p class="text-gray-600">Manage your farm staff information and roles</p>
       </div>
-      <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-        </svg>
+      <button @click="openAddStaffModal" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2">
+        <PlusIcon class="w-4 h-4" />
         <span>Add Staff</span>
       </button>
     </div>
 
     <!-- Filters -->
-    <div class="flex space-x-4 mb-6">
-      <div class="flex-1">
-        <input
-          type="text"
-          placeholder="Search by name, role, or department..."
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          v-model="searchQuery"
-        />
-      </div>
-      <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-        <option>All Departments</option>
-        <option>Management</option>
-        <option>Health</option>
-        <option>Operations</option>
-        <option>Administration</option>
-      </select>
-      <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
-        <option>All Status</option>
-        <option>Active</option>
-        <option>On Leave</option>
-        <option>Inactive</option>
-      </select>
-    </div>
+    <StaffFilters
+      v-model:searchQuery="searchQuery"
+      v-model:selectedDepartment="selectedDepartment"
+      v-model:selectedStatus="selectedStatus"
+    />
 
     <!-- Staff Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -46,88 +26,158 @@
         :key="staff.id"
         :staff="staff"
         @view="viewStaff"
-        @edit="editStaff"
-        @delete="deleteStaff"
+        @edit="openEditStaffModal"
+        @delete="openDeleteConfirmDialog"
       />
     </div>
+
+    <!-- Staff Form Modal -->
+    <StaffFormModal
+      :is-visible="isFormModalVisible"
+      :staff-to-edit="staffToEdit"
+      @close="isFormModalVisible = false"
+      @save="saveStaff"
+    />
+
+    <!-- Confirmation Dialog -->
+    <ConfirmationDialog
+      :is-visible="isConfirmDialogVisible"
+      :message="`Are you sure you want to delete ${staffToDelete?.name}?`"
+      @confirm="confirmDeleteStaff"
+      @cancel="isConfirmDialogVisible = false"
+    />
   </div>
 </template>
 
-<script>
-import StaffCard from '../components/staff/StaffCard.vue'
-import StaffFilters from '../components/staff/StaffFilters.vue'
+<script setup>
+import { ref, computed } from 'vue'
+import StaffCard from '@/components/staff/StaffCard.vue'
+import StaffFilters from '@/components/staff/StaffFilters.vue'
+import StaffFormModal from '@/components/staff/StaffFormModal.vue'
+import ConfirmationDialog from '@/components/staff/ConfirmationDialog.vue'
 
-export default {
-  name: 'StaffManagement',
-  components: {
-    StaffCard
+import { PlusIcon } from 'lucide-vue-next'
+
+const searchQuery = ref('')
+const selectedDepartment = ref('')
+const selectedStatus = ref('')
+
+const staff = ref([
+  {
+    id: 1,
+    name: 'John Smith',
+    role: 'Farm Manager',
+    email: 'john.smith@farm.com',
+    phone: '+1 234-567-8901',
+    startDate: '2022-01-15', // Changed to YYYY-MM-DD for date input compatibility
+    department: 'Management',
+    status: 'Active'
   },
-  data() {
-    return {
-      searchQuery: '',
-      staff: [
-        {
-          id: 1,
-          name: 'John Smith',
-          role: 'Farm Manager',
-          email: 'john.smith@farm.com',
-          phone: '+1 234-567-8901',
-          startDate: '1/15/2022',
-          department: 'Management',
-          status: 'Active'
-        },
-        {
-          id: 2,
-          name: 'Sarah Johnson',
-          role: 'Veterinarian',
-          email: 'sarah.johnson@farm.com',
-          phone: '+1 234-567-8902',
-          startDate: '3/20/2022',
-          department: 'Health',
-          status: 'Active'
-        },
-        {
-          id: 3,
-          name: 'Mike Davis',
-          role: 'Farmhand',
-          email: 'mike.davis@farm.com',
-          phone: '+1 234-567-8903',
-          startDate: '1/10/2023',
-          department: 'Operations',
-          status: 'On Leave'
-        },
-        {
-          id: 4,
-          name: 'Emily Wilson',
-          role: 'Administrator',
-          email: 'emily.wilson@farm.com',
-          phone: '+1 234-567-8904',
-          startDate: '11/5/2021',
-          department: 'Administration',
-          status: 'Active'
-        }
-      ]
-    }
+  {
+    id: 2,
+    name: 'Sarah Johnson',
+    role: 'Veterinarian',
+    email: 'sarah.johnson@farm.com',
+    phone: '+1 234-567-8902',
+    startDate: '2022-03-20',
+    department: 'Health',
+    status: 'Active'
   },
-  computed: {
-    filteredStaff() {
-      return this.staff.filter(member =>
-        member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        member.role.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        member.department.toLowerCase().includes(this.searchQuery.toLowerCase())
-      )
-    }
+  {
+    id: 3,
+    name: 'Mike Davis',
+    role: 'Farmhand',
+    email: 'mike.davis@farm.com',
+    phone: '+1 234-567-8903',
+    startDate: '2023-01-10',
+    department: 'Operations',
+    status: 'On Leave'
   },
-  methods: {
-    viewStaff(staff) {
-      console.log('View staff:', staff)
-    },
-    editStaff(staff) {
-      console.log('Edit staff:', staff)
-    },
-    deleteStaff(staff) {
-      console.log('Delete staff:', staff)
-    }
+  {
+    id: 4,
+    name: 'Emily Wilson',
+    role: 'Administrator',
+    email: 'emily.wilson@farm.com',
+    phone: '+1 234-567-8904',
+    startDate: '2021-11-05',
+    department: 'Administration',
+    status: 'Active'
   }
+])
+
+const isFormModalVisible = ref(false)
+const staffToEdit = ref(null) // Holds staff data for editing
+const isConfirmDialogVisible = ref(false)
+const staffToDelete = ref(null) // Holds staff data for deletion confirmation
+
+const filteredStaff = computed(() => {
+  let filtered = staff.value
+
+  // Apply search query filter
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(member =>
+      member.name.toLowerCase().includes(query) ||
+      member.role.toLowerCase().includes(query) ||
+      member.department.toLowerCase().includes(query)
+    )
+  }
+
+  // Apply department filter
+  if (selectedDepartment.value) {
+    filtered = filtered.filter(member => member.department === selectedDepartment.value)
+  }
+
+  // Apply status filter
+  if (selectedStatus.value) {
+    filtered = filtered.filter(member => member.status === selectedStatus.value)
+  }
+
+  return filtered
+})
+
+const openAddStaffModal = () => {
+  staffToEdit.value = null // Clear any previous edit data
+  isFormModalVisible.value = true
+}
+
+const openEditStaffModal = (staffMember) => {
+  staffToEdit.value = staffMember
+  isFormModalVisible.value = true
+}
+
+const saveStaff = (newStaffData) => {
+  if (newStaffData.id) {
+    // Editing existing staff
+    const index = staff.value.findIndex(s => s.id === newStaffData.id)
+    if (index !== -1) {
+      staff.value[index] = newStaffData
+    }
+  } else {
+    // Adding new staff
+    newStaffData.id = Date.now() // Simple ID generation
+    staff.value.push(newStaffData)
+  }
+  isFormModalVisible.value = false
+}
+
+const viewStaff = (staffMember) => {
+  // For viewing, you might open a read-only modal or navigate to a detail page.
+  // For now, we'll just log it.
+  console.log('View staff:', staffMember)
+  alert(`Viewing Staff: ${staffMember.name}\nRole: ${staffMember.role}\nEmail: ${staffMember.email}`)
+}
+
+const openDeleteConfirmDialog = (staffMember) => {
+  staffToDelete.value = staffMember
+  isConfirmDialogVisible.value = true
+}
+
+const confirmDeleteStaff = () => {
+  if (staffToDelete.value) {
+    staff.value = staff.value.filter(s => s.id !== staffToDelete.value.id)
+    staffToDelete.value = null
+  }
+  isConfirmDialogVisible.value = false
 }
 </script>
