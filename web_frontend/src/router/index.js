@@ -50,7 +50,7 @@ const routes = [
         path: "financial",
         name: "financial",
         component: FinancialView,
-      },
+      }
     ],
   },
 ];

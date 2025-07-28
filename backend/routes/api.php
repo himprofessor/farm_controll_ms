@@ -10,6 +10,7 @@ use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SupplireController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WithdrawalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,12 +27,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-// authentication
+// Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+// Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+<<<<<<< HEAD
 
 });
 
@@ -40,6 +43,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
+=======
+    Route::put('/admin/update', [AuthController::class, 'update']);
+});
+
+// Resources
+Route::resource('users', UserController::class);
+>>>>>>> development
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);
 Route::resource('supplires', SupplireController::class);
@@ -50,8 +60,39 @@ Route::resource('equipment', EquipmentController::class);
 Route::resource('withdrawals', WithdrawalController::class);
 Route::resource('savings', SavingController::class);
 Route::resource('salaries', SalaryController::class);
-// Optional: custom pay route
 Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
+
+
+// // authentication
+// Route::post('/register', [AuthController::class, 'register']);
+// Route::post('/login', [AuthController::class, 'login']);
+
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/logout', [AuthController::class, 'logout']);
+
+// });
+
+// Route::resource('users', UserController::class);
+//     Route::put('/admin/update', [AuthController::class, 'update']);
+// });
+
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/logout', [AuthController::class, 'logout']);
+
+// });
+
+// Route::resource('staff', StaffController::class);
+// Route::resource('materials', MaterialController::class);
+// Route::resource('supplires', SupplireController::class);
+// Route::resource('material_purchases', MaterialPurchaseController::class);
+// Route::resource('borrowings', BorrowingController::class);
+// Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
+// Route::resource('equipment', EquipmentController::class);
+// Route::resource('withdrawals', WithdrawalController::class);
+// Route::resource('savings', SavingController::class);
+// Route::resource('salaries', SalaryController::class);
+// // Optional: custom pay route
+// Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
 
 
 
