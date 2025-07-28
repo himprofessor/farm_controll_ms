@@ -2,7 +2,7 @@
   <div class="p-6 bg-gray-100 rounded-lg shadow">
     <!-- Header -->
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">Salary Management</h1>
+      <h1 class="text-3xl font-bold text-gray-900">Salary Management</h1>
       <p class="text-gray-600">Manage staff salaries and withdrawal requests</p>
     </div>
 

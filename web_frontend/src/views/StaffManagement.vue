@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6">
+  <div class="p-6 bg-gray-100 rounded-lg shadow">
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
       <div>

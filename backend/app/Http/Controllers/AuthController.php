@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers;
 
-<<<<<<< HEAD
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-=======
 use App\Models\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
->>>>>>> 35d2ca88b3636045e623314f506fa0d26581854e
 
 class AuthController extends Controller
 {
@@ -19,14 +12,6 @@ class AuthController extends Controller
     {
         $fields = $request->validate([
             'name' => 'required|string',
-<<<<<<< HEAD
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $fields['name'],
-=======
             'role' => 'required|in:admin',
             'email' => 'required|string|email|unique:auth,email',
             'password' => 'required|string|confirmed',
@@ -35,26 +20,16 @@ class AuthController extends Controller
         $auth = Auth::create([
             'name' => $fields['name'],
             'role' => $fields['role'],
->>>>>>> 35d2ca88b3636045e623314f506fa0d26581854e
             'email' => $fields['email'],
             'password' => bcrypt($fields['password']),
         ]);
 
-<<<<<<< HEAD
-        $token = $user->createToken('apptoken')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ]);
-=======
         $token = $auth->createToken('apptoken')->plainTextToken;
 
         return response()->json([
             'auth' => $auth,
             'token' => $token,
         ], 201);
->>>>>>> 35d2ca88b3636045e623314f506fa0d26581854e
     }
 
     public function login(Request $request)
@@ -64,18 +39,6 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-<<<<<<< HEAD
-        $user = User::where('email', $fields['email'])->first();
-
-        if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response(['message' => 'Invalid credentials'], 401);
-        }
-
-        $token = $user->createToken('apptoken')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-=======
         $auth = Auth::where('email', $fields['email'])->first();
 
         if (!$auth || !Hash::check($fields['password'], $auth->password)) {
@@ -90,7 +53,6 @@ class AuthController extends Controller
 
         return response()->json([
             'auth' => $auth,
->>>>>>> 35d2ca88b3636045e623314f506fa0d26581854e
             'token' => $token,
         ]);
     }
@@ -101,8 +63,6 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logged out']);
     }
-<<<<<<< HEAD
-=======
 
     public function update(Request $request)
     {
@@ -129,5 +89,4 @@ class AuthController extends Controller
             'auth' => $auth,
         ]);
     }
->>>>>>> 35d2ca88b3636045e623314f506fa0d26581854e
 }
