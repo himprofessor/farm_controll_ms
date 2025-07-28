@@ -57,35 +57,82 @@
             </div>
           </td>
           <td class="px-6 py-5">
-            <div class="flex space-x-2">
+            <div class="relative">
               <button 
-                @click="$emit('edit', item)"
-                class="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors"
-                title="Edit Item"
+                @click="toggleDropdown(item.id)"
+                class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                title="More actions"
               >
-                <EditIcon class="w-5 h-5" />
+                <MoreVerticalIcon class="w-5 h-5" />
               </button>
-              <button 
-                @click="$emit('delete', item.id)"
-                class="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
-                title="Delete Item"
+              
+              <!-- Dropdown Menu -->
+              <div 
+                v-if="activeDropdown === item.id"
+                class="absolute right-0 top-12 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-10"
+                @click.stop
               >
-                <TrashIcon class="w-5 h-5" />
-              </button>
+                <button
+                  @click="handleEdit(item)"
+                  class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3"
+                >
+                  <EditIcon class="w-4 h-4 text-green-600" />
+                  <span>Edit Item</span>
+                </button>
+                <button
+                  @click="handleDelete(item.id)"
+                  class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center space-x-3"
+                >
+                  <TrashIcon class="w-4 h-4 text-red-600" />
+                  <span>Delete Item</span>
+                </button>
+              </div>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    
+    <!-- Overlay to close dropdown when clicking outside -->
+    <div 
+      v-if="activeDropdown"
+      class="fixed inset-0 z-5"
+      @click="closeDropdown"
+    ></div>
   </div>
 </template>
 
 <script setup>
-import { AlertTriangleIcon, EditIcon, TrashIcon } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { AlertTriangleIcon, EditIcon, TrashIcon, MoreVerticalIcon } from 'lucide-vue-next'
 
 defineProps({
   items: Array
 })
 
-defineEmits(['edit', 'delete'])
+const emit = defineEmits(['edit', 'delete'])
+
+const activeDropdown = ref(null)
+
+const toggleDropdown = (itemId) => {
+  if (activeDropdown.value === itemId) {
+    activeDropdown.value = null
+  } else {
+    activeDropdown.value = itemId
+  }
+}
+
+const closeDropdown = () => {
+  activeDropdown.value = null
+}
+
+const handleEdit = (item) => {
+  emit('edit', item)
+  closeDropdown()
+}
+
+const handleDelete = (itemId) => {
+  emit('delete', itemId)
+  closeDropdown()
+}
 </script>
