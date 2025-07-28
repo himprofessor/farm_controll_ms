@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
+import DefaultLayout from '@/layouts/DefaultLayout.vue'; 
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
 
 
 // Use consistent aliasing
 import HomeScreen from '@/components/HomeScreen.vue';
-import Login from '@/components/Login.vue'; // use @ instead of relative path
+import Login from '@/components/Login.vue'; 
 import StaffManagement from '../views/StaffManagement.vue';
-import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
+import DashboardView from '../views/Dashboard.vue'  
 
 // import StaffManagement from '@/views/StaffManagement.vue';
 const routes = [
@@ -24,20 +24,20 @@ const routes = [
   },
   {
     path: '/',
-    component: DefaultLayout, // Wrap all authenticated routes here
+    component: DefaultLayout, 
     children: [
       {
-        path: 'dashboard', // Default child route (e.g., /dashboard)
+        path: 'dashboard',
         name: 'Dashboard',
         component: () => import('@/views/Dashboard.vue'),
       },
       {
-        path: 'staff', // Default child route (e.g., /dashboard)
+        path: 'staff', 
         name: 'StaffManagement',
         component: () => import('@/views/StaffManagement.vue'),
       },
       {
-        path: 'salary', // Now accessible at /salary (not /salary/)
+        path: 'salary', 
         name: 'SalaryManagement',
         component: () => import('@/views/SalaryManagement.vue'),
       },
