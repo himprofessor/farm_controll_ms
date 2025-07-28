@@ -35,7 +35,7 @@ import LanguageToggle from '@/components/language/LanguageToggle.vue'
 const navItems = [
   {
     label: 'Dashboard',
-    path: '/',
+    path: '/dashboard',
     icon: 'dashboard',
     iconColor: 'text-sky-500',
   },
