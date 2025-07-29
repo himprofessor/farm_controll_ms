@@ -62,17 +62,44 @@ const credentials = ref({ username: '', password: '' });
 const error = ref('');
 const rememberMe = ref(false);
 
+// Password validation function
+const isPasswordStrong = (password) => {
+  // At least 8 characters, one uppercase, one lowercase, one number, one special character
+  const minLength = 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  return (
+    password.length >= minLength &&
+    hasUppercase &&
+    hasLowercase &&
+    hasNumber &&
+    hasSpecialChar
+  );
+};
+
 // Login function
 const login = () => {
-    if (credentials.value.username && credentials.value.password) {
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('username', credentials.value.username);
-        if (rememberMe.value) {
-            localStorage.setItem('rememberedUsername', credentials.value.username);
-        }
-        router.push('/dashboard');
-    } else {
-        error.value = 'Please enter both username and password.';
-    }
+  error.value = ''; // Clear previous errors
+
+  if (!credentials.value.username || !credentials.value.password) {
+    error.value = 'Please enter both email and password.';
+    return;
+  }
+
+  if (!isPasswordStrong(credentials.value.password)) {
+    error.value = 'Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.';
+    return;
+  }
+
+  // If validation passes, proceed with login logic
+  localStorage.setItem('isAuthenticated', 'true');
+  localStorage.setItem('username', credentials.value.username);
+  if (rememberMe.value) {
+    localStorage.setItem('rememberedUsername', credentials.value.username);
+  }
+  router.push('/dashboard');
 };
 </script>
