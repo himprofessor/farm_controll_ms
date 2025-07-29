@@ -50,6 +50,12 @@ const navItems = [
     iconColor: 'text-purple-500',
   },
   {
+    label: 'Form',
+    path: '/form',
+    icon: 'edit',
+    iconColor: 'text-purple-500',
+  },
+  {
     label: 'Financial',
     path: '/financial',
     icon: 'account_balance_wallet',
