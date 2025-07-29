@@ -1,6 +1,6 @@
 <!-- App.vue -->
 <template>
-  <div class="min-h-screen bg-gray-100">
+  <div class="min-h-screen bg-blue-50">
     <NavBar v-if="isAuthenticated" @logout="logout" />
     <router-view />
   </div>
