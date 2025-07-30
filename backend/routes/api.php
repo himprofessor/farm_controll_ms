@@ -1,6 +1,5 @@
 <?php
-
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentMaintenanceController;
@@ -27,14 +26,15 @@ use Illuminate\Support\Facades\Route;
 
 
 // authentication
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('users', UserController::class);
-    Route::put('/admin/update', [AuthController::class, 'update']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+
 
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);

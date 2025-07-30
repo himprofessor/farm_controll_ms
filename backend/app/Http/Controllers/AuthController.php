@@ -1,94 +1,78 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
-use App\Models\Auth;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Auth;
+use Illuminate\Support\Facades\Auth as FacadeAuth;
 
 class AuthController extends Controller
 {
+    /**
+     * Register a new admin
+     */
     public function register(Request $request)
     {
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'role' => 'required|in:admin',
-            'email' => 'required|string|email|unique:auth,email',
-            'password' => 'required|string|confirmed',
+        $request->validate([
+            'name' => 'required|string|unique:auth,name',
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
-        $auth = Auth::create([
-            'name' => $fields['name'],
-            'role' => $fields['role'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password']),
+        $user = \App\Models\Auth::create([
+            'name' => $request->name,
+            'password' => Hash::make($request->password),
         ]);
 
-        $token = $auth->createToken('apptoken')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'auth' => $auth,
+            'status' => true,
+            'message' => 'Registration successful',
             'token' => $token,
         ], 201);
     }
 
+    /**
+     * Login an existing admin
+     */
     public function login(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        $credentials = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password
-        ];
+        $user = \App\Models\Auth::where('name', $request->name)->first();
 
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid credentials',
+            ], 401);
         }
 
-        $auth = Auth::user();
-        $token = $auth->createToken('admin-token')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
+            'status' => true,
+            'message' => 'Login successful',
             'token' => $token,
-            'auth' => $auth,
-        ]);
+        ], 200);
     }
 
+    /**
+     * Logout current admin (invalidate token)
+     */
     public function logout(Request $request)
     {
+        // For Sanctum: deletes the token of the current session
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out']);
-    }
-
-    public function update(Request $request)
-    {
-        $auth = $request->user();
-
-        if ($auth->role !== 'admin') {
-            return response()->json(['message' => 'Only admins can update profile'], 403);
-        }
-
-        $fields = $request->validate([
-            'name' => 'sometimes|string',
-            'email' => 'sometimes|string|email|unique:auth,email,' . $auth->id,
-            'password' => 'sometimes|string|confirmed',
-        ]);
-
-        if (isset($fields['name'])) $auth->name = $fields['name'];
-        if (isset($fields['email'])) $auth->email = $fields['email'];
-        if (isset($fields['password'])) $auth->password = bcrypt($fields['password']);
-
-        $auth->save();
-
         return response()->json([
-            'message' => 'Admin profile updated successfully',
-            'auth' => $auth,
+            'status' => true,
+            'message' => 'Logged out',
         ]);
     }
 }
