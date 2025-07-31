@@ -1,35 +1,45 @@
 <template>
-  <div class="flex space-x-4 mb-8">
-    <div class="flex-1 relative">
-      <SearchIcon class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2" />
+  <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+    <!-- Search Input -->
+    <div class="relative flex-1 w-full">
+      <SearchIcon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
       <input
+        type="text"
         :value="searchQuery"
         @input="$emit('update:searchQuery', $event.target.value)"
-        type="text"
         placeholder="Search items by name or supplier..."
-        class="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm"
+        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
       />
     </div>
-    <select
-      :value="selectedCategory"
-      @change="$emit('update:selectedCategory', $event.target.value)"
-      class="px-6 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent shadow-sm min-w-[180px]"
-    >
-      <option value="">All Categories</option>
-      <option value="Feed">Feed</option>
-      <option value="Medication">Medication</option>
-      <option value="Equipment">Equipment</option>
-      <option value="Supplies">Supplies</option>
-    </select>
+
+    <!-- Category Dropdown -->
+    <div class="relative w-full sm:w-auto">
+      <select
+        :value="selectedCategory"
+        @change="$emit('update:selectedCategory', $event.target.value)"
+        class="appearance-none w-full py-2 pl-4 pr-10 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+      >
+        <option value="">All Categories</option>
+        <option
+          v-for="category in categories"
+          :key="category"
+          :value="category"
+        >
+          {{ category }}
+        </option>
+      </select>
+      <ChevronDownIcon class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5 pointer-events-none" />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { SearchIcon } from 'lucide-vue-next'
+import { SearchIcon, ChevronDownIcon } from 'lucide-vue-next'
 
 defineProps({
   searchQuery: String,
-  selectedCategory: String
+  selectedCategory: String,
+  categories: Array
 })
 
 defineEmits(['update:searchQuery', 'update:selectedCategory'])
