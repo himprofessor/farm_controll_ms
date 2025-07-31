@@ -52,6 +52,8 @@ Route::resource('salaries', SalaryController::class);
 Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
 
 
+
+
 // // authentication
 // Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login']);
@@ -82,7 +84,4 @@ Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
 // Route::resource('salaries', SalaryController::class);
 // // Optional: custom pay route
 // Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
-
-
-
 
