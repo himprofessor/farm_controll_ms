@@ -128,144 +128,25 @@ import StaffFormModal from '@/components/staff/StaffFormModal.vue'
 import ConfirmationDialog from '@/components/staff/ConfirmationDialog.vue'
 import { PlusIcon, XIcon, UserIcon } from 'lucide-vue-next'
 
-const searchQuery = ref("");
-const selectedDepartment = ref("");
-const selectedStatus = ref("");
+import { onMounted } from 'vue'
+import axios from 'axios'
 
-const staff = ref([
-  {
-    id: 1,
-    name: 'John Smith',
-    role: 'Farm Manager',
-    email: 'john.smith@farm.com',
-    phone: '+1 234-567-8901',
-    startDate: '2022-01-15',
-    department: 'Management',
-    status: 'Active',
-    notes: 'Responsible for overall farm operations and management.'
-  },
-  {
-    id: 2,
-    name: 'Sarah Johnson',
-    role: 'Veterinarian',
-    email: 'sarah.johnson@farm.com',
-    phone: '+1 234-567-8902',
-    startDate: '2022-03-20',
-    department: 'Health',
-    status: 'Active',
-    notes: 'Specializes in livestock health and wellness.'
-  },
-  {
-    id: 3,
-    name: 'Mike Davis',
-    role: 'Farmhand',
-    email: 'mike.davis@farm.com',
-    phone: '+1 234-567-8903',
-    startDate: '2023-01-10',
-    department: 'Operations',
-    status: 'On Leave',
-    notes: 'Currently on leave until June 2023.'
-  },
-  {
-    id: 4,
-    name: 'Emily Wilson',
-    role: 'Administrator',
-    email: 'emily.wilson@farm.com',
-    phone: '+1 234-567-8904',
-    startDate: '2021-11-05',
-    department: 'Administration',
-    status: 'Active',
-    notes: 'Handles all administrative tasks and payroll.'
-  }
-])
+const staff = ref([])
 
-const isFormModalVisible = ref(false)
-const isViewModalVisible = ref(false)
-const staffToEdit = ref(null)
-const viewedStaff = ref({})
-const isConfirmDialogVisible = ref(false)
-const staffToDelete = ref(null)
-
-const filteredStaff = computed(() => {
-  let filtered = staff.value;
-
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase();
-    filtered = filtered.filter(
-      (member) =>
-        member.name.toLowerCase().includes(query) ||
-        member.role.toLowerCase().includes(query) ||
-        member.department.toLowerCase().includes(query)
-    );
-  }
-
-  if (selectedDepartment.value) {
-    filtered = filtered.filter(
-      (member) => member.department === selectedDepartment.value
-    );
-  }
-
-  if (selectedStatus.value) {
-    filtered = filtered.filter(
-      (member) => member.status === selectedStatus.value
-    );
-  }
-
-  return filtered;
-});
-
-const openAddStaffModal = () => {
-  staffToEdit.value = null
-  isFormModalVisible.value = true
+const loadStaff = async () => {
+  const response = await apiClient.get('/staff')
+  staff.value = response.data
 }
 
-const openEditStaffModal = (staffMember) => {
-  staffToEdit.value = staffMember;
-  isFormModalVisible.value = true;
-};
-
-const openViewStaffModal = (staffMember) => {
-  viewedStaff.value = staffMember
-  isViewModalVisible.value = true
-}
-
-const saveStaff = (newStaffData) => {
+onMounted(loadStaff)
+const saveStaff = async (newStaffData) => {
   if (newStaffData.id) {
-    const index = staff.value.findIndex(s => s.id === newStaffData.id)
-    if (index !== -1) {
-      staff.value[index] = newStaffData;
-    }
+    await apiClient.put(`/staff/${newStaffData.id}`, newStaffData)
   } else {
-    newStaffData.id = Date.now()
-    staff.value.push(newStaffData)
+    await apiClient.post('/staff', newStaffData)
   }
-  isFormModalVisible.value = false;
-};
-
-const openDeleteConfirmDialog = (staffMember) => {
-  staffToDelete.value = staffMember;
-  isConfirmDialogVisible.value = true;
-};
-
-const confirmDeleteStaff = () => {
-  if (staffToDelete.value) {
-    staff.value = staff.value.filter((s) => s.id !== staffToDelete.value.id);
-    staffToDelete.value = null;
-  }
-  isConfirmDialogVisible.value = false
+  await loadStaff()
+  isFormModalVisible.value = false
 }
 
-const getStatusClasses = (status) => {
-  const classes = {
-    'Active': 'bg-green-100 text-green-800',
-    'On Leave': 'bg-yellow-100 text-yellow-800',
-    'Inactive': 'bg-red-100 text-red-800'
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
-
-const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  return new Date(dateString).toLocaleDateString(undefined, options)
-}
 </script>

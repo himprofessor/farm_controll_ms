@@ -8,17 +8,23 @@ use Illuminate\Support\Facades\Hash;
 
 class StaffController extends Controller
 {
-    /**
-     * Display a listing of the staff.
-     */
     public function index()
     {
-        return response()->json(Staff::all(), 200);
+        $staffs = Staff::all();
+
+        if ($staffs->isEmpty()) {
+            return response()->json([
+                'message' => 'No staff found.',
+                'data' => []
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => 'Staff list retrieved successfully.',
+            'data' => $staffs
+        ], 200);
     }
 
-    /**
-     * Store a newly created staff member.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -39,9 +45,6 @@ class StaffController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified staff member.
-     */
     public function show(Staff $staff)
     {
         return response()->json([
@@ -50,9 +53,6 @@ class StaffController extends Controller
         ], 200);
     }
 
-    /**
-     * Update the specified staff member.
-     */
     public function update(Request $request, Staff $staff)
     {
         $validated = $request->validate([
@@ -73,9 +73,6 @@ class StaffController extends Controller
         ], 200);
     }
 
-    /**
-     * Remove the specified staff member.
-     */
     public function destroy(Staff $staff)
     {
         $staff->delete();
