@@ -4,7 +4,6 @@ use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentMaintenanceController;
 use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\MaterialPurchaseController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SupplireController;
@@ -35,10 +34,11 @@ Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logo
 
 
 
+// Resources
+Route::resource('users', UserController::class);
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);
 Route::resource('supplires', SupplireController::class);
-Route::resource('material_purchases', MaterialPurchaseController::class);
 Route::resource('borrowings', BorrowingController::class);
 Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
 Route::resource('equipment', EquipmentController::class);
