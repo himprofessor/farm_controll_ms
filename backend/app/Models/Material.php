@@ -16,11 +16,8 @@ class Material extends Model
         return $this->hasMany(Borrowing::class);
     }
 
-    protected $fillable = [
-        'name',
-        'category',
-        'unit',
-        'quantity',
-        'reorder-level'
+     protected $fillable = [
+        'name', 'expires', 'category', 'currentStock', 'minStock',
+        'unit', 'status', 'value', 'pricePerUnit', 'supplier', 'lastUpdated',
     ];
 }
