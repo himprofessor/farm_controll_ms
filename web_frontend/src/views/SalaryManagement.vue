@@ -120,8 +120,10 @@
 </template>
 
 <script>
+import API from '@/plugin/axios'
 import SalaryCard from '../components/salary/SalaryCard.vue'
 import WithdrawalTable from '../components/salary/WithdrawalTable.vue'
+
 
 export default {
   name: 'SalaryManagement',
