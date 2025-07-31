@@ -106,10 +106,6 @@ const closeModal = () => {
   selectedMaterial.value = null
 }
 
-const handleMaterialAdded = (newMaterial) => {
-  materials.value.push(newMaterial)
-  toast.success('Material added!')
-}
 
 const handleMaterialUpdated = (updated) => {
   const index = materials.value.findIndex(m => m.id === updated.id)
