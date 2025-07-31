@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
+import Signup from '@/pages/auth/signup.vue'
 
 
 // Use consistent aliasing
@@ -21,6 +22,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login
+  },
+   {
+    path: '/signup',
+    name: 'signup',
+    component: Signup
   },
   {
     path: '/',
