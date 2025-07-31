@@ -1,78 +1,78 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Auth;
-use Illuminate\Support\Facades\Auth as FacadeAuth;
 
 class AuthController extends Controller
 {
-    /**
-     * Register a new admin
-     */
     public function register(Request $request)
     {
-        $request->validate([
+        $fields = $request->validate([
             'name' => 'required|string|unique:auth,name',
-            'password' => 'required|string|min:6|confirmed',
+            'password' => 'required|string|confirmed',
         ]);
 
-        $user = \App\Models\Auth::create([
-            'name' => $request->name,
-            'password' => Hash::make($request->password),
+        $auth = Auth::create([
+            'name' => $fields['name'],
+            'password' => bcrypt($fields['password']),
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $auth->createToken('apptoken')->plainTextToken;
 
         return response()->json([
-            'status' => true,
-            'message' => 'Registration successful',
+            'auth' => $auth,
             'token' => $token,
         ], 201);
     }
 
-    /**
-     * Login an existing admin
-     */
     public function login(Request $request)
     {
-        $request->validate([
+        $fields = $request->validate([
             'name' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $user = \App\Models\Auth::where('name', $request->name)->first();
+        $auth = Auth::where('name', $fields['name'])->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid credentials',
-            ], 401);
+        if (!$auth || !Hash::check($fields['password'], $auth->password)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $auth->createToken('apptoken')->plainTextToken;
 
         return response()->json([
-            'status' => true,
-            'message' => 'Login successful',
+            'auth' => $auth,
             'token' => $token,
-        ], 200);
+        ]);
     }
 
-    /**
-     * Logout current admin (invalidate token)
-     */
     public function logout(Request $request)
     {
-        // For Sanctum: deletes the token of the current session
         $request->user()->currentAccessToken()->delete();
 
+        return response()->json(['message' => 'Logged out']);
+    }
+
+    public function update(Request $request)
+    {
+        $auth = $request->user();
+
+        $fields = $request->validate([
+            'name' => 'sometimes|string|unique:auth,name,' . $auth->id,
+            'password' => 'sometimes|string|confirmed',
+        ]);
+
+        if (isset($fields['name'])) $auth->name = $fields['name'];
+        if (isset($fields['password'])) $auth->password = bcrypt($fields['password']);
+
+        $auth->save();
+
         return response()->json([
-            'status' => true,
-            'message' => 'Logged out',
+            'message' => 'Profile updated successfully',
+            'auth' => $auth,
         ]);
     }
 }

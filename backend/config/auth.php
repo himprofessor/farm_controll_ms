@@ -37,13 +37,14 @@ return [
 
     'guards' => [
         'web' => [
-        'driver' => 'session',
-        'provider' => 'users', 
-    ],
-    'api' => [
-        'driver' => 'sanctum',
-        'provider' => 'auth', 
-    ],
+            'driver' => 'session',
+            'provider' => 'auth_users', 
+        ],
+
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'auth_users', 
+        ],
     ],
 
     /*
@@ -64,10 +65,10 @@ return [
     */
 
     'providers' => [
-        'auth' => [
-        'driver' => 'eloquent',
-        'model' => App\Models\Auth::class,
-    ],
+        'auth_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Auth::class, 
+        ],
 
         // 'users' => [
         //     'driver' => 'database',
