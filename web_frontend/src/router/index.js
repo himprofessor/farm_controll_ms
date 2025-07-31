@@ -8,6 +8,7 @@ import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
 import StaffManagement from '@/views/StaffManagement.vue';
 import DashboardView from '@/views/Dashboard.vue';
+import Signup from '@/pages/auth/signup.vue';
 
 const routes = [
   {
