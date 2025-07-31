@@ -13,8 +13,8 @@
             <form @submit.prevent="login">
                 <!-- Username -->
                 <div class="mb-4">
-                    <label for="username" class="block text-gray-700 mb-2">Email Address</label>
-                    <input v-model="credentials.username" type="text" id="username" placeholder="Enter email address"
+                    <label for="username" class="block text-gray-700 mb-2">Usermane</label>
+                    <input v-model="credentials.username" type="text" id="username" placeholder="Username"
                         class="w-full border p-2 rounded focus:outline-none focus:ring-2" />
                 </div>
 
