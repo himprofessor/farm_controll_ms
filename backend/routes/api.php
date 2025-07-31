@@ -5,7 +5,6 @@ use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentMaintenanceController;
 use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\MaterialPurchaseController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SupplireController;
@@ -34,26 +33,14 @@ Route::post('/login', [AuthController::class, 'login']);
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-<<<<<<< HEAD
-
-});
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-});
-
-=======
     Route::put('/admin/update', [AuthController::class, 'update']);
 });
 
 // Resources
 Route::resource('users', UserController::class);
->>>>>>> development
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);
 Route::resource('supplires', SupplireController::class);
-Route::resource('material_purchases', MaterialPurchaseController::class);
 Route::resource('borrowings', BorrowingController::class);
 Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
 Route::resource('equipment', EquipmentController::class);
