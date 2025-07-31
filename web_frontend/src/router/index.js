@@ -13,6 +13,7 @@ import DashboardView from '../views/Dashboard.vue'  // Correct path based on you
 
 // import StaffManagement from '@/views/StaffManagement.vue';
 const routes = [
+  
   {
     path: '/',
     name: 'homescreen',
