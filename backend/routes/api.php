@@ -34,22 +34,11 @@ Route::post('/login', [AuthController::class, 'login']);
 // Authenticated routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-<<<<<<< HEAD
-
-});
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-
-});
-
-=======
     Route::put('/admin/update', [AuthController::class, 'update']);
 });
 
 // Resources
 Route::resource('users', UserController::class);
->>>>>>> development
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);
 Route::resource('supplires', SupplireController::class);
