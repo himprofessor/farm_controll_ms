@@ -6,12 +6,8 @@ import HomeScreen from '@/components/HomeScreen.vue';
 import Login from '@/components/Login.vue';
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
-<<<<<<< HEAD
-import Signup from '@/pages/auth/signup.vue'
-=======
 import StaffManagement from '@/views/StaffManagement.vue';
 import DashboardView from '@/views/Dashboard.vue';
->>>>>>> Invetory_frontend
 
 const routes = [
   {
