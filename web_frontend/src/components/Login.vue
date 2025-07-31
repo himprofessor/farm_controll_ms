@@ -54,7 +54,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import api from '@/services/api'; // your axios instance
+import api from '@/services/api'; 
 
 const router = useRouter();
 
