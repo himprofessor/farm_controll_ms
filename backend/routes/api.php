@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\EquipmentController;
@@ -26,15 +25,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-// Public routes
+// authentication
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Authenticated routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/admin/update', [AuthController::class, 'update']);
-});
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+
+
 
 // Resources
 Route::resource('users', UserController::class);

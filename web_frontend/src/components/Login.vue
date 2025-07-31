@@ -13,8 +13,8 @@
             <form @submit.prevent="login">
                 <!-- Username -->
                 <div class="mb-4">
-                    <label for="username" class="block text-gray-700 mb-2">Username</label>
-                    <input v-model="credentials.username" type="text" id="username" placeholder="Enter username"
+                    <label for="name" class="block text-gray-700 mb-2">Username</label>
+                    <input v-model="credentials.name" type="text" id="name" placeholder="Enter username"
                         class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600" />
                 </div>
 
@@ -54,25 +54,42 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import api from '@/services/api'; 
 
 const router = useRouter();
 
-// Reactive data
-const credentials = ref({ username: '', password: '' });
+const credentials = ref({ name: '', password: '' });
 const error = ref('');
 const rememberMe = ref(false);
 
-// Login function
-const login = () => {
-    if (credentials.value.username && credentials.value.password) {
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('username', credentials.value.username);
-        if (rememberMe.value) {
-            localStorage.setItem('rememberedUsername', credentials.value.username);
-        }
-        router.push('/dashboard');
-    } else {
-        error.value = 'Please enter both username and password.';
+const login = async () => {
+  error.value = '';
+
+  if (!credentials.value.name || !credentials.value.password) {
+    error.value = 'Please enter both username and password.';
+    return;
+  }
+
+  try {
+    const response = await api.post('/login', {
+      name: credentials.value.name,
+      password: credentials.value.password,
+    });
+
+    const token = response.data.token;
+    const auth = response.data.auth;
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('authUser', JSON.stringify(auth));
+
+    if (rememberMe.value) {
+      localStorage.setItem('rememberedname', credentials.value.name);
     }
+
+    router.push('/dashboard');
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Login failed.';
+  }
 };
 </script>
+
