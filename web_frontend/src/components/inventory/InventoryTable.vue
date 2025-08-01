@@ -1,4 +1,3 @@
-<!-- src/views/MaterialsInventory.vue -->
 <template>
   <div class="bg-white rounded-lg shadow p-4">
     <!-- Header & Add Button -->
@@ -14,6 +13,22 @@
     <!-- Modal Form -->
     <AddItemView v-if="showModal" :item="selectedMaterial" :categories="categories" @close="closeModal"
       @material-added="handleMaterialAdded" @material-updated="handleMaterialUpdated" />
+
+    <!-- Delete Confirmation Popup -->
+    <div v-if="showDeleteConfirm" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Action</h3>
+        <p class="text-gray-600 mb-6">Are you sure you want to delete {{ selectedMaterialToDelete.name }}?</p>
+        <div class="flex justify-end space-x-4">
+          <button @click="cancelDelete" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-800">
+            Cancel
+          </button>
+          <button @click="confirmDelete" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
 
     <!-- Materials Table -->
     <div class="overflow-x-auto">
@@ -46,11 +61,13 @@
             <td class="px-6 py-4 text-sm text-right">
               <div class="relative inline-block">
                 <button @click="showMenuId = showMenuId === material.id ? null : material.id"
-                  class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="5" cy="12" r="2" />
+                  class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                  aria-label="Toggle menu" :aria-expanded="showMenuId === material.id ? 'true' : 'false'">
+                  <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <circle cx="12" cy="6" r="2" />
                     <circle cx="12" cy="12" r="2" />
-                    <circle cx="19" cy="12" r="2" />
+                    <circle cx="12" cy="18" r="2" />
                   </svg>
                 </button>
                 <div v-if="showMenuId === material.id"
@@ -99,13 +116,18 @@ const showMenuId = ref(null)
 const categories = ['Seeds', 'Fertilizer', 'Tools', 'Feed', 'Medicine']
 const showDeleteConfirm = ref(false)
 const selectedMaterialToDelete = ref(null)
+const loading = ref(false) // Added loading state
 
 const fetchMaterials = async () => {
   try {
+    loading.value = true
     const res = await API.get('/materials')
     materials.value = res.data
   } catch (error) {
     toast.error('Failed to fetch materials.')
+    console.error('Fetch error:', error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -124,12 +146,19 @@ const closeModal = () => {
   selectedMaterial.value = null
 }
 
+const handleMaterialAdded = (material) => {
+  materials.value.push(material)
+  toast.success('Material added!')
+  closeModal()
+}
+
 const handleMaterialUpdated = (updated) => {
   const index = materials.value.findIndex(m => m.id === updated.id)
   if (index !== -1) {
     materials.value[index] = updated
   }
   toast.success('Material updated!')
+  closeModal()
 }
 
 const cancelDelete = () => {
@@ -138,22 +167,23 @@ const cancelDelete = () => {
 }
 
 const confirmDelete = async () => {
-  if (!selectedMaterialToDelete.value) return
+  if (!selectedMaterialToDelete.value || !selectedMaterialToDelete.value.id) {
+    toast.error('No material selected for deletion.')
+    return
+  }
   try {
+    loading.value = true
     await API.delete(`/materials/${selectedMaterialToDelete.value.id}`)
     materials.value = materials.value.filter(m => m.id !== selectedMaterialToDelete.value.id)
-    toast.success('Material deleted.')
-  } catch (err) {
-    toast.error('Failed to delete.')
+    toast.success('Material deleted successfully.')
+  } catch (error) {
+    toast.error('Failed to delete material. Please check the material ID or server status.')
+    console.error('Delete error:', error)
   } finally {
+    loading.value = false
     showDeleteConfirm.value = false
     selectedMaterialToDelete.value = null
   }
-}
-
-const deleteMaterial = (id) => {
-  // This function is now a trigger to show the confirmation popup
-  // The actual deletion is handled in confirmDelete
 }
 
 const getStatusClass = (status) => {
