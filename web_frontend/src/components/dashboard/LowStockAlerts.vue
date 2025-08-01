@@ -1,20 +1,22 @@
-<!-- src/components/dashboard/LowStockAlerts.vue -->
 <template>
   <div class="bg-white rounded-lg shadow">
     <div class="p-6 border-b border-gray-200">
       <h3 class="text-lg font-medium text-gray-900">Low Stock Alerts</h3>
     </div>
     <div class="p-6">
-      <div v-if="lowStockItems.length" class="space-y-4">
+      <div v-if="filteredItems.length" class="space-y-4">
         <div
-          v-for="item in lowStockItems"
+          v-for="item in filteredItems"
           :key="item.id"
           class="border border-gray-200 rounded-lg p-4"
         >
           <div class="flex items-center justify-between mb-2">
             <h4 class="text-sm font-medium text-gray-900">{{ item.name }}</h4>
-            <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">
-              Low Stock
+            <span
+              class="px-2 py-1 text-xs font-medium rounded-full"
+              :class="getBadgeClass(item)"
+            >
+              {{ getStatusLabel(item) }}
             </span>
           </div>
           <p class="text-sm text-gray-600 mb-3">
@@ -22,7 +24,8 @@
           </p>
           <div class="w-full bg-gray-200 rounded-full h-2">
             <div
-              class="bg-red-500 h-2 rounded-full"
+              :class="getBarClass(item)"
+              class="h-2 rounded-full"
               :style="{ width: item.percentage + '%' }"
             ></div>
           </div>
@@ -34,24 +37,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import API from '@/plugin/axios'
+import { onMounted, computed } from 'vue'
+import { useMaterialsStore } from '@/stores/material'
 
-const lowStockItems = ref([])
+const store = useMaterialsStore()
 
-const fetchLowStock = async () => {
-  try {
-    const res = await API.get('/materials') // API returns all
-    lowStockItems.value = res.data
-      .filter(item => item.currentStock < 50)
-      .map(item => ({
-        ...item,
-        percentage: Math.round((item.currentStock / item.minStock)* 10)
-      }))
-  } catch (err) {
-    console.error('Failed to fetch low stock materials.', err)
-  }
+onMounted(() => {
+  store.fetchMaterials()
+})
+
+// Only show materials with stock <= 60
+const filteredItems = computed(() =>
+  store.lowStockItems.filter(item => item.currentStock <= 60)
+)
+
+const getStatusLabel = (item) => {
+  if (item.currentStock <= 40) return 'Critical'
+  if (item.currentStock <= 60) return 'Low Stock'
+  return 'OK'
 }
 
-onMounted(fetchLowStock)
+const getBadgeClass = (item) => {
+  if (item.currentStock <= 40) {
+    return 'text-red-800 bg-red-100'
+  } else if (item.currentStock <= 60) {
+    return 'text-yellow-800 bg-yellow-100'
+  }
+  return 'text-green-800 bg-green-100'
+}
+
+const getBarClass = (item) => {
+  if (item.currentStock <= 40) {
+    return 'bg-red-500'
+  } else if (item.currentStock <= 60) {
+    return 'bg-yellow-400'
+  }
+  return 'bg-green-500'
+}
 </script>
