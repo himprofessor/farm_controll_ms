@@ -23,8 +23,12 @@ class StaffController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'phone' => 'required|string|unique:staff,phone',
+            'phone' => 'required|string|unique:staff,phone|max:20',
+            'email' => 'sometimes|email|unique:staff,email|max:255',
             'role' => 'required|in:manager,worker',
+            'department' => 'sometimes|string|max:255',
+            'status' => 'sometimes|in:active,inactive',
+            'start_date' => 'sometimes|date',
         ]);
 
         if (!empty($validated['phone'])) {
@@ -57,8 +61,12 @@ class StaffController extends Controller
     {
         $validated = $request->validate([
             'name' => 'sometimes|string|max:255',
-            'phone' => 'sometimes|string|unique:staff,phone,' . $staff->id,
+            'phone' => 'sometimes|string|unique:staff,phone,' . $staff->id . '|max:20',
+            'email' => 'sometimes|email|unique:staff,email,' . $staff->id . '|max:255',
             'role' => 'sometimes|in:manager,worker',
+            'department' => 'sometimes|string|max:255',
+            'status' => 'sometimes|in:active,inactive',
+            'start_date' => 'sometimes|date',
         ]);
 
         if (isset($validated['phone']) && !empty($validated['phone'])) {
@@ -76,12 +84,22 @@ class StaffController extends Controller
     /**
      * Remove the specified staff member.
      */
-    public function destroy(Staff $staff)
-    {
-        $staff->delete();
+    // public function destroy(Staff $staff)
+    // {
+    //     $staff->delete();
 
-        return response()->json([
-            'message' => 'Staff deleted successfully.'
-        ], 200);
+    //     return response()->json([
+    //         'message' => 'Staff deleted successfully.'
+    //     ], 200);
+    // }
+
+    public function destroy($id)
+    {
+        $staff = Staff::find($id);
+        if (!$staff) {
+            return response()->json(['message' => 'Staff not found'], 404);
+        }
+        $staff->delete();
+        return response()->json(['message' => 'Staff deleted successfully']);
     }
 }
