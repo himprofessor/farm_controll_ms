@@ -41,11 +41,7 @@
 
         <div>
           <label class="block text-sm font-medium mb-1">Status</label>
-          <select v-model="form.status" class="input" required>
-            <option value="ok">OK</option>
-            <option value="low">Low</option>
-            <option value="critical">Critical</option>
-          </select>
+          <input :value="form.status" class="input bg-gray-100 text-gray-600" readonly />
         </div>
 
         <div>
@@ -109,40 +105,64 @@ const form = reactive({
 
 const isEdit = computed(() => !!props.item?.id)
 
-watch(() => props.item, (val) => {
-  if (val) {
-    Object.assign(form, { ...val })
-  } else {
-    Object.assign(form, {
-      name: '',
-      expires: '',
-      category: '',
-      currentStock: 0,
-      minStock: 0,
-      unit: '',
-      status: 'ok',
-      value: 0,
-      pricePerUnit: 0,
-      supplier: '',
-      lastUpdated: ''
-    })
-  }
-}, { immediate: true })
+// Watch for props.item (edit mode)
+watch(
+  () => props.item,
+  (val) => {
+    if (val) {
+      Object.assign(form, { ...val })
+    } else {
+      Object.assign(form, {
+        name: '',
+        expires: '',
+        category: '',
+        currentStock: 0,
+        minStock: 0,
+        unit: '',
+        status: 'ok',
+        value: 0,
+        pricePerUnit: 0,
+        supplier: '',
+        lastUpdated: ''
+      })
+    }
+  },
+  { immediate: true }
+)
+
+// Watch stock to compute status
+watch(
+  () => [form.currentStock],
+  ([stock]) => {
+    if (stock <= 40) {
+      form.status = 'critical'
+    } else if (stock > 40 && stock <= 60) {
+      form.status = 'low'
+    } else {
+      form.status = 'ok'
+    }
+  },
+  { immediate: true }
+)
 
 const submit = async () => {
+  const isUpdating = isEdit.value
+  const payload = { ...form }
+
+  emit('close') // Close modal immediately for UX
+
   try {
-    if (isEdit.value) {
-      const { data } = await API.put(`/materials/${props.item.id}`, form)
+    if (isUpdating) {
+      const { data } = await API.put(`/materials/${props.item.id}`, payload)
       emit('material-updated', data.data)
       toast.success('Material updated!')
     } else {
-      const { data } = await API.post('/materials', form)
+      const { data } = await API.post('/materials', payload)
       emit('material-added', data.material)
       toast.success('Material added!')
     }
-    emit('close')
   } catch (error) {
-    toast.error('Failed to save material.')
+    toast.error(`Failed to ${isUpdating ? 'update' : 'add'} material.`)
   }
 }
 </script>
