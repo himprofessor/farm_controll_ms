@@ -1,13 +1,19 @@
+<!-- src/views/MaterialsInventory.vue -->
 <template>
   <div class="bg-white rounded-lg shadow p-4">
+    <!-- Header & Add Button -->
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-800">Materials Inventory</h2>
-      <button @click="openAdd" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors duration-200 flex items-center space-x-2">
+      <button
+        @click="openAdd"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-colors duration-200 flex items-center space-x-2"
+      >
         <Plus class="w-5 h-5" />
         <span>Add Material</span>
       </button>
     </div>
 
+    <!-- Modal Form -->
     <AddItemView
       v-if="showModal"
       :item="selectedMaterial"
@@ -17,6 +23,7 @@
       @material-updated="handleMaterialUpdated"
     />
 
+    <!-- Materials Table -->
     <div class="overflow-x-auto">
       <table class="min-w-full bg-white">
         <thead class="bg-gray-50">
@@ -32,31 +39,50 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr v-for="material in materials" :key="material.id" class="hover:bg-gray-50 transition-colors duration-150">
+          <tr
+            v-for="material in materials"
+            :key="material.id"
+            class="hover:bg-gray-50 transition-colors duration-150"
+          >
             <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ material.name }}</td>
             <td class="px-6 py-4 text-sm text-gray-500">{{ material.category }}</td>
             <td class="px-6 py-4 text-sm text-gray-500">{{ material.currentStock }}</td>
             <td class="px-6 py-4 text-sm text-gray-500">{{ material.minStock }}</td>
             <td class="px-6 py-4 text-sm">
-              <span :class="getStatusClass(material.status)">{{ material.status }}</span>
+              <span :class="getStatusClass(material.status)">
+                {{ material.status }}
+              </span>
             </td>
             <td class="px-6 py-4 text-sm text-gray-500">{{ material.value }}</td>
             <td class="px-6 py-4 text-sm text-gray-500">{{ material.supplier }}</td>
             <td class="px-6 py-4 text-sm text-right">
-              <!-- Three Dot Menu -->
               <div class="relative inline-block">
-                <button @click="showMenuId = showMenuId === material.id ? null : material.id" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
-                  <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <button
+                  @click="showMenuId = showMenuId === material.id ? null : material.id"
+                  class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200"
+                >
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="5" cy="12" r="2"/>
                     <circle cx="12" cy="12" r="2"/>
                     <circle cx="19" cy="12" r="2"/>
                   </svg>
                 </button>
-
-                <!-- Dropdown Menu -->
-                <div v-if="showMenuId === material.id" class="absolute right-0 mt-2 bg-white shadow-md rounded-md w-36">
-                  <button @click="openEdit(material)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Update</button>
-                  <button @click="deleteMaterial(material.id)" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Delete</button>
+                <div
+                  v-if="showMenuId === material.id"
+                  class="absolute right-0 mt-2 bg-white shadow-md rounded-md w-36 z-50"
+                >
+                  <button
+                    @click="openEdit(material)"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Update
+                  </button>
+                  <button
+                    @click="deleteMaterial(material.id)"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             </td>
@@ -78,7 +104,7 @@ const materials = ref([])
 const showModal = ref(false)
 const selectedMaterial = ref(null)
 const toast = useToast()
-const showMenuId = ref(null) // Track which menu is open
+const showMenuId = ref(null)
 
 const categories = ['Seeds', 'Fertilizer', 'Tools', 'Feed', 'Medicine']
 
@@ -104,11 +130,6 @@ const openEdit = (item) => {
 const closeModal = () => {
   showModal.value = false
   selectedMaterial.value = null
-}
-
-const handleMaterialAdded = (newMaterial) => {
-  materials.value.push(newMaterial)
-  toast.success('Material added!')
 }
 
 const handleMaterialUpdated = (updated) => {
@@ -141,9 +162,3 @@ const getStatusClass = (status) => {
 
 onMounted(fetchMaterials)
 </script>
-
-<style scoped>
-/* Styling handled by Tailwind CSS */
-</style>
-
- 
