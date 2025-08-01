@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import HomeScreen from '@/components/HomeScreen.vue';
 import Login from '@/components/Login.vue';
+import Signup from '@/pages/auth/signup.vue';
 import InventoryManagement from '@/views/InventoryManagement.vue';
 import FinancialView from '@/views/FinancialView.vue';
 import StaffManagement from '@/views/StaffManagement.vue';
