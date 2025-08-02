@@ -164,10 +164,8 @@ watch(
   () => props.staffToEdit,
   (newVal) => {
     if (newVal) {
-      // Deep copy to avoid mutating prop directly
       staffData.value = { ...newVal };
     } else {
-      // Reset form for new staff
       staffData.value = {
         id: null,
         name: "",
