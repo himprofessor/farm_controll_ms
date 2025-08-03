@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-lg shadow-lg p-6 max-w-md">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center space-x-3">
@@ -30,94 +30,88 @@
         <span class="text-gray-600">Base Salary:</span>
         <span class="font-semibold text-gray-900">{{ formatCurrency(employee.baseSalary) }}</span>
       </div>
-
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Current Balance:</span>
         <span class="font-semibold text-green-600">{{ formatCurrency(employee.currentBalance) }}</span>
       </div>
-
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Total Earned:</span>
         <span class="font-semibold text-gray-900">{{ formatCurrency(employee.totalEarned) }}</span>
       </div>
-
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Last Payment:</span>
         <span class="font-semibold text-gray-900">{{ employee.lastPayment }}</span>
       </div>
     </div>
 
-    <!-- Action Buttons -->
+    <!-- Actions -->
     <div class="flex space-x-2">
-      <button @click="openPaymentModal"
-        class="flex items-center justify-center gap-1 flex-1 w-24 bg-green-500 hover:bg-green-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
+      <button
+        @click="openPaymentModal"
+        aria-label="Pay Salary"
+        class="flex items-center justify-center gap-1 flex-1 w-24 bg-green-500 hover:bg-green-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm"
+      >
         Pay Salary
       </button>
-      <button @click="viewDetails"
-        class="text-blue-600 border border-blue-200 hover:bg-blue-50 bg-transparent font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
+      <button
+        @click="viewDetails"
+        aria-label="View Employee Details"
+        class="text-blue-600 border border-blue-200 hover:bg-blue-50 font-medium py-1.5 px-3 rounded-md transition-colors text-sm"
+      >
         Details
       </button>
     </div>
 
     <!-- Payment Modal -->
-    <PaymentModal :is-open="showPaymentModal" :employee="employee" @close="showPaymentModal = false"
-      @payment-processed="handlePaymentProcessed" />
+    <PaymentModal
+      :open="showPaymentModal"
+      :employee="employee"
+      @close="showPaymentModal = false"
+      @payment-processed="handlePaymentProcessed"
+    />
   </div>
-
-
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import PaymentModal from './PaymentModal.vue'
 
-export default {
-  name: 'SalaryCard',
-  components: {
-    PaymentModal
-  },
-  props: {
-    employee: {
-      type: Object,
-      required: true,
-      default: () => ({
-        id: 'emp-001',
-        name: 'John Smith',
-        position: 'Farm Manager',
-        baseSalary: 4500,
-        currentBalance: 2340,
-        totalEarned: 54000,
-        lastPayment: '1/1/2024'
-      })
-    }
-  },
-  data() {
-    return {
-      showPaymentModal: false
-    }
-  },
-  methods: {
-    openPaymentModal() {
-      this.showPaymentModal = true
-    },
-    viewDetails() {
-      this.$emit('view-details', this.employee)
-    },
-    handlePaymentProcessed(paymentInfo) {
-      // Handle the payment processing
-      console.log('Payment processed:', paymentInfo)
-
-      // You can emit this to parent component or handle via Vuex/Pinia
-      this.$emit('payment-processed', paymentInfo)
-
-      // Show success message
-      alert('Payment processed successfully!')
-    },
-    formatCurrency(amount) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(amount)
-    }
+defineProps({
+  employee: {
+    type: Object,
+    default: () => ({
+      id: 'emp-001',
+      name: 'John Smith',
+      position: 'Farm Manager',
+      baseSalary: 4500,
+      currentBalance: 2340,
+      totalEarned: 54000,
+      lastPayment: '1/1/2024'
+    })
   }
+})
+
+const emit = defineEmits(['payment-processed', 'view-details'])
+
+const showPaymentModal = ref(false)
+
+function openPaymentModal() {
+  showPaymentModal.value = true
+}
+
+function viewDetails() {
+  emit('view-details', employee)
+}
+
+function handlePaymentProcessed(paymentInfo) {
+  emit('payment-processed', paymentInfo)
+  showPaymentModal.value = false
+}
+
+function formatCurrency(amount) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(amount)
 }
 </script>

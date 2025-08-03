@@ -1,23 +1,7 @@
-<!-- App.vue -->
 <template>
-  <div class="min-h-screen bg-blue-50">
-    <NavBar v-if="isAuthenticated" @logout="logout" />
-    <router-view />
-  </div>
-  
+  <router-view />
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true');
-
-const logout = () => {
-  isAuthenticated.value = false;
-  localStorage.removeItem('isAuthenticated');
-  localStorage.removeItem('username');
-  router.push('/');
-};
+// no need to import layout here; it's handled by the router
 </script>

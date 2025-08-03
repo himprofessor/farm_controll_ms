@@ -1,71 +1,96 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import DefaultLayout from '@/layouts/DefaultLayout.vue'; // Import the layout
-import InventoryManagement from '@/views/InventoryManagement.vue';
-import FinancialView from '@/views/FinancialView.vue';
+import { createRouter, createWebHistory } from 'vue-router'
+
+// Layouts
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+
+// Pages (eager-loaded for public routes)
+import HomeScreen from '@/components/HomeScreen.vue'
+import Login from '@/components/Login.vue'
 import Signup from '@/pages/auth/signup.vue'
 
+// Lazy-loaded views (authenticated routes)
+const DashboardView = () => import('@/views/Dashboard.vue')
+const StaffManagement = () => import('@/views/StaffManagement.vue')
+const SalaryManagement = () => import('@/views/SalaryManagement.vue')
+const InventoryManagement = () => import('@/views/InventoryManagement.vue')
+const FinancialView = () => import('@/views/FinancialView.vue')
 
-// Use consistent aliasing
-import HomeScreen from '@/components/HomeScreen.vue';
-import Login from '@/components/Login.vue'; // use @ instead of relative path
-import StaffManagement from '../views/StaffManagement.vue';
-import DashboardView from '../views/Dashboard.vue'  // Correct path based on your structure
+// Optional: 404 NotFound component
+// const NotFound = () => import('@/components/NotFound.vue')
 
-// import StaffManagement from '@/views/StaffManagement.vue';
 const routes = [
+  // Public routes
   {
     path: '/',
-    name: 'homescreen',
-    component: HomeScreen
+    name: 'Home',
+    component: HomeScreen,
   },
   {
     path: '/login',
-    name: 'login',
-    component: Login
-  },
-   {
-    path: '/signup',
-    name: 'signup',
-    component: Signup
+    name: 'Login',
+    component: Login,
   },
   {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
+  },
+
+  // Authenticated routes wrapped with DefaultLayout
+  {
     path: '/',
-    component: DefaultLayout, // Wrap all authenticated routes here
+    component: DefaultLayout,
+    meta: { requiresAuth: true }, // Optional meta for auth guard
     children: [
       {
-        path: 'dashboard', // Default child route (e.g., /dashboard)
+        path: 'dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/Dashboard.vue'),
+        component: DashboardView,
       },
       {
-        path: 'staff', // Default child route (e.g., /dashboard)
+        path: 'staff',
         name: 'StaffManagement',
-        component: () => import('@/views/StaffManagement.vue'),
+        component: StaffManagement,
       },
       {
-        path: 'salary', // Now accessible at /salary (not /salary/)
+        path: 'salary',
         name: 'SalaryManagement',
-        component: () => import('@/views/SalaryManagement.vue'),
+        component: SalaryManagement,
       },
       {
-        path: "/inventory",
-        name: "inventory",
+        path: 'inventory',
+        name: 'InventoryManagement',
         component: InventoryManagement,
       },
       {
-        path: "financial",
-        name: "financial",
+        path: 'financial',
+        name: 'FinancialView',
         component: FinancialView,
-      }
+      },
     ],
   },
-];
- 
 
+  // Catch-all route for 404 Not Found
+  // {
+  //   path: '/:catchAll(.*)',
+  //   name: 'NotFound',
+  //   component: NotFound,
+  // },
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
+  routes,
 })
+
+// Example navigation guard (optional):
+// router.beforeEach((to, from, next) => {
+//   const isAuthenticated = false // replace with real auth check
+//   if (to.meta.requiresAuth && !isAuthenticated) {
+//     next({ name: 'Login' })
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

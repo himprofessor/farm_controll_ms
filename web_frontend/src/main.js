@@ -1,19 +1,22 @@
-import './assets/main.css'
+import "@/assets/main.css";
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import { createPinia } from "pinia";
+import axios from "axios";
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+const pinia = createPinia();
 
-import App from './App.vue'
-import router from './router'
-import * as lucide from 'lucide-vue-next'
+// Axios token setup
+const token = localStorage.getItem("token");
+if (token) {
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  console.log("🔐 Token applied to Axios headers");
+} else {
+  console.log("⚠️ No token found");
+}
 
-const app = createApp(App)
-
-Object.entries(lucide).forEach(([name, component]) => {
-  app.component(name, component)
-})
-
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+createApp(App)
+  .use(router)
+  .use(pinia)
+  .mount("#app");
