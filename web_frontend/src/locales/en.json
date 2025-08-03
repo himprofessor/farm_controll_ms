@@ -165,6 +165,144 @@
     "noPayments": "No payment history available",
     "error": "Failed to load payment history"
   },
+  
+  "inventory": {
+    "title": "Inventory Management",
+    "subtitle": "Track and manage farm inventory and supplies",
+    "loading": "Loading inventory...",
+    "error": "Failed to load inventory data",
+    "addItem": "Add Material",
+    "editItem": "Edit Material",
+    "save": "Update",
+    "add": "Add",
+    "materialAdded": "Material added successfully!",
+    "materialUpdated": "Material updated successfully!",
+    "materialDeleted": "Material deleted successfully!",
+    "deleteError": "Failed to delete material",
+    "formError": "Failed to save material",
+    "searchPlaceholder": "Search items by name or supplier...",
+    "allCategories": "All Categories",
+    "selectCategory": "Select category",
+    "selectStatus": "Select status",
+    "noItems": "No items found",
+    "deleteConfirm": "Are you sure you want to delete {name}?",
+    "totalItems": "Total Items",
+    "lowStockCount": "Low Stock Alerts",
+    "totalValue": "Total Value",
+    "uniqueCategoriesCount": "Categories",
+    "table": {
+      "title": "Inventory List",
+      "name": "Name",
+      "category": "Category",
+      "currentStock": "Current Stock",
+      "minStock": "Min Stock",
+      "unit": "Unit",
+      "status": "Status",
+      "value": "Total Value",
+      "pricePerUnit": "Price Per Unit",
+      "supplier": "Supplier",
+      "expires": "Expires",
+      "lastUpdated": "Last Updated",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete",
+      "toggleMenu": "Toggle actions menu"
+    },
+    "categories": {
+      "Seeds": "Seeds",
+      "Fertilizer": "Fertilizer",
+      "Tools": "Tools",
+      "Feed": "Feed",
+      "Medicine": "Medicine"
+    },
+    "statuses": {
+      "ok": "OK",
+      "low": "Low",
+      "critical": "Critical"
+    }
+  },
+ "financial": {
+    "title": "Financial Management",
+    "subtitle": "Track income, expenses, and financial performance",
+    "loading": "Loading financial data...",
+    "error": "Failed to load financial data",
+    "overview": {
+      "totalIncome": "Total Income",
+      "totalExpenses": "Total Expenses",
+      "netProfit": "Net Profit"
+    },
+    "income": {
+      "title": "Income Records",
+      "add": "Add Income",
+      "edit": "Edit Income",
+      "save": "Save",
+      "searchPlaceholder": "Search income by category, description, or customer...",
+      "category": "Category",
+      "description": "Description",
+      "customer": "Customer",
+      "amount": "Amount",
+      "date": "Date",
+      "actions": "Actions",
+      "delete": "Delete",
+      "noRecords": "No income records found",
+      "noRecordsHint": "Try adjusting your search or filters",
+      "added": "Income added successfully",
+      "updated": "Income updated successfully",
+      "deleted": "Income deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete the income: {description}?",
+      "filters": {
+        "thisMonth": "This Month",
+        "lastMonth": "Last Month",
+        "thisQuarter": "This Quarter",
+        "thisYear": "This Year",
+        "allTime": "All Time"
+      }
+    },
+    "expenses": {
+      "title": "Expense Records",
+      "add": "Add Expense",
+      "edit": "Edit Expense",
+      "save": "Save",
+      "searchPlaceholder": "Search expenses by category, description, or vendor...",
+      "category": "Category",
+      "description": "Description",
+      "vendor": "Vendor",
+      "amount": "Amount",
+      "date": "Date",
+      "actions": "Actions",
+      "delete": "Delete",
+      "noRecords": "No expense records found",
+      "noRecordsHint": "Try adjusting your search or filters",
+      "added": "Expense added successfully",
+      "updated": "Expense updated successfully",
+      "deleted": "Expense deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete the expense: {description}?",
+      "filters": {
+        "thisMonth": "This Month",
+        "lastMonth": "Last Month",
+        "thisQuarter": "This Quarter",
+        "thisYear": "This Year",
+        "allTime": "All Time"
+      }
+    },
+    "reports": {
+      "title": "Financial Reports",
+      "incomeVsExpenses": "Income vs Expenses",
+      "income": "Income",
+      "expenses": "Expenses",
+      "month": "Month",
+      "amount": "Amount"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "income": "Income",
+      "expenses": "Expenses",
+      "reports": "Reports"
+    }
+  },
+
+ 
+
   "staffCard": {
     "view": "View",
     "edit": "Edit",

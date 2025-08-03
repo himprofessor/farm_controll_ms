@@ -1,20 +1,24 @@
-import { createRouter, createWebHistory } from 'vue-router';
+// src/router/index.js
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 
 // Layout
-import DefaultLayout from '@/layouts/DefaultLayout.vue';
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 // Public Pages
-import HomeScreen from '@/components/HomeScreen.vue';
-import Login from '@/components/Login.vue';
-import Signup from '@/pages/auth/signup.vue';
+import HomeScreen from '@/components/HomeScreen.vue'
+import Login from '@/components/Login.vue'
+import Signup from '@/components/Signup.vue'
 
-// Authenticated Views (lazy or eager loaded)
-import DashboardView from '@/views/Dashboard.vue';
-import StaffManagement from '@/views/StaffManagement.vue';
-import SalaryManagement from '@/views/SalaryManagement.vue';
-import InventoryManagement from '@/views/InventoryManagement.vue';
-import FinancialView from '@/views/FinancialView.vue';
-// import NotFound from '@/components/NotFound.vue'; // Optional 404 page
+// Authenticated Views (lazy-loaded)
+const DashboardView = () => import('@/views/Dashboard.vue')
+const StaffManagement = () => import('@/views/StaffManagement.vue')
+const SalaryManagement = () => import('@/views/SalaryManagement.vue')
+const InventoryManagement = () => import('@/views/InventoryManagement.vue')
+const FinancialView = () => import('@/views/FinancialView.vue')
+
+// // Optional 404 page (lazy-loaded)
+// const NotFound = () => import('@/components/NotFound.vue')
 
 const routes = [
   // Public routes
@@ -59,7 +63,6 @@ const routes = [
         path: 'inventory',
         name: 'InventoryManagement',
         component: InventoryManagement,
-        meta: { requiresAuth: true },
       },
       {
         path: 'financial',
@@ -69,27 +72,36 @@ const routes = [
     ],
   },
 
-  // Optional catch-all 404 route
+  // // Catch-all 404 route
   // {
   //   path: '/:catchAll(.*)',
   //   name: 'NotFound',
   //   component: NotFound,
   // },
-];
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-});
+})
 
-// Optional: Navigation guard
-// router.beforeEach((to, from, next) => {
-//   const isAuthenticated = false; // Replace with your actual auth logic
-//   if (to.meta.requiresAuth && !isAuthenticated) {
-//     next({ name: 'Login' });
-//   } else {
-//     next();
-//   }
-// });
+// Navigation guard to check auth status before routing
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const isAuthenticated = !!authStore.token
 
-export default router;
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    // Not authenticated and trying to access protected route
+    next({ name: 'Login' })
+  } else if (
+    (to.name === 'Login' || to.name === 'Signup') &&
+    isAuthenticated
+  ) {
+    // Prevent authenticated users from visiting login/signup
+    next({ name: 'Dashboard' })
+  } else {
+    next()
+  }
+})
+
+export default router

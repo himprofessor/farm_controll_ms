@@ -4,21 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class Auth extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory;
 
-    protected $table = 'auth';
+    protected $table = 'auth'; // your table name if not default 'auths'
 
     protected $fillable = [
         'name',
+        'email',
         'password',
     ];
 
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 }
