@@ -1,3 +1,4 @@
+
 <template>
   <div class="p-6 bg-gray-100 rounded-lg shadow max-w-screen-xl mx-auto">
     <div v-if="isLoading" class="text-sm text-gray-500">{{ $t('salaryManagement.loading') }}</div>
@@ -87,36 +88,11 @@
       </div>
 
       <!-- Employee Details Modal -->
-      <div v-if="selectedStaff" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-          <button
-            @click="selectedStaff = null"
-            class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-          >
-            <XIcon class="w-6 h-6" />
-          </button>
-          <h2 class="text-2xl font-bold mb-6 text-gray-900">
-            {{ $t('salaryManagement.employeeDetails.title', { name: selectedStaff.name }) }}
-          </h2>
-          <div class="space-y-2">
-            <p><strong>{{ $t('salaryManagement.employeeDetails.id') }}:</strong> {{ selectedStaff.id || $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.role') }}:</strong> {{ $t(`roles.${selectedStaff.roleKey || selectedStaff.role?.toLowerCase().replace(' ', '_') || 'unknown'}`) }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.baseSalary') }}:</strong> {{ selectedStaff.baseSalary ? formatCurrency(selectedStaff.baseSalary) : $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.currentBalance') }}:</strong> {{ selectedStaff.currentBalance ? formatCurrency(selectedStaff.currentBalance) : $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.totalEarned') }}:</strong> {{ selectedStaff.totalEarned ? formatCurrency(selectedStaff.totalEarned) : $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.lastPayment') }}:</strong> {{ selectedStaff.lastPayment || $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.acresManaged') }}:</strong> {{ selectedStaff.acresManaged || $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.crops') }}:</strong> {{ selectedStaff.crops || $t('salaryManagement.na') }}</p>
-            <p><strong>{{ $t('salaryManagement.employeeDetails.workHours') }}:</strong> {{ selectedStaff.workHours ? `${selectedStaff.workHours} ${$t('salaryManagement.hours')}` : $t('salaryManagement.na') }}</p>
-          </div>
-          <button
-            @click="processPayment(selectedStaff)"
-            class="mt-6 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition"
-          >
-            {{ $t('salaryManagement.processPayment') }}
-          </button>
-        </div>
-      </div>
+      <EmployeeDetails
+        v-if="selectedStaff"
+        :employee="selectedStaff"
+        @close="closeDetailsModal"
+      />
 
       <!-- Success Modal -->
       <div v-if="showSuccessModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -125,7 +101,7 @@
           <p class="text-gray-600">{{ $t('salaryManagement.successModal.message', { date: successDate }) }}</p>
           <p class="text-gray-600">{{ processedCount }} {{ $t('salaryManagement.successModal.paid') }}</p>
           <button
-            @click="showSuccessModal = false"
+            @click="closeSuccessModal"
             class="mt-4 bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 transition"
           >
             {{ $t('salaryManagement.closeButton') }}
@@ -137,21 +113,23 @@
       <ConfirmationDialog
         :isVisible="showConfirmDialog"
         :message="confirmMessage"
+        :title="confirmTitle"
         @confirm="confirmWithdrawalAction"
-        @cancel="showConfirmDialog = false"
+        @cancel="closeConfirmDialog"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { XIcon } from 'lucide-vue-next'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import axios from 'axios'
-import StaffFilters from '@/components/StaffFilters.vue'
-import SalaryCard from '@/components/SalaryCard.vue'
-import WithdrawalTable from '@/components/WithdrawalTable.vue'
-import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
+
+import StaffFilters from '@/components/staff/StaffFilters.vue'
+import SalaryCard from '@/components/salary/SalaryCard.vue'
+import WithdrawalTable from '@/components/salary/WithdrawalTable.vue'
+import ConfirmationDialog from '@/components/staff/ConfirmationDialog.vue'
+import EmployeeDetails from '@/components/salary/Employeedetail.vue'
 
 const activeTab = ref('Salaries')
 const tabs = ref(['Salaries', 'Withdrawals'])
@@ -171,6 +149,7 @@ const successDate = ref('')
 const processedCount = ref(0)
 const showConfirmDialog = ref(false)
 const confirmMessage = ref('')
+const confirmTitle = ref('')
 const pendingWithdrawalAction = ref(null)
 
 const filteredStaff = computed(() => {
@@ -179,6 +158,7 @@ const filteredStaff = computed(() => {
       !searchQuery.value ||
       staff.name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       staff.role?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      staff.position?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
       staff.baseSalary?.toString().includes(searchQuery.value)
     const matchesDepartment = !selectedDepartment.value || staff.department === selectedDepartment.value
     const matchesStatus = !selectedStatus.value || staff.status === selectedStatus.value
@@ -202,8 +182,8 @@ onMounted(async () => {
       id: staff.id,
       name: staff.name,
       role: staff.role,
-      roleKey: staff.roleKey || staff.role?.toLowerCase().replace(' ', '_'),
-      position: staff.role,
+      roleKey: staff.roleKey || staff.role?.toLowerCase().replace(' ', '_') || staff.position?.toLowerCase().replace(' ', '_'),
+      position: staff.position || staff.role,
       status: staff.status,
       department: staff.department,
       baseSalary: staff.baseSalary,
@@ -230,8 +210,14 @@ onMounted(async () => {
   }
 })
 
-function viewDetails(staff) {
+async function viewDetails(staff) {
+  await nextTick()
   selectedStaff.value = staff
+}
+
+async function closeDetailsModal() {
+  await nextTick()
+  selectedStaff.value = null
 }
 
 async function processPayment(staff) {
@@ -255,29 +241,14 @@ async function processPayment(staff) {
   }
 }
 
-async function handlePaymentProcessed(paymentInfo) {
-  try {
-    await axios.post(`/api/staff/${paymentInfo.employeeId}/payment`, {
-      amount: paymentInfo.amount,
-      notes: paymentInfo.notes,
-      date: paymentInfo.date,
-    })
-    showSuccessModal.value = true
-    successDate.value = new Date(paymentInfo.date).toLocaleDateString()
-    processedCount.value = 1
-    staffList.value = staffList.value.map(s =>
-      s.id === paymentInfo.employeeId
-        ? {
-            ...s,
-            currentBalance: (s.currentBalance || 0) + paymentInfo.amount,
-            totalEarned: (s.totalEarned || 0) + paymentInfo.amount,
-            lastPayment: new Date(paymentInfo.date).toLocaleDateString(),
-          }
-        : s
-    )
-  } catch (err) {
-    error.value = err.message
-  }
+async function handlePaymentProcessed(updatedEmployee) {
+  await nextTick()
+  staffList.value = staffList.value.map(s =>
+    s.id === updatedEmployee.id ? updatedEmployee : s
+  )
+  showSuccessModal.value = true
+  successDate.value = new Date(updatedEmployee.lastPayment).toLocaleDateString()
+  processedCount.value = 1
 }
 
 async function processAllSalaries() {
@@ -297,21 +268,27 @@ async function processAllSalaries() {
   }
 }
 
-function approveWithdrawal(withdrawal) {
+async function approveWithdrawal(withdrawal) {
   pendingWithdrawalAction.value = { action: 'approve', withdrawal }
   confirmMessage.value = $t('confirmationDialog.defaultMessage')
+  confirmTitle.value = $t('confirmationDialog.title')
+  await nextTick()
   showConfirmDialog.value = true
 }
 
-function rejectWithdrawal(withdrawal) {
+async function rejectWithdrawal(withdrawal) {
   pendingWithdrawalAction.value = { action: 'reject', withdrawal }
   confirmMessage.value = $t('confirmationDialog.defaultMessage')
+  confirmTitle.value = $t('confirmationDialog.title')
+  await nextTick()
   showConfirmDialog.value = true
 }
 
-function completeWithdrawal(withdrawal) {
+async function completeWithdrawal(withdrawal) {
   pendingWithdrawalAction.value = { action: 'complete', withdrawal }
   confirmMessage.value = $t('confirmationDialog.defaultMessage')
+  confirmTitle.value = $t('confirmationDialog.title')
+  await nextTick()
   showConfirmDialog.value = true
 }
 
@@ -338,7 +315,17 @@ async function confirmWithdrawalAction() {
   } catch (err) {
     error.value = err.message
   }
+  await closeConfirmDialog()
+}
+
+async function closeConfirmDialog() {
+  await nextTick()
   showConfirmDialog.value = false
   pendingWithdrawalAction.value = null
+}
+
+async function closeSuccessModal() {
+  await nextTick()
+  showSuccessModal.value = false
 }
 </script>

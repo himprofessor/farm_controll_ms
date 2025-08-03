@@ -1,22 +1,20 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-// Layouts
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
+// Layout
+import DefaultLayout from '@/layouts/DefaultLayout.vue';
 
-// Pages (eager-loaded for public routes)
-import HomeScreen from '@/components/HomeScreen.vue'
-import Login from '@/components/Login.vue'
-import Signup from '@/pages/auth/signup.vue'
+// Public Pages
+import HomeScreen from '@/components/HomeScreen.vue';
+import Login from '@/components/Login.vue';
+import Signup from '@/pages/auth/signup.vue';
 
-// Lazy-loaded views (authenticated routes)
-const DashboardView = () => import('@/views/Dashboard.vue')
-const StaffManagement = () => import('@/views/StaffManagement.vue')
-const SalaryManagement = () => import('@/views/SalaryManagement.vue')
-const InventoryManagement = () => import('@/views/InventoryManagement.vue')
-const FinancialView = () => import('@/views/FinancialView.vue')
-
-// Optional: 404 NotFound component
-// const NotFound = () => import('@/components/NotFound.vue')
+// Authenticated Views (lazy or eager loaded)
+import DashboardView from '@/views/Dashboard.vue';
+import StaffManagement from '@/views/StaffManagement.vue';
+import SalaryManagement from '@/views/SalaryManagement.vue';
+import InventoryManagement from '@/views/InventoryManagement.vue';
+import FinancialView from '@/views/FinancialView.vue';
+// import NotFound from '@/components/NotFound.vue'; // Optional 404 page
 
 const routes = [
   // Public routes
@@ -36,11 +34,11 @@ const routes = [
     component: Signup,
   },
 
-  // Authenticated routes wrapped with DefaultLayout
+  // Authenticated routes under DefaultLayout
   {
     path: '/',
     component: DefaultLayout,
-    meta: { requiresAuth: true }, // Optional meta for auth guard
+    meta: { requiresAuth: true },
     children: [
       {
         path: 'dashboard',
@@ -61,6 +59,7 @@ const routes = [
         path: 'inventory',
         name: 'InventoryManagement',
         component: InventoryManagement,
+        meta: { requiresAuth: true },
       },
       {
         path: 'financial',
@@ -70,27 +69,27 @@ const routes = [
     ],
   },
 
-  // Catch-all route for 404 Not Found
+  // Optional catch-all 404 route
   // {
   //   path: '/:catchAll(.*)',
   //   name: 'NotFound',
   //   component: NotFound,
   // },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
 
-// Example navigation guard (optional):
+// Optional: Navigation guard
 // router.beforeEach((to, from, next) => {
-//   const isAuthenticated = false // replace with real auth check
+//   const isAuthenticated = false; // Replace with your actual auth logic
 //   if (to.meta.requiresAuth && !isAuthenticated) {
-//     next({ name: 'Login' })
+//     next({ name: 'Login' });
 //   } else {
-//     next()
+//     next();
 //   }
-// })
+// });
 
-export default router
+export default router;

@@ -126,7 +126,7 @@
 import { ref, watch, nextTick } from 'vue'
 import { CreditCard, X, User } from 'lucide-vue-next'
 import axios from 'axios'
-import ConfirmationDialog from '@/components/ConfirmationDialog.vue'
+import ConfirmationDialog from '@/components/staff/ConfirmationDialog.vue'
 
 const props = defineProps({
   open: {
