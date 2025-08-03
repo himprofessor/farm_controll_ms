@@ -1,0 +1,233 @@
+
+{
+  "farmControl": "ការគ្រប់គ្រងចម្ការ",
+  "languageToggle": {
+    "khmer": "ភាសាខ្មែរ",
+    "english": "English"
+  },
+  "navItems": {
+    "Dashboard": "ផ្ទាំងគ្រប់គ្រង",
+    "Staff Management": "ការគ្រប់គ្រងបុគ្គលិក",
+    "Salary Management": "ការគ្រប់គ្រងប្រាក់ខែ",
+    "Inventory": "ស្តុកទំនិញ",
+    "Financial": "ហិរញ្ញវត្ថុ"
+  },
+  "dashboard": {
+    "dashboardTitle": "ផ្ទាំងគ្រប់គ្រង",
+    "dashboardSubtitle": "សូមស្វាគមន៍វិញ! នេះជាអ្វីដែលកំពុងកើតឡើងនៅក្នុងចម្ការរបស់អ្នកថ្ងៃនេះ។",
+    "totalStaff": {
+      "title": "បុគ្គលិកសរុប",
+      "value": "២៤",
+      "change": "+២ ក្នុងខែនេះ"
+    },
+    "monthlyExpenses": {
+      "title": "ចំណាយប្រចាំខែ",
+      "value": "$12,450",
+      "change": "+5.2% ពីខែមុន"
+    },
+    "inventoryItems": {
+      "title": "ស្តុកទំនិញ",
+      "value": "156",
+      "change": "12 ការជូនដំណឹងស្តុកតិច"
+    },
+    "monthlyRevenue": {
+      "title": "ប្រាក់ចំណូលប្រចាំខែ",
+      "value": "$18,750",
+      "change": "+8.1% ពីខែមុន"
+    },
+    "salariesPaid": {
+      "title": "ប្រាក់ខែបានបង់",
+      "value": "$0.00",
+      "desc": "ការទូទាត់សរុបចំពោះបុគ្គលិក"
+    },
+    "activeBorrows": {
+      "title": "ការខ្ចីសកម្ម",
+      "value": "០",
+      "desc": "សម្ភារៈដែលកំពុងខ្ចី"
+    },
+    "maintenanceCosts": {
+      "title": "ថ្លៃថែទាំ",
+      "value": "$0.00",
+      "desc": "ចំណាយថែទាំឧបករណ៍សរុប"
+    }
+  },
+  "recentActivities": {
+    "title": "សកម្មភាពថ្មីៗ",
+    "noActivities": "គ្មានសកម្មភាពថ្មីៗទេ",
+    "activities": {
+      "1": {
+        "message": "បន្ថែមសមាជិកបុគ្គលិកថ្មី John Doe",
+        "time": "២ ម៉ោងមុន"
+      },
+      "2": {
+        "message": "ស្តុកចំណីសត្វជិតអស់ (នៅសល់ ៥ ថ្ងៃ)",
+        "time": "៤ ម៉ោងមុន"
+      },
+      "3": {
+        "message": "បានដំណើរការប្រាក់ខែសម្រាប់បុគ្គលិក ២៤ នាក់",
+        "time": "១ ថ្ងៃមុន"
+      },
+      "4": {
+        "message": "ថ្នាំជិតផុតកំណត់ក្នុង ៧ ថ្ងៃ",
+        "time": "២ ថ្ងៃមុន"
+      }
+    }
+  },
+  "lowStockAlerts": {
+    "title": "ការជូនដំណឹងស្តុកតិច",
+    "lowStockLabel": "ស្តុកតិច",
+    "current": "បច្ចុប្បន្ន",
+    "minimum": "អប្បបរមា",
+    "noItems": "គ្មានទំនិញស្តុកតិចទេ",
+    "items": {
+      "1": {
+        "name": "ចំណីជ្រូក - ចាប់ផ្តើម"
+      },
+      "2": {
+        "name": "ថ្នាំអង់ទីប៊ីយ៉ូទិក"
+      },
+      "3": {
+        "name": "វីតាមីន"
+      }
+    }
+  },
+  "salaryManagement": {
+    "title": "ការគ្រប់គ្រងប្រាក់ខែ",
+    "subtitle": "គ្រប់គ្រងប្រាក់ខែបុគ្គលិក និងសំណើដកប្រាក់",
+    "tabs": {
+      "salaries": "ប្រាក់ខែបុគ្គលិក",
+      "withdrawals": "សំណើដកប្រាក់"
+    },
+    "searchPlaceholder": "ស្វែងរកបុគ្គលិកតាមឈ្មោះ តួនាទី ឬប្រាក់ខែមូលដ្ឋាន...",
+    "processAllButton": "ដំណើរការប្រាក់ខែទាំងអស់",
+    "noStaff": "រកមិនឃើញបុគ្គលិកទេ",
+    "noWithdrawals": "រកមិនឃើញសំណើដកប្រាក់ទេ",
+    "employeeDetails": {
+      "title": "ព័ត៌មានលម្អិតរបស់ {name}",
+      "id": "លេខសម្គាល់",
+      "role": "តួនាទី",
+      "baseSalary": "ប្រាក់ខែមូលដ្ឋាន",
+      "currentBalance": "សមតុល្យបច្ចុប្បន្ន",
+      "totalEarned": "ប្រាក់រកបានសរុប",
+      "lastPayment": "ការទូទាត់ចុងក្រោយ",
+      "acresManaged": "ផ្ទៃដីគ្រប់គ្រង",
+      "crops": "ដំណាំដែលមើលការខុសត្រូវ",
+      "workHours": "ម៉ោងធ្វើការ"
+    },
+    "successModal": {
+      "title": "ការដំណើរការប្រាក់ខែបានបញ្ចប់",
+      "message": "ប្រាក់ខែបុគ្គលិកទាំងអស់ត្រូវបានដំណើរការនៅថ្ងៃ {date}",
+      "paid": "បានបង់"
+    },
+    "closeButton": "បិទ",
+    "na": "គ្មាន",
+    "hours": "ម៉ោង",
+    "viewDetails": "មើលព័ត៌មានលម្អិត",
+    "processPayment": "ដំណើរការការទូទាត់",
+    "withdrawalTable": {
+      "staffMember": "សមាជិកបុគ្គលិក",
+      "amount": "ចំនួន",
+      "requestDate": "កាលបរិច្ឆេទសំណើ",
+      "status": "ស្ថានភាព",
+      "reason": "ហេតុផល",
+      "actions": "សកម្មភាព",
+      "approve": "អនុម័ត",
+      "reject": "បដិសេធ",
+      "complete": "បញ្ចប់",
+      "noActions": "គ្មានសកម្មភាព",
+      "statuses": {
+        "pending": "រង់ចាំ",
+        "approved": "បានអនុម័ត",
+        "completed": "បានបញ្ចប់",
+        "rejected": "បានបដិសេធ"
+      }
+    },
+    "loading": "កំពុងផ្ទុកទិន្នន័យបុគ្គលិក...",
+    "error": "បរាជ័យក្នុងការផ្ទុកទិន្នន័យបុគ្គលិក"
+  },
+  "paymentModal": {
+    "processFor": "ដំណើរការការទូទាត់ប្រាក់ខែសម្រាប់ {name} - {role}",
+    "amount": "ចំនួនទឹកប្រាក់",
+    "amountPlaceholder": "0.00",
+    "notes": "កំណត់ចំណាំការទូទាត់ (ជាជម្រើស)",
+    "notesPlaceholder": "បន្ថែមកំណត់ចំណាំអំពីការទូទាត់នេះ...",
+    "submit": "ដំណើរការការទូទាត់",
+    "success": "ទូទាត់ជោគជ័យ",
+    "successMessage": "ការទូទាត់បានដំណើរការដោយជោគជ័យ!",
+    "error": "កំហុសក្នុងការទូទាត់",
+    "invalidAmount": "សូមបញ្ចូលចំនួនទឹកប្រាក់ត្រឹមត្រូវ",
+    "failure": "ការទូទាត់បរាជ័យ: {message}",
+    "errorMessage": "កំហុសក្នុងការដំណើរការទូទាត់: {message}"
+  },
+  "employeeDetails": {
+    "title": "ព័ត៌មានលម្អិតប្រាក់ខែសម្រាប់ {name}",
+    "paymentHistory": "ប្រវត្តិការទូទាត់",
+    "noPayments": "គ្មានប្រវត្តិការទូទាត់ទេ",
+    "error": "បរាជ័យក្នុងការផ្ទុកប្រវត្តិការទូទាត់"
+  },
+  "staffCard": {
+    "view": "មើល",
+    "edit": "កែសម្រួល",
+    "started": "ចាប់ផ្តើម",
+    "na": "គ្មាន",
+    "unknown": "មិនស្គាល់"
+  },
+  "roles": {
+    "farm_manager": "អ្នកគ្រប់គ្រងចម្ការ",
+    "veterinarian": "ពេទ្យសត្វ",
+    "farmhand": "កម្មករចម្ការ",
+    "administrator": "អ្នករដ្ឋបាល",
+    "unknown": "មិនស្គាល់"
+  },
+  "staffStatus": {
+    "active": "សកម្ម",
+    "on_leave": "កំពុងឈប់សម្រាក",
+    "inactive": "អសកម្ម",
+    "unknown": "មិនស្គាល់"
+  },
+  "departments": {
+    "farm_operations": "ប្រតិបត្តិការចម្ការ",
+    "administration": "រដ្ឋបាល",
+    "veterinary_services": "សេវាពេទ្យសត្វ",
+    "management": "ការគ្រប់គ្រង",
+    "health": "សុខភាព",
+    "operations": "ប្រតិបត្តិការ",
+    "unknown": "មិនស្គាល់"
+  },
+  "staffManagement": {
+    "title": "ការគ្រប់គ្រងបុគ្គលិក",
+    "subtitle": "គ្រប់គ្រងសមាជិកបុគ្គលិកនៃចម្ការរបស់អ្នក",
+    "searchPlaceholder": "ស្វែងរកបុគ្គលិកតាមឈ្មោះ តួនាទី ឬនាឯកដ្ឋាន...",
+    "addStaff": "បន្ថែមបុគ្គលិក",
+    "noStaff": "រកមិនឃើញបុគ្គលិកទេ",
+    "loading": "កំពុងផ្ទុកទិន្នន័យបុគ្គលិក...",
+    "error": "បរាជ័យក្នុងការផ្ទុកទិន្នន័យបុគ្គលិក",
+    "deleteConfirm": "តើអ្នកប្រាកដទេថាចង់លុប {name}?"
+  },
+  "confirmationDialog": {
+    "title": "បញ្ជាក់សកម្មភាព",
+    "defaultMessage": "តើអ្នកប្រាកដទេថាចង់បន្តសកម្មភាពនេះ?",
+    "cancel": "បោះបង់",
+    "confirm": "បញ្ជាក់"
+  },
+  "staffFilters": {
+    "searchPlaceholder": "ស្វែងរកតាមឈ្មោះ តួនាទី ឬនាឯកដ្ឋាន...",
+    "allDepartments": "នាឯកដ្ឋានទាំងអស់",
+    "allStatus": "ស្ថានភាពទាំងអស់"
+  },
+  "staffForm": {
+    "addTitle": "បន្ថែមបុគ្គលិកថ្មី",
+    "editTitle": "កែសម្រួលបុគ្គលិក",
+    "name": "ឈ្មោះ",
+    "role": "តួនាទី",
+    "email": "អ៊ីម៉ែល",
+    "phone": "ទូរស័ព្ទ",
+    "startDate": "កាលបរិច្ឆេទចាប់ផ្តើម",
+    "department": "នាឯកដ្ឋាន",
+    "status": "ស្ថានភាព",
+    "selectDepartment": "ជ្រើសរើសនាឯកដ្ឋាន",
+    "selectStatus": "ជ្រើសរើសស្ថានភាព",
+    "cancel": "បោះបង់",
+    "save": "រក្សាទុក"
+  }
+}

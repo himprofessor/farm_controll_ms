@@ -1,22 +1,32 @@
 import "@/assets/main.css";
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import { createPinia } from "pinia";
-import axios from "axios";
 
-const pinia = createPinia();
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import { createI18n } from 'vue-i18n'
+import App from './App.vue'
+import router from './router'
+import axios from 'axios'
+import en from './locales/en.json'
+import kh from './locales/kh.json'
 
-// Axios token setup
-const token = localStorage.getItem("token");
+const token = localStorage.getItem('token')
 if (token) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  console.log("🔐 Token applied to Axios headers");
-} else {
-  console.log("⚠️ No token found");
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token} `
+  console.log('🔐 Token applied to Axios headers')
 }
 
-createApp(App)
-  .use(router)
-  .use(pinia)
-  .mount("#app");
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages: {
+    en,
+    kh,
+  },
+})
+
+const app = createApp(App)
+app.use(createPinia())
+app.use(i18n)
+app.use(router)
+app.mount('#app')

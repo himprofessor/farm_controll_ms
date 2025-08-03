@@ -1,0 +1,233 @@
+
+{
+  "farmControl": "Farm Control",
+  "languageToggle": {
+    "khmer": "ភាសាខ្មែរ",
+    "english": "English"
+  },
+  "navItems": {
+    "Dashboard": "Dashboard",
+    "Staff Management": "Staff Management",
+    "Salary Management": "Salary Management",
+    "Inventory": "Inventory",
+    "Financial": "Financial"
+  },
+  "dashboard": {
+    "dashboardTitle": "Dashboard",
+    "dashboardSubtitle": "Welcome back! Here's what's happening at your farm today.",
+    "totalStaff": {
+      "title": "Total Staff",
+      "value": "24",
+      "change": "+2 this month"
+    },
+    "monthlyExpenses": {
+      "title": "Monthly Expenses",
+      "value": "$12,450",
+      "change": "+5.2% from last month"
+    },
+    "inventoryItems": {
+      "title": "Inventory Items",
+      "value": "156",
+      "change": "12 low stock alerts"
+    },
+    "monthlyRevenue": {
+      "title": "Monthly Revenue",
+      "value": "$18,750",
+      "change": "+8.1% from last month"
+    },
+    "salariesPaid": {
+      "title": "Salaries Paid",
+      "value": "$0.00",
+      "desc": "Total lifetime payments to staff"
+    },
+    "activeBorrows": {
+      "title": "Active Borrows",
+      "value": "0",
+      "desc": "Materials currently borrowed by staff"
+    },
+    "maintenanceCosts": {
+      "title": "Maintenance Costs",
+      "value": "$0.00",
+      "desc": "Total equipment maintenance expenses"
+    }
+  },
+  "recentActivities": {
+    "title": "Recent Activities",
+    "noActivities": "No recent activities available",
+    "activities": {
+      "1": {
+        "message": "New staff member John Doe added",
+        "time": "2 hours ago"
+      },
+      "2": {
+        "message": "Feed stock running low (5 days remaining)",
+        "time": "4 hours ago"
+      },
+      "3": {
+        "message": "Salary payment processed for 24 staff",
+        "time": "1 day ago"
+      },
+      "4": {
+        "message": "Medication batch expires in 7 days",
+        "time": "2 days ago"
+      }
+    }
+  },
+  "lowStockAlerts": {
+    "title": "Low Stock Alerts",
+    "lowStockLabel": "Low Stock",
+    "current": "Current",
+    "minimum": "Minimum",
+    "noItems": "No low stock items available",
+    "items": {
+      "1": {
+        "name": "Pig Feed - Starter"
+      },
+      "2": {
+        "name": "Antibiotics"
+      },
+      "3": {
+        "name": "Vitamins"
+      }
+    }
+  },
+  "salaryManagement": {
+    "title": "Salary Management",
+    "subtitle": "Manage staff salaries and withdrawal requests",
+    "tabs": {
+      "salaries": "Staff Salaries",
+      "withdrawals": "Withdrawal Requests"
+    },
+    "searchPlaceholder": "Search staff by name, role, or base salary...",
+    "processAllButton": "Process All Salaries",
+    "noStaff": "No staff members found",
+    "noWithdrawals": "No withdrawal requests found",
+    "employeeDetails": {
+      "title": "{name}'s Details",
+      "id": "ID",
+      "role": "Role",
+      "baseSalary": "Base Salary",
+      "currentBalance": "Current Balance",
+      "totalEarned": "Total Earned",
+      "lastPayment": "Last Payment",
+      "acresManaged": "Acres Managed",
+      "crops": "Crops Overseen",
+      "workHours": "Work Hours"
+    },
+    "successModal": {
+      "title": "Salary Processing Complete",
+      "message": "All staff salaries processed on {date}.",
+      "paid": "paid"
+    },
+    "closeButton": "Close",
+    "na": "N/A",
+    "hours": "hrs",
+    "viewDetails": "View Details",
+    "processPayment": "Process Payment",
+    "withdrawalTable": {
+      "staffMember": "Staff Member",
+      "amount": "Amount",
+      "requestDate": "Request Date",
+      "status": "Status",
+      "reason": "Reason",
+      "actions": "Actions",
+      "approve": "Approve",
+      "reject": "Reject",
+      "complete": "Complete",
+      "noActions": "No actions",
+      "statuses": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "completed": "Completed",
+        "rejected": "Rejected"
+      }
+    },
+    "loading": "Loading staff data...",
+    "error": "Failed to load staff data"
+  },
+  "paymentModal": {
+    "processFor": "Process salary payment for {name} - {role}",
+    "amount": "Payment Amount",
+    "amountPlaceholder": "0.00",
+    "notes": "Payment Notes (Optional)",
+    "notesPlaceholder": "Add any additional notes about this payment...",
+    "submit": "Process Payment",
+    "success": "Payment Successful",
+    "successMessage": "Payment processed successfully!",
+    "error": "Payment Error",
+    "invalidAmount": "Please enter a valid payment amount",
+    "failure": "Payment failed: {message}",
+    "errorMessage": "Error processing payment: {message}"
+  },
+  "employeeDetails": {
+    "title": "Salary Details for {name}",
+    "paymentHistory": "Payment History",
+    "noPayments": "No payment history available",
+    "error": "Failed to load payment history"
+  },
+  "staffCard": {
+    "view": "View",
+    "edit": "Edit",
+    "started": "Started",
+    "na": "N/A",
+    "unknown": "Unknown"
+  },
+  "roles": {
+    "farm_manager": "Farm Manager",
+    "veterinarian": "Veterinarian",
+    "farmhand": "Farmhand",
+    "administrator": "Administrator",
+    "unknown": "Unknown"
+  },
+  "staffStatus": {
+    "active": "Active",
+    "on_leave": "On Leave",
+    "inactive": "Inactive",
+    "unknown": "Unknown"
+  },
+  "departments": {
+    "farm_operations": "Farm Operations",
+    "administration": "Administration",
+    "veterinary_services": "Veterinary Services",
+    "management": "Management",
+    "health": "Health",
+    "operations": "Operations",
+    "unknown": "Unknown"
+  },
+  "staffManagement": {
+    "title": "Staff Management",
+    "subtitle": "Manage your farm's staff members",
+    "searchPlaceholder": "Search staff by name, role, or department...",
+    "addStaff": "Add Staff",
+    "noStaff": "No staff members found",
+    "loading": "Loading staff data...",
+    "error": "Failed to load staff data",
+    "deleteConfirm": "Are you sure you want to delete {name}?"
+  },
+  "confirmationDialog": {
+    "title": "Confirm Action",
+    "defaultMessage": "Are you sure you want to proceed with this action?",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "staffFilters": {
+    "searchPlaceholder": "Search by name, role, or department...",
+    "allDepartments": "All Departments",
+    "allStatus": "All Status"
+  },
+  "staffForm": {
+    "addTitle": "Add New Staff",
+    "editTitle": "Edit Staff",
+    "name": "Name",
+    "role": "Role",
+    "email": "Email",
+    "phone": "Phone",
+    "startDate": "Start Date",
+    "department": "Department",
+    "status": "Status",
+    "selectDepartment": "Select Department",
+    "selectStatus": "Select Status",
+    "cancel": "Cancel",
+    "save": "Save"
+  }
+}

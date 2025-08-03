@@ -9,7 +9,7 @@
       class="w-7 h-5 object-cover rounded-sm"
     />
     <span class="truncate">
-      {{ currentLanguage === 'en' ? 'ភាសាខ្មែរ' : 'English' }}
+      {{ $t(`languageToggle.${currentLanguage === 'en' ? 'khmer' : 'english'}`) }}
     </span>
   </button>
 </template>
