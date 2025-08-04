@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-
-// Layouts and views
 import DefaultLayout from '@/layouts/DefaultLayout.vue';
 import HomeScreen from '@/components/HomeScreen.vue';
 import Login from '@/components/Login.vue';
@@ -21,10 +19,10 @@ const routes = [
     name: 'login',
     component: Login,
   },
-   {
+  {
     path: '/signup',
     name: 'signup',
-    component: Signup
+    component: Signup,
   },
   {
     path: '/',
@@ -69,7 +67,6 @@ const router = createRouter({
   routes,
 });
 
-// 🔐 Navigation Guard
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token');
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
