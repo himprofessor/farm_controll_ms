@@ -6,46 +6,32 @@
         <h1 class="text-3xl font-bold text-gray-900">Staff Management</h1>
         <p class="text-gray-600">Manage your farm staff information and roles</p>
       </div>
-      <button @click="openAddStaffModal" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2">
+      <button @click="openAddStaffModal"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2">
         <PlusIcon class="w-4 h-4" />
         <span>Add Staff</span>
       </button>
     </div>
 
     <!-- Filters -->
-    <StaffFilters
-      v-model:searchQuery="searchQuery"
-      v-model:selectedDepartment="selectedDepartment"
-      v-model:selectedStatus="selectedStatus"
-    />
+    <StaffFilters v-model:searchQuery="searchQuery" v-model:selectedDepartment="selectedDepartment"
+      v-model:selectedStatus="selectedStatus" />
 
     <!-- Staff Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <StaffCard
-        v-for="staff in filteredStaff"
-        :key="staff.id"
-        :staff="staff"
-        @view="openViewStaffModal"
-        @edit="openEditStaffModal"
-        @delete="openDeleteConfirmDialog"
-      />
+      <StaffCard v-for="staff in filteredStaff" :key="staff.id" :staff="staff" @view="openViewStaffModal"
+        @edit="openEditStaffModal" @delete="openDeleteConfirmDialog" />
     </div>
 
     <!-- Staff Form Modal -->
-    <StaffFormModal
-      :is-visible="isFormModalVisible"
-      :staff-to-edit="staffToEdit"
-      @close="isFormModalVisible = false"
-      @save="saveStaff"
-    />
+    <StaffFormModal :is-visible="isFormModalVisible" :staff-to-edit="staffToEdit" @close="isFormModalVisible = false"
+      @save="saveStaff" />
 
     <!-- View Staff Modal -->
-    <div v-if="isViewModalVisible" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div v-if="isViewModalVisible"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-        <button
-          @click="isViewModalVisible = false"
-          class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-        >
+        <button @click="isViewModalVisible = false" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
           <XIcon class="w-6 h-6" />
         </button>
         <h2 class="text-2xl font-bold mb-6 text-gray-900">Staff Details</h2>
@@ -88,10 +74,8 @@
         </div>
 
         <div class="mt-6 flex justify-end">
-          <button
-            @click="isViewModalVisible = false"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-red-500 hover:text-white"
-          >
+          <button @click="isViewModalVisible = false"
+            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-red-500 hover:text-white">
             Close
           </button>
         </div>
@@ -99,12 +83,9 @@
     </div>
 
     <!-- Confirmation Dialog -->
-    <ConfirmationDialog
-      :is-visible="isConfirmDialogVisible"
-      :message="`Are you sure you want to delete ${staffToDelete?.name}?`"
-      @confirm="confirmDeleteStaff"
-      @cancel="isConfirmDialogVisible = false"
-    />
+    <ConfirmationDialog :is-visible="isConfirmDialogVisible"
+      :message="`Are you sure you want to delete ${staffToDelete?.name}?`" @confirm="confirmDeleteStaff"
+      @cancel="isConfirmDialogVisible = false" />
   </div>
 </template>
 
@@ -150,13 +131,13 @@ const filteredStaff = computed(() => {
   }
 
   if (selectedDepartment.value) {
-    filtered = filtered.filter(member => 
+    filtered = filtered.filter(member =>
       member.department === selectedDepartment.value
     )
   }
 
   if (selectedStatus.value) {
-    filtered = filtered.filter(member => 
+    filtered = filtered.filter(member =>
       member.status === selectedStatus.value
     )
   }
@@ -211,7 +192,11 @@ const saveStaff = async (newStaffData) => {
     }
     isFormModalVisible.value = false
   } catch (error) {
-    console.error('Error saving staff:', error)
+    if (error.response && error.response.status === 422) {
+      console.log("Validation errors:", error.response.data.errors);
+    } else {
+      console.error("Error saving staff:", error);
+    }
   }
 }
 

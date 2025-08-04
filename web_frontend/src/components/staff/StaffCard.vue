@@ -25,7 +25,7 @@
       </div>
       <div class="flex items-center text-sm text-gray-600">
         <CalendarIcon class="w-4 h-4 mr-2" />
-        Started: {{ staff.startDate }}
+        Started: {{ staff.start_date }}
       </div>
       <div class="flex items-center text-sm text-gray-600">
         <BuildingIcon class="w-4 h-4 mr-2" />
