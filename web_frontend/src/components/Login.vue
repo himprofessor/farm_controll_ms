@@ -13,9 +13,15 @@
             <form @submit.prevent="login">
                 <!-- Username -->
                 <div class="mb-4">
+<<<<<<< HEAD
                     <label for="username" class="block text-gray-700 mb-2">Usermane</label>
                     <input v-model="credentials.username" type="text" id="username" placeholder="Username"
                         class="w-full border p-2 rounded focus:outline-none focus:ring-2" />
+=======
+                    <label for="name" class="block text-gray-700 mb-2">Username</label>
+                    <input v-model="credentials.name" type="text" id="name" placeholder="Enter username"
+                        class="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-600" />
+>>>>>>> development
                 </div>
 
                 <!-- Password -->
@@ -82,11 +88,11 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import api from '@/services/api'; 
 
 const router = useRouter();
 
-// Reactive data
-const credentials = ref({ username: '', password: '' });
+const credentials = ref({ name: '', password: '' });
 const error = ref('');
 const rememberMe = ref(false);
 const showPassword = ref(false);
@@ -114,26 +120,34 @@ const isPasswordStrong = (password) => {
     );
 };
 
-// Login function
-const login = () => {
-    error.value = ''; // Clear previous errors
+const login = async () => {
+  error.value = '';
 
-    if (!credentials.value.username || !credentials.value.password) {
-        error.value = 'Please enter both email and password.';
-        return;
-    }
+  if (!credentials.value.name || !credentials.value.password) {
+    error.value = 'Please enter both username and password.';
+    return;
+  }
 
-    if (!isPasswordStrong(credentials.value.password)) {
-        error.value = 'Password must be at least 8 characters long and include uppercase, lowercase, numbers, and special characters.';
-        return;
-    }
+  try {
+    const response = await api.post('/login', {
+      name: credentials.value.name,
+      password: credentials.value.password,
+    });
 
-    // If validation passes, proceed with login logic
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('username', credentials.value.username);
+    const token = response.data.token;
+    const auth = response.data.auth;
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('authUser', JSON.stringify(auth));
+
     if (rememberMe.value) {
-        localStorage.setItem('rememberedUsername', credentials.value.username);
+      localStorage.setItem('rememberedname', credentials.value.name);
     }
+
     router.push('/dashboard');
+  } catch (err) {
+    error.value = err.response?.data?.message || 'Login failed.';
+  }
 };
 </script>
+

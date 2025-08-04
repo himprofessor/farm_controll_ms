@@ -11,16 +11,12 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $fields = $request->validate([
-            'name' => 'required|string',
-            'role' => 'required|in:admin',
-            'email' => 'required|string|email|unique:auth,email',
+            'name' => 'required|string|unique:auth,name',
             'password' => 'required|string|confirmed',
         ]);
 
         $auth = Auth::create([
             'name' => $fields['name'],
-            'role' => $fields['role'],
-            'email' => $fields['email'],
             'password' => bcrypt($fields['password']),
         ]);
 
@@ -35,18 +31,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $fields = $request->validate([
-            'email' => 'required|string|email',
+            'name' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $auth = Auth::where('email', $fields['email'])->first();
+        $auth = Auth::where('name', $fields['name'])->first();
 
         if (!$auth || !Hash::check($fields['password'], $auth->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
-        }
-
-        if ($auth->role !== 'admin') {
-            return response()->json(['message' => 'Access denied. Admins only.'], 403);
         }
 
         $token = $auth->createToken('apptoken')->plainTextToken;
@@ -68,24 +60,18 @@ class AuthController extends Controller
     {
         $auth = $request->user();
 
-        if ($auth->role !== 'admin') {
-            return response()->json(['message' => 'Only admins can update profile'], 403);
-        }
-
         $fields = $request->validate([
-            'name' => 'sometimes|string',
-            'email' => 'sometimes|string|email|unique:auth,email,' . $auth->id,
+            'name' => 'sometimes|string|unique:auth,name,' . $auth->id,
             'password' => 'sometimes|string|confirmed',
         ]);
 
         if (isset($fields['name'])) $auth->name = $fields['name'];
-        if (isset($fields['email'])) $auth->email = $fields['email'];
         if (isset($fields['password'])) $auth->password = bcrypt($fields['password']);
 
         $auth->save();
 
         return response()->json([
-            'message' => 'Admin profile updated successfully',
+            'message' => 'Profile updated successfully',
             'auth' => $auth,
         ]);
     }

@@ -9,19 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::create('materials', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('category');
-            $table->string('unit');
-            $table->integer('quantity');
-        
-            $table->integer('reorder-level');
-            $table->timestamps();
-        });
-    }
+    public function up()
+{
+    Schema::create('materials', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('expires')->nullable();
+        $table->string('category');
+        $table->integer('currentStock');
+        $table->integer('minStock');
+        $table->string('unit');
+        $table->enum('status', ['critical', 'low', 'ok']);
+        $table->decimal('value', 10, 2);
+        $table->decimal('pricePerUnit', 10, 2);
+        $table->string('supplier');
+        $table->date('lastUpdated');
+        $table->timestamps();
+    });
+}
+
 
     /**
      * Reverse the migrations.

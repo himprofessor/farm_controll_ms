@@ -10,6 +10,7 @@ const apiClient = axios.create({
   withCredentials: false
 });
 
+<<<<<<< HEAD
 export default apiClient;
 export const setAuthToken = (token) => {
   if (token) {
@@ -21,3 +22,6 @@ export const setAuthToken = (token) => {
 export const clearAuthToken = () => {
     delete apiClient.defaults.headers.common['Authorization'];
 }
+=======
+export default API
+>>>>>>> development
