@@ -1,22 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6 md:p-10">
+  <div class="min-h-screen bg-gray-100 p-4 md:p-6">
     <div class="max-w-7xl mx-auto">
-      <InventoryHeader @add-item="handleItemAdded" />
-
+      <InventoryHeader @add-item="handleAddItem" />
       <InventoryCard
         :totalItems="inventoryItems.length"
         :lowStockCount="lowStockCount"
         :totalValue="totalValue"
         :uniqueCategoriesCount="uniqueCategories.length"
       />
-
       <InventorySearchFilter
         v-model:searchQuery="searchQuery"
         v-model:selectedCategory="selectedCategory"
         :categories="uniqueCategories"
-/>
-
-
+        ref="searchFilter"
+      />
       <InventoryTable
         :items="filteredItems"
         @delete-item="deleteItem"
@@ -28,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import InventoryHeader from '@/components/inventory/InventoryHeader.vue'
 import InventoryCard from '@/components/inventory/InventoryCard.vue'
 import InventoryTable from '@/components/inventory/InventoryTable.vue'
@@ -36,31 +33,34 @@ import InventorySearchFilter from '@/components/inventory/InventorySearchFilter.
 import API from '@/plugin/axios'
 
 const inventoryItems = ref([])
-
 const searchQuery = ref('')
 const selectedCategory = ref('')
+const searchFilter = ref(null)
 
-// Fetch data from backend
 const fetchInventory = async () => {
   try {
-    const res = await API.get('/materials')
+    console.log('Fetching inventory...') // Debug log
+    const res = await API.get('/materials') // Fetch all data initially
     inventoryItems.value = res.data
+    console.log('API Response:', res.data) // Debug log
   } catch (error) {
     console.error('Failed to fetch inventory:', error)
   }
 }
 
+watch([searchQuery, selectedCategory], (newValues) => {
+  console.log('Search/Category Changed:', newValues) // Debug log
+  // No need to fetch again; rely on client-side filtering
+}, { immediate: true })
+
 onMounted(fetchInventory)
 
-// Summary cards
 const lowStockCount = computed(() =>
-  inventoryItems.value.filter(item =>
-    item.status === 'low' || item.status === 'critical'
-  ).length
+  inventoryItems.value.filter(item => ['low', 'critical'].includes(item.status)).length
 )
 
 const totalValue = computed(() =>
-  inventoryItems.value.reduce((sum, item) => sum + Number(item.value || 0), 0)
+  inventoryItems.value.reduce((sum, item) => sum + (Number(item.value) || 0), 0)
 )
 
 const uniqueCategories = computed(() => {
@@ -68,35 +68,35 @@ const uniqueCategories = computed(() => {
   return Array.from(categories).sort()
 })
 
-// Filtered table data
 const filteredItems = computed(() => {
-  let items = inventoryItems.value
-
+  console.log('Filtering items with query:', searchQuery.value, 'and category:', selectedCategory.value) // Debug log
+  let items = [...inventoryItems.value]
   if (selectedCategory.value) {
     items = items.filter(i => i.category === selectedCategory.value)
   }
-
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     items = items.filter(i =>
       i.name.toLowerCase().includes(query) ||
+      i.category.toLowerCase().includes(query) ||
+      i.status.toLowerCase().includes(query) ||
+      i.currentStock.toString().includes(query) || // 'stock' mapped to currentStock
       i.supplier.toLowerCase().includes(query)
     )
   }
-
+  console.log('Filtered Items:', items) // Debug log
   return items
 })
 
-// Events
-const handleItemAdded = item => {
-  inventoryItems.value.push(item)
+const handleAddItem = () => {}
+const handleItemAdded = (item) => { inventoryItems.value = [...inventoryItems.value, item] }
+const deleteItem = async (id) => {
+  try {
+    await API.delete(`/materials/${id}`)
+    inventoryItems.value = inventoryItems.value.filter(item => item.id !== id)
+  } catch (error) {
+    console.error('Failed to delete item:', error)
+  }
 }
-
-const deleteItem = id => {
-  inventoryItems.value = inventoryItems.value.filter(item => item.id !== id)
-}
-
-const editItem = item => {
-  console.log('Edit:', item)
-}
+const editItem = (item) => {}
 </script>
