@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
-    <div class="relative flex-1 w-full bg-white">
+    <div class="relative flex-1 w-full">
       <SearchIcon class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
       <input
         v-model="searchQuery"
@@ -37,11 +37,9 @@ const debouncedSearch = debounce((event) => {
   searchQuery.value = event.target.value
 }, 300)
 
-// Handle category change manually to avoid unnecessary fetch
+// Handle category change manually
 const onCategoryChange = (event) => {
   selectedCategory.value = event.target.value
   console.log('Category Changed:', selectedCategory.value) // Debug log
 }
-
-// No need to expose fetchInventory here since filtering is client-side
 </script>

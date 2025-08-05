@@ -40,17 +40,22 @@ const searchFilter = ref(null)
 const fetchInventory = async () => {
   try {
     console.log('Fetching inventory...') // Debug log
-    const res = await API.get('/materials') // Fetch all data initially
-    inventoryItems.value = res.data
-    console.log('API Response:', res.data) // Debug log
+    const res = await API.get('/materials') // Fetch all data
+    if (res.data && Array.isArray(res.data)) {
+      inventoryItems.value = res.data
+    } else {
+      inventoryItems.value = [] // Fallback if API returns invalid data
+      console.warn('API returned invalid data format:', res.data)
+    }
+    console.log('API Response:', inventoryItems.value) // Debug log
   } catch (error) {
     console.error('Failed to fetch inventory:', error)
+    inventoryItems.value = [] // Fallback on error
   }
 }
 
 watch([searchQuery, selectedCategory], (newValues) => {
   console.log('Search/Category Changed:', newValues) // Debug log
-  // No need to fetch again; rely on client-side filtering
 }, { immediate: true })
 
 onMounted(fetchInventory)
@@ -77,11 +82,11 @@ const filteredItems = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     items = items.filter(i =>
-      i.name.toLowerCase().includes(query) ||
-      i.category.toLowerCase().includes(query) ||
-      i.status.toLowerCase().includes(query) ||
-      i.currentStock.toString().includes(query) || // 'stock' mapped to currentStock
-      i.supplier.toLowerCase().includes(query)
+      i.name?.toLowerCase().includes(query) ||
+      i.category?.toLowerCase().includes(query) ||
+      i.status?.toLowerCase().includes(query) ||
+      i.currentStock?.toString().includes(query) || // 'stock' mapped to currentStock
+      i.supplier?.toLowerCase().includes(query)
     )
   }
   console.log('Filtered Items:', items) // Debug log

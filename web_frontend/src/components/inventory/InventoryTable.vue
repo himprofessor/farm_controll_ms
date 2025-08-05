@@ -32,7 +32,7 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr v-for="material in paginatedItems" :key="material.id" class="hover:bg-gray-50">
+          <tr v-for="material in items" :key="material.id" class="hover:bg-gray-50">
             <td class="px-4 py-2 text-sm font-medium text-gray-900">{{ material.name }}</td>
             <td class="px-4 py-2 text-sm text-gray-500">{{ material.category }}</td>
             <td class="px-4 py-2 text-sm text-gray-500">{{ material.currentStock }}</td>
@@ -63,17 +63,13 @@
           </tr>
         </tbody>
       </table>
-    </div>
-    <div class="flex justify-end mt-2">
-      <button @click="prevPage" :disabled="currentPage === 1" class="px-2 py-1 bg-gray-200 rounded-l hover:bg-gray-300 disabled:opacity-50">Prev</button>
-      <span class="px-2 py-1">{{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="px-2 py-1 bg-gray-200 rounded-r hover:bg-gray-300 disabled:opacity-50">Next</button>
+      <div v-if="items.length === 0" class="text-center py-4 text-gray-500">No items found.</div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, watch } from 'vue'
 import AddItemView from './AddItemView.vue'
 import { Plus } from 'lucide-vue-next'
 import API from '@/plugin/axios'
@@ -87,16 +83,10 @@ const showMenuId = ref(null)
 const categories = ['Seeds', 'Fertilizer', 'Tools', 'Feed', 'Medicine']
 const showDeleteConfirm = ref(false)
 const selectedMaterialToDelete = ref(null)
-const currentPage = ref(1)
-const itemsPerPage = 10 // Adjust as needed
 
-const paginatedItems = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  const end = start + itemsPerPage
-  return props.items.slice(start, end)
-})
-
-const totalPages = computed(() => Math.ceil(props.items.length / itemsPerPage))
+watch(() => props.items, (newItems) => {
+  console.log('Table Items Updated:', newItems) // Debug log
+}, { immediate: true })
 
 const openAdd = () => { selectedMaterial.value = null; showModal.value = true }
 const openEdit = (item) => { selectedMaterial.value = { ...item }; showModal.value = true }
@@ -116,7 +106,4 @@ const getStatusClass = (status) => ({
   'low': 'inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800',
   'critical': 'inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800',
 })[status] || 'inline-flex items-center px-1 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800'
-
-const prevPage = () => { if (currentPage.value > 1) currentPage.value-- }
-const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
 </script>
