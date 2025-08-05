@@ -8,7 +8,7 @@ const API = axios.create({
   },
 });
 
-// ✅ Automatically attach Bearer token if available
+
 API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
