@@ -34,11 +34,35 @@
           <div class="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span class="text-gray-600">Current Balance:</span>
-              <div class="font-semibold text-green-600">{{ formatCurrency(employee.currentBalance) }}</div>
+              <div class="font-semibold" :class="{'text-green-600': employee.currentBalance >= 0, 'text-red-600': employee.currentBalance < 0}">
+                {{ formatCurrency(employee.currentBalance) }}
+              </div>
             </div>
             <div>
               <span class="text-gray-600">Base Salary:</span>
               <div class="font-semibold">{{ formatCurrency(employee.baseSalary) }}</div>
+            </div>
+          </div>
+          
+          <!-- New Balance Preview -->
+          <div v-if="paymentAmount > 0" class="mt-3 p-2 bg-blue-50 rounded-md">
+            <div class="text-sm text-gray-700">
+              <p class="font-medium">After Payment:</p>
+              <div class="mt-1">
+                New Balance: 
+                <span :class="{
+                  'text-green-600': newBalance >= 0,
+                  'text-red-600': newBalance < 0
+                }">
+                  {{ formatCurrency(newBalance) }}
+                </span>
+              </div>
+              <div v-if="newBalance < 0" class="mt-1 text-xs text-red-600 flex items-start">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <span>Employee will owe {{ formatCurrency(Math.abs(newBalance)) }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -54,12 +78,31 @@
               id="amount"
               type="number"
               v-model="paymentAmount"
+              @input="validatePayment"
               class="block w-full pl-7 pr-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              :class="{
+                'border-red-300': newBalance < 0,
+                'border-green-300': paymentAmount > 0 && newBalance >= 0
+              }"
               placeholder="0.00"
               step="0.01"
               min="0"
             >
+            <div v-if="newBalance < 0" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            </div>
           </div>
+          
+          <!-- Balance Warning -->
+          <div v-if="newBalance < 0" class="text-sm text-red-600 flex items-start">
+            <svg class="w-4 h-4 mt-0.5 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span>Warning: This payment will create a debt of {{ formatCurrency(Math.abs(newBalance)) }}</span>
+          </div>
+          
           <div class="flex space-x-2">
             <button
               type="button"
@@ -101,7 +144,8 @@
         </button>
         <button
           @click="processPayment"
-          class="px-4 py-2 text-sm font-medium text-white bg-green-500 border border-transparent rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center"
+          :disabled="paymentAmount <= 0"
+          class="px-4 py-2 text-sm font-medium text-white bg-green-500 border border-transparent rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
@@ -114,7 +158,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
 export default {
   name: 'PaymentModal',
@@ -143,9 +187,14 @@ export default {
     const paymentAmount = ref(0)
     const paymentNote = ref('')
 
+    const newBalance = computed(() => {
+      const amount = parseFloat(paymentAmount.value) || 0
+      return props.employee.currentBalance - amount
+    })
+
     watch(() => props.isOpen, (newVal) => {
       if (newVal) {
-        paymentAmount.value = props.employee.baseSalary
+        paymentAmount.value = Math.min(props.employee.baseSalary, props.employee.currentBalance)
         paymentNote.value = ''
       }
     })
@@ -158,8 +207,13 @@ export default {
       paymentAmount.value = amount
     }
 
+    const validatePayment = () => {
+      // Ensure the payment amount is a valid number
+      paymentAmount.value = parseFloat(paymentAmount.value) || 0
+    }
+
     const processPayment = async () => {
-      if (!paymentAmount.value || isNaN(paymentAmount.value) || paymentAmount.value <= 0) {
+      if (!paymentAmount.value || isNaN(paymentAmount.value)) {
         alert('Please enter a valid payment amount')
         return
       }
@@ -173,14 +227,15 @@ export default {
           employeeId: props.employee.id,
           amount: amount,
           note: paymentNote.value,
-          date: today
+          date: today,
+          willCreateDebt: newBalance.value < 0
         })
 
         if (response.success) {
           // Emit the complete updated employee data
           emit('payment-processed', {
             ...props.employee,
-            currentBalance: props.employee.currentBalance + amount,
+            currentBalance: newBalance.value,
             totalEarned: props.employee.totalEarned + amount,
             lastPayment: today
           })
@@ -209,18 +264,26 @@ export default {
     }
 
     const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('en-US', {
+      const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-      }).format(amount)
+      })
+      
+      // Handle negative amounts by adding a minus sign
+      if (amount < 0) {
+        return '-' + formatter.format(Math.abs(amount))
+      }
+      return formatter.format(amount)
     }
 
     return {
       paymentAmount,
       paymentNote,
+      newBalance,
       closeModal,
       setAmount,
       processPayment,
+      validatePayment,
       formatCurrency
     }
   }

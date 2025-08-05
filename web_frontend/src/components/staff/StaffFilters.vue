@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+  <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4 bg-white p-6 rounded-lg shadow ">
     <!-- Search Input -->
     <div class="flex-1">
       <div class="relative">

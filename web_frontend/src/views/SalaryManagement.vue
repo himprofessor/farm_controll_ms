@@ -38,7 +38,7 @@
           v-model="searchQuery"
         />
 
-        <button @click="processAllSalaries" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+        <button @click="processAllSalaries" class="bg-green-500 text-white px-2 py-2 rounded-lg hover:bg-green-600">
           Process All Salaries
         </button>
       </div>
