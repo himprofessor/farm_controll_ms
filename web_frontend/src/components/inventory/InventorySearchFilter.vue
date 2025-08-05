@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4">
-    <div class="relative flex-1 w-full">
+  <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4 bg-white p-6 rounded-lg shadow">
+    <div class="relative flex-1 w-full ">
       <SearchIcon class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
       <input
         v-model="searchQuery"
@@ -18,7 +18,6 @@
         <option value="">All Categories</option>
         <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
       </select>
-      <ChevronDownIcon class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4 pointer-events-none" />
     </div>
   </div>
 </template>

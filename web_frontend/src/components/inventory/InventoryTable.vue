@@ -2,7 +2,7 @@
   <div class="bg-white rounded-lg shadow p-4">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold text-gray-800">Materials Inventory</h2>
-      <button @click="openAdd" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-1">
+      <button @click="openAdd" class="bg-green-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-1">
         <Plus class="w-4 h-4" /><span>Add Material</span>
       </button>
     </div>
@@ -28,7 +28,8 @@
             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
             <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Supplier</th>
-            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -46,7 +47,7 @@
                   <circle cx="12" cy="6" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="12" cy="18" r="2" />
                 </svg>
               </button>
-              <div v-if="showMenuId === material.id" class="absolute right-0 mt-1 w-40 bg-white shadow-lg rounded-lg ring-1 ring-gray-100 z-50">
+              <div v-if="showMenuId === material.id" class="absolute right-0 mt-2 w-40 bg-white shadow-lg shadow-gray-400 rounded-lg ring-1 ring-gray-100 z-50">
                 <button @click="openEdit(material)" class="w-full text-left px-2 py-1 text-sm text-gray-800 hover:bg-blue-50 flex items-center gap-1">
                   <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

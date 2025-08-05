@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-4 md:p-6">
+  <div class="min-h-screen bg-gray-100 p-4 md:p-6 rounded-lg shadow">
     <div class="max-w-7xl mx-auto">
       <InventoryHeader @add-item="handleAddItem" />
       <InventoryCard
