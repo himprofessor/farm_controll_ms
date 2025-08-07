@@ -8,7 +8,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
             </svg>
-            Process Salary Payment
+            {{ localEmployee.currentBalance < 0 ? 'Process Repayment' : 'Process Salary Payment' }}
           </h3>
           <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,7 +17,7 @@
           </button>
         </div>
         <p class="text-sm text-gray-600 mt-1">
-          Process salary payment for {{ employee.name }} - {{ employee.position || employee.role }}
+          {{ localEmployee.currentBalance < 0 ? 'Repay borrowed amount for' : 'Process salary payment for' }} {{ localEmployee.name }} - {{ localEmployee.position || localEmployee.role }}
         </p>
       </div>
 
@@ -29,25 +29,25 @@
             <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
             </svg>
-            <span class="font-medium">{{ employee.name }}</span>
+            <span class="font-medium">{{ localEmployee.name }}</span>
           </div>
           <div class="grid grid-cols-2 gap-4 text-sm">
             <div>
               <span class="text-gray-600">Current Balance:</span>
-              <div class="font-semibold" :class="{'text-green-600': employee.currentBalance >= 0, 'text-red-600': employee.currentBalance < 0}">
-                {{ formatCurrency(employee.currentBalance) }}
+              <div class="font-semibold" :class="{'text-green-600': localEmployee.currentBalance >= 0, 'text-red-600': localEmployee.currentBalance < 0}">
+                {{ formatCurrency(localEmployee.currentBalance) }}
               </div>
             </div>
             <div>
               <span class="text-gray-600">Base Salary:</span>
-              <div class="font-semibold">{{ formatCurrency(employee.baseSalary) }}</div>
+              <div class="font-semibold">{{ formatCurrency(localEmployee.baseSalary) }}</div>
             </div>
           </div>
           
           <!-- New Balance Preview -->
           <div v-if="paymentAmount > 0" class="mt-3 p-2 bg-blue-50 rounded-md">
             <div class="text-sm text-gray-700">
-              <p class="font-medium">After Payment:</p>
+              <p class="font-medium">After {{ localEmployee.currentBalance < 0 ? 'Repayment' : 'Payment' }}:</p>
               <div class="mt-1">
                 New Balance: 
                 <span :class="{
@@ -63,13 +63,19 @@
                 </svg>
                 <span>Employee will owe {{ formatCurrency(Math.abs(newBalance)) }}</span>
               </div>
+              <div v-if="newBalance > localEmployee.currentBalance && localEmployee.currentBalance < 0" class="mt-1 text-xs text-green-600 flex items-start">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Repayment will reduce debt by {{ formatCurrency(paymentAmount) }}</span>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Payment Amount -->
         <div class="space-y-2">
-          <label for="amount" class="text-base font-medium text-gray-700">Payment Amount</label>
+          <label for="amount" class="text-base font-medium text-gray-700">Amount</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="text-gray-500 sm:text-sm">$</span>
@@ -81,14 +87,14 @@
               @input="validatePayment"
               class="block w-full pl-7 pr-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               :class="{
-                'border-red-300': newBalance < 0,
-                'border-green-300': paymentAmount > 0 && newBalance >= 0
+                'border-red-300': newBalance < 0 && paymentAmount > localEmployee.baseSalary && localEmployee.currentBalance >= 0,
+                'border-green-300': (paymentAmount > 0 && newBalance >= 0) || (localEmployee.currentBalance < 0 && newBalance > localEmployee.currentBalance)
               }"
               placeholder="0.00"
               step="0.01"
               min="0"
             >
-            <div v-if="newBalance < 0" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <div v-if="newBalance < 0 && paymentAmount > localEmployee.baseSalary && localEmployee.currentBalance >= 0" class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
               <svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
               </svg>
@@ -96,7 +102,7 @@
           </div>
           
           <!-- Balance Warning -->
-          <div v-if="newBalance < 0" class="text-sm text-red-600 flex items-start">
+          <div v-if="newBalance < 0 && paymentAmount > localEmployee.baseSalary && localEmployee.currentBalance >= 0" class="text-sm text-red-600 flex items-start">
             <svg class="w-4 h-4 mt-0.5 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
@@ -106,14 +112,14 @@
           <div class="flex space-x-2">
             <button
               type="button"
-              @click="setAmount(employee.currentBalance)"
+              @click="setAmount(localEmployee.currentBalance > 0 ? localEmployee.currentBalance : Math.abs(localEmployee.currentBalance))"
               class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:bg-green-500 hover:text-white transition-colors"
             >
-              Current Balance
+              {{ localEmployee.currentBalance < 0 ? 'Repay Debt' : 'Current Balance' }}
             </button>
             <button
               type="button"
-              @click="setAmount(employee.baseSalary)"
+              @click="setAmount(localEmployee.baseSalary)"
               class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:bg-green-500 hover:text-white transition-colors"
             >
               Base Salary
@@ -150,7 +156,7 @@
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
           </svg>
-          Process Payment
+          {{ localEmployee.currentBalance < 0 ? 'Process Repayment' : 'Process Payment' }}
         </button>
       </div>
     </div>
@@ -182,19 +188,22 @@ export default {
       })
     }
   },
-  emits: ['close', 'payment-processed'],
+  emits: ['close', 'payment-processed', 'navigate-to-inventory'],
   setup(props, { emit }) {
+    const localEmployee = ref({ ...props.employee })
     const paymentAmount = ref(0)
     const paymentNote = ref('')
 
     const newBalance = computed(() => {
       const amount = parseFloat(paymentAmount.value) || 0
-      return props.employee.currentBalance - amount
+      // Add amount for repayment (when currentBalance is negative), subtract for payment
+      return localEmployee.value.currentBalance < 0 ? localEmployee.value.currentBalance + amount : localEmployee.value.currentBalance - amount
     })
 
     watch(() => props.isOpen, (newVal) => {
       if (newVal) {
-        paymentAmount.value = Math.min(props.employee.baseSalary, props.employee.currentBalance)
+        localEmployee.value = { ...props.employee }
+        paymentAmount.value = props.employee.currentBalance < 0 ? Math.abs(props.employee.currentBalance) : Math.min(props.employee.baseSalary, props.employee.currentBalance)
         paymentNote.value = ''
       }
     })
@@ -208,8 +217,10 @@ export default {
     }
 
     const validatePayment = () => {
-      // Ensure the payment amount is a valid number
       paymentAmount.value = parseFloat(paymentAmount.value) || 0
+      if (props.employee.currentBalance < 0 && paymentAmount.value > Math.abs(props.employee.currentBalance)) {
+        paymentAmount.value = Math.abs(props.employee.currentBalance) // Cap repayment to debt amount
+      }
     }
 
     const processPayment = async () => {
@@ -222,25 +233,28 @@ export default {
       const today = new Date().toISOString().split('T')[0]
 
       try {
-        // Simulate API call
         const response = await mockApiCall({
           employeeId: props.employee.id,
           amount: amount,
           note: paymentNote.value,
           date: today,
-          willCreateDebt: newBalance.value < 0
+          willCreateDebt: newBalance.value < 0,
+          isRepayment: props.employee.currentBalance < 0
         })
 
         if (response.success) {
-          // Emit the complete updated employee data
+          const updatedTotalEarned = props.employee.currentBalance < 0 ? props.employee.totalEarned : props.employee.totalEarned + amount
           emit('payment-processed', {
             ...props.employee,
             currentBalance: newBalance.value,
-            totalEarned: props.employee.totalEarned + amount,
+            totalEarned: updatedTotalEarned,
             lastPayment: today
           })
           
-          alert('Payment processed successfully!')
+          // Emit navigation event after successful payment
+          emit('navigate-to-inventory')
+          
+          alert(`${props.employee.currentBalance < 0 ? 'Repayment' : 'Payment'} processed successfully!`)
           closeModal()
         } else {
           alert('Payment failed: ' + response.message)
@@ -250,13 +264,12 @@ export default {
       }
     }
 
-    // Mock API function (replace with your actual API call)
     const mockApiCall = (paymentData) => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve({
             success: true,
-            message: 'Payment successful',
+            message: paymentData.isRepayment ? 'Repayment successful' : 'Payment successful',
             data: paymentData
           })
         }, 500)
@@ -269,7 +282,6 @@ export default {
         currency: 'USD'
       })
       
-      // Handle negative amounts by adding a minus sign
       if (amount < 0) {
         return '-' + formatter.format(Math.abs(amount))
       }
@@ -277,6 +289,7 @@ export default {
     }
 
     return {
+      localEmployee,
       paymentAmount,
       paymentNote,
       newBalance,
