@@ -15,7 +15,8 @@
 
     <!-- Top Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-      <StatsCard title="Total Staff" :value="staffStore.totalStaff" change="+0%" icon="users" bg="bg-blue-600" />
+      <StatsCard title="Total Staff" :value="staffStore.totalStaff" :change="staffStore.smoothChangeText" icon="users"
+        bg="bg-blue-600" />
 
 
       <StatsCard :title="texts.monthlyExpenses.title" :value="texts.monthlyExpenses.value"

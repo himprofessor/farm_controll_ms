@@ -1,3 +1,4 @@
+// src/stores/staff.js
 import { defineStore } from 'pinia'
 import API from '@/plugin/axios'
 
@@ -9,7 +10,38 @@ export const useStoreStaff = defineStore('staff', {
   }),
 
   getters: {
+    // Total staff count
     totalStaff: (state) => state.staff.length,
+
+    // Number of staff added in current month
+    newStaffThisMonth: (state) => {
+      const now = new Date()
+      return state.staff.filter((item) => {
+        const created = new Date(item.created_at)
+        return (
+          created.getMonth() === now.getMonth() &&
+          created.getFullYear() === now.getFullYear()
+        )
+      }).length
+    },
+
+    // Smooth message for dashboard display
+    smoothChangeText: (state) => {
+      const now = new Date()
+      const added = state.staff.filter((item) => {
+        const created = new Date(item.created_at)
+        return (
+          created.getMonth() === now.getMonth() &&
+          created.getFullYear() === now.getFullYear()
+        )
+      }).length
+
+      if (added > 0) {
+        return `↑ ${added} added this month`
+      } else {
+        return '— No new staff this month'
+      }
+    },
   },
 
   actions: {
