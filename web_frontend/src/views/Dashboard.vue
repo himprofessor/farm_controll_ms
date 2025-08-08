@@ -15,15 +15,15 @@
 
     <!-- Top Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-      <StatsCard title="Total Staff" :value="staffStore.totalStaff" :change="staffStore.smoothChangeText" icon="users"
-        bg="bg-blue-600" />
-
+      <StatsCard title="Total Staff" :value="staffStore.totalStaff" 
+      :change="staffStore.smoothChangeText" icon="users" bg="bg-blue-600" />
 
       <StatsCard :title="texts.monthlyExpenses.title" :value="texts.monthlyExpenses.value"
         :change="texts.monthlyExpenses.change" icon="dollar" bg="bg-red-500" />
 
       <StatsCard :title="'Inventory Items'" :value="store.materials.length"
         :change="store.lowStockCount + ' Low Stock Alerts'" icon="box" bg="bg-green-600" />
+
       <StatsCard :title="texts.monthlyRevenue.title" :value="texts.monthlyRevenue.value"
         :change="texts.monthlyRevenue.change" icon="trending" bg="bg-purple-600" />
     </div>
@@ -140,9 +140,10 @@ function toggleLanguage() {
 }
 
 const store = useMaterialsStore()
+
 onMounted(() => {
   store.fetchMaterials()
-});
+})
 
 const staffStore = useStoreStaff()
 onMounted(() => {

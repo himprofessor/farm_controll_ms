@@ -2,31 +2,40 @@
 import { defineStore } from 'pinia'
 import API from '@/plugin/axios'
 
-export const useMaterialsStore = defineStore('materials', {
+export const useMaterialStore = defineStore('materials', {
   state: () => ({
     materials: [],
+    loading: false,
   }),
 
   actions: {
     async fetchMaterials() {
+      this.loading = true
       try {
         const response = await API.get('/materials')
         this.materials = response.data
       } catch (error) {
         console.error('Failed to fetch materials:', error)
+      } finally {
+        this.loading = false
       }
     }
   },
 
   getters: {
-    // Group by category and sum value
+    // ✅ Group by category and sum value
     categorySummary: (state) => {
       const categoryTotals = {}
 
       state.materials.forEach((material) => {
         const category = material.category || 'Unknown'
         const value = parseFloat(material.value) || 0
-        categoryTotals[category] = (categoryTotals[category] || 0) + value
+
+        if (!categoryTotals[category]) {
+          categoryTotals[category] = 0
+        }
+
+        categoryTotals[category] += value
       })
 
       return Object.entries(categoryTotals).map(([category, total]) => ({
@@ -35,24 +44,12 @@ export const useMaterialsStore = defineStore('materials', {
       }))
     },
 
+    // ✅ Total expenses (sum of all material values)
     totalExpenses: (state) => {
       return state.materials.reduce((sum, material) => {
         const value = parseFloat(material.value) || 0
         return sum + value
       }, 0)
-    },
-
-    // ✅ Low stock items
-    lowStockItems: (state) => {
-      return state.materials
-        .filter((item) => item.currentStock <= 60)
-        .map((item) => ({
-          ...item,
-          percentage: Math.min((item.currentStock / item.minStock) * 100, 100),
-        }))
-    },
-    lowStockCount: (state) => {
-    return state.materials.filter((item) => item.currentStock <= 60).length
-  }
+    }
   }
 })
