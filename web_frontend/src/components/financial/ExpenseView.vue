@@ -19,11 +19,11 @@
           v-model="timeFilter"
           class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
         >
+        <option value="all">All Time</option>
           <option value="this-month">This Month</option>
           <option value="last-month">Last Month</option>
           <option value="this-quarter">This Quarter</option>
           <option value="this-year">This Year</option>
-          <option value="all">All Time</option>
         </select>
       </div>
       
