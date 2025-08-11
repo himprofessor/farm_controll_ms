@@ -1,7 +1,29 @@
 <template>
-  <div class="p-6  min-h-screen">
+  <div class="p-2 min-h-screen text-left">
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 text-left">
+        <h3 class="text-md font-medium text-gray-500">Total Sales</h3>
+        <p class="text-3xl font-bold mt-2 text-gray-800">${{ totalSales.toLocaleString() }}</p>
+        <p class="text-sm text-green-600 mt-1">+12% from last month</p>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 text-left">
+        <h3 class="text-md font-medium text-gray-500">Total Quantity Sold</h3>
+        <p class="text-3xl font-bold mt-2 text-gray-800">{{ totalQuantity.toLocaleString() }}</p>
+        <p class="text-sm text-green-600 mt-1">+8% from last month</p>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200 text-left">
+        <h3 class="text-md font-medium text-gray-500">Average Price</h3>
+        <p class="text-3xl font-bold mt-2 text-gray-800">${{ averagePrice.toFixed(2) }}</p>
+        <p class="text-sm text-red-600 mt-1">-2% from last month</p>
+      </div>
+    </div>
+
+    <!-- Header and Add Button -->
     <div class="flex justify-between items-center mb-8">
-      <h1 class="text-3xl font-bold text-gray-800">Sales Dashboard</h1>
+      <h1 class="text-2xl font-bold text-gray-800">Sales Records</h1>
       <button 
         @click="openAddModal"
         class="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg flex items-center gap-2 shadow-md transition-all duration-200">
@@ -12,98 +34,24 @@
       </button>
     </div>
 
-    <!-- Add/Edit Sale Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 ease-in-out">
-        <h2 class="text-2xl font-semibold mb-6 text-gray-800">{{ isEditing ? 'Edit Sale' : 'Add New Sale' }}</h2>
-        
-        <form @submit.prevent="isEditing ? updateSale() : addNewSale()" class="space-y-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Product</label>
-            <input 
-              v-model="currentSale.product"
-              type="text" 
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-              required>
-          </div>
-          
-          <div class="grid grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-              <input 
-                v-model.number="currentSale.quantity"
-                type="number" 
-                min="1"
-                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-                required>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Unit Price ($)</label>
-              <input 
-                v-model.number="currentSale.unitPrice"
-                type="number" 
-                min="0.01"
-                step="0.01"
-                class="w-full px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-                required>
-            </div>
-          </div>
-          
-          <div class="flex justify-end space-x-4">
-            <button 
-              type="button"
-              @click="closeModal"
-              class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-700 transition duration-200">
-              Cancel
-            </button>
-            <button 
-              type="submit"
-              class="px-6 py-1 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">
-              {{ isEditing ? 'Update' : 'Save' }} Sale
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
-        <h3 class="text-md font-medium text-gray-500">Total Sales</h3>
-        <p class="text-3xl font-bold mt-2 text-gray-800">${{ totalSales.toLocaleString() }}</p>
-        <p class="text-sm text-green-600 mt-1">+12% from last month</p>
-      </div>
-      
-      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
-        <h3 class="text-md font-medium text-gray-500">Total Quantity Sold</h3>
-        <p class="text-3xl font-bold mt-2 text-gray-800">{{ totalQuantity.toLocaleString() }}</p>
-        <p class="text-sm text-green-600 mt-1">+8% from last month</p>
-      </div>
-      
-      <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-200">
-        <h3 class="text-md font-medium text-gray-500">Average Price</h3>
-        <p class="text-3xl font-bold mt-2 text-gray-800">${{ averagePrice.toFixed(2) }}</p>
-        <p class="text-sm text-red-600 mt-1">-2% from last month</p>
-      </div>
-    </div>
-
     <!-- Individual Sales Table -->
     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-      <div class="flex justify-between items-center p-5 border-b border-gray-200">
-        <h2 class="text-2xl font-semibold text-gray-800">Individual Sales</h2>
-        <span class="text-sm text-gray-500">
+      <div class="p-5 border-b border-gray-200 text-left">
+        <h2 class="text-xl font-semibold text-gray-800">Individual Sales</h2>
+        <span class="text-sm text-gray-500 block mt-1">
           Showing {{ salesData.length }} {{ salesData.length === 1 ? 'record' : 'records' }}
         </span>
       </div>
       
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 text-left">
           <thead class="bg-gray-50">
             <tr>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+              <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
               <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -113,6 +61,7 @@
               <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">{{ sale.quantity }}</td>
               <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">${{ sale.unitPrice.toFixed(2) }}</td>
               <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">${{ (sale.quantity * sale.unitPrice).toFixed(2) }}</td>
+              <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">{{ sale.description || '-' }}</td>
               <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-right">
                 <div class="relative">
                   <button 
@@ -154,14 +103,78 @@
       </div>
     </div>
 
+    <!-- Add/Edit Sale Modal -->
+    <div v-if="showModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 ease-in-out">
+        <h2 class="text-2xl font-semibold mb-6 text-gray-800">{{ isEditing ? 'Edit Sale' : 'Add New Sale' }}</h2>
+
+        <form @submit.prevent="isEditing ? updateSale() : addNewSale()" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Product</label>
+            <input 
+              v-model="currentSale.product"
+              type="text" 
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+              required>
+          </div>
+
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
+              <input 
+                v-model.number="currentSale.quantity"
+                type="number" 
+                min="1"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Unit Price ($)</label>
+              <input 
+                v-model.number="currentSale.unitPrice"
+                type="number" 
+                min="0.01"
+                step="0.01"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                required>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+            <textarea
+              v-model="currentSale.description"
+              rows="3"
+              placeholder="Enter description or notes about the sale"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 resize-none"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-start space-x-4">
+            <button 
+              type="button"
+              @click="closeModal"
+              class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-700 transition duration-200">
+              Cancel
+            </button>
+            <button 
+              type="submit"
+              class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">
+              {{ isEditing ? 'Update' : 'Save' }} Sale
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div v-if="showDeleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 ease-in-out">
         <h2 class="text-2xl font-semibold mb-6 text-gray-800">Confirm Deletion</h2>
-        <p class="mb-6 text-gray-600">Are you sure you want to delete this sale record?</p>
+        <p class="mb-6 text-gray-600">Are you sure you want to delete this sale record? This action cannot be undone.</p>
         <div class="flex justify-end space-x-4">
           <button 
-            @click="showDeleteModal = false"
+            @click="cancelDelete"
             class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-700 transition duration-200">
             Cancel
           </button>
@@ -177,101 +190,108 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, reactive, computed } from 'vue';
 
+// State
 const salesData = ref([
-  { product: 'Organic Apples', quantity: 120, unitPrice: 2.99 },
-  { product: 'Free Range Eggs', quantity: 85, unitPrice: 4.50 },
-  { product: 'Grass-fed Beef', quantity: 42, unitPrice: 12.99 },
-  { product: 'Organic Milk', quantity: 76, unitPrice: 3.49 },
-  { product: 'Whole Grain Bread', quantity: 93, unitPrice: 3.99 },
+  { product: 'Laptop', quantity: 3, unitPrice: 1200, description: 'Client order' },
+  { product: 'Smartphone', quantity: 5, unitPrice: 600, description: '' },
+  { product: 'Tablet', quantity: 2, unitPrice: 400, description: 'Discounted' },
 ]);
 
 const showModal = ref(false);
-const showDeleteModal = ref(false);
 const isEditing = ref(false);
-const currentIndex = ref(null);
-const currentSale = ref({
-  product: '',
-  quantity: 1,
-  unitPrice: 0
-});
+const currentSaleIndex = ref(null);
+const currentSale = reactive({ product: '', quantity: 1, unitPrice: 0, description: '' });
 const activeIndex = ref(null);
+const showDeleteModal = ref(false);
+const deleteIndex = ref(null);
 
-const totalSales = computed(() => 
-  salesData.value.reduce((total, sale) => total + (sale.quantity * sale.unitPrice), 0)
-);
+// Computed properties
+const totalSales = computed(() => {
+  return salesData.value.reduce((acc, sale) => acc + sale.quantity * sale.unitPrice, 0);
+});
 
-const totalQuantity = computed(() => 
-  salesData.value.reduce((total, sale) => total + sale.quantity, 0)
-);
+const totalQuantity = computed(() => {
+  return salesData.value.reduce((acc, sale) => acc + sale.quantity, 0);
+});
 
-const averagePrice = computed(() => 
-  totalQuantity.value > 0 ? totalSales.value / totalQuantity.value : 0
-);
+const averagePrice = computed(() => {
+  if (totalQuantity.value === 0) return 0;
+  return totalSales.value / totalQuantity.value;
+});
 
-const openAddModal = () => {
+// Methods
+function openAddModal() {
   isEditing.value = false;
-  currentSale.value = { product: '', quantity: 1, unitPrice: 0 };
+  currentSale.product = '';
+  currentSale.quantity = 1;
+  currentSale.unitPrice = 0;
+  currentSale.description = '';
   showModal.value = true;
-};
+}
 
-const editSale = (index) => {
-  currentSale.value = { ...salesData.value[index] };
-  currentIndex.value = index;
+function closeModal() {
+  showModal.value = false;
+}
+
+function addNewSale() {
+  salesData.value.push({ 
+    product: currentSale.product, 
+    quantity: currentSale.quantity, 
+    unitPrice: currentSale.unitPrice,
+    description: currentSale.description || ''
+  });
+  closeModal();
+}
+
+function editSale(index) {
+  const sale = salesData.value[index];
+  currentSale.product = sale.product;
+  currentSale.quantity = sale.quantity;
+  currentSale.unitPrice = sale.unitPrice;
+  currentSale.description = sale.description;
+  currentSaleIndex.value = index;
   isEditing.value = true;
   showModal.value = true;
   activeIndex.value = null;
-};
+}
 
-const addNewSale = () => {
-  salesData.value.push({ ...currentSale.value });
-  closeModal();
-};
+function updateSale() {
+  if (currentSaleIndex.value !== null) {
+    salesData.value[currentSaleIndex.value] = { 
+      product: currentSale.product, 
+      quantity: currentSale.quantity, 
+      unitPrice: currentSale.unitPrice,
+      description: currentSale.description || ''
+    };
+    closeModal();
+  }
+}
 
-const updateSale = () => {
-  salesData.value[currentIndex.value] = { ...currentSale.value };
-  closeModal();
-};
+function toggleActions(index) {
+  activeIndex.value = activeIndex.value === index ? null : index;
+}
 
-const confirmDelete = (index) => {
-  currentIndex.value = index;
+function confirmDelete(index) {
+  deleteIndex.value = index;
   showDeleteModal.value = true;
   activeIndex.value = null;
-};
+}
 
-const deleteSale = () => {
-  salesData.value.splice(currentIndex.value, 1);
+function cancelDelete() {
   showDeleteModal.value = false;
-};
+  deleteIndex.value = null;
+}
 
-const closeModal = () => {
-  showModal.value = false;
-  isEditing.value = false;
-  currentIndex.value = null;
-};
-
-const toggleActions = (index) => {
-  activeIndex.value = activeIndex.value === index ? null : index;
-};
+function deleteSale() {
+  if (deleteIndex.value !== null) {
+    salesData.value.splice(deleteIndex.value, 1);
+    cancelDelete();
+  }
+}
 </script>
 
 <style scoped>
-/* Smooth transitions for hover effects */
-button {
-  transition: all 0.2s ease;
-}
-
-/* Better focus states for accessibility */
-input:focus, button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
-}
-
-/* Style for the dropdown menu */
-button[title="Show Actions"] {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+/* Optional custom styles can be added here */
 </style>
