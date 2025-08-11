@@ -47,6 +47,7 @@
         <table class="min-w-full divide-y divide-gray-200 text-left">
           <thead class="bg-gray-50">
             <tr>
+              <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
               <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
@@ -57,6 +58,7 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="(sale, index) in salesData" :key="index" class="hover:bg-gray-50 transition-colors duration-200">
+              <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">{{ formatDateForDisplay(sale.date) }}</td>
               <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-gray-900">{{ sale.product }}</td>
               <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">{{ sale.quantity }}</td>
               <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">${{ sale.unitPrice.toFixed(2) }}</td>
@@ -109,13 +111,23 @@
         <h2 class="text-2xl font-semibold mb-6 text-gray-800">{{ isEditing ? 'Edit Sale' : 'Add New Sale' }}</h2>
 
         <form @submit.prevent="isEditing ? updateSale() : addNewSale()" class="space-y-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Product</label>
-            <input 
-              v-model="currentSale.product"
-              type="text" 
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-              required>
+          <div class="grid grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+              <input 
+                v-model="currentSale.date"
+                type="date" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Product</label>
+              <input 
+                v-model="currentSale.product"
+                type="text" 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
+                required>
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-6">
@@ -194,15 +206,39 @@ import { ref, reactive, computed } from 'vue';
 
 // State
 const salesData = ref([
-  { product: 'Laptop', quantity: 3, unitPrice: 1200, description: 'Client order' },
-  { product: 'Smartphone', quantity: 5, unitPrice: 600, description: '' },
-  { product: 'Tablet', quantity: 2, unitPrice: 400, description: 'Discounted' },
+  { 
+    product: 'Laptop', 
+    quantity: 3, 
+    unitPrice: 1200, 
+    description: 'Client order',
+    date: new Date().toISOString().split('T')[0] // Default to today's date
+  },
+  { 
+    product: 'Smartphone', 
+    quantity: 5, 
+    unitPrice: 600, 
+    description: '',
+    date: new Date(Date.now() - 86400000).toISOString().split('T')[0] // Yesterday
+  },
+  { 
+    product: 'Tablet', 
+    quantity: 2, 
+    unitPrice: 400, 
+    description: 'Discounted',
+    date: new Date(Date.now() - 172800000).toISOString().split('T')[0] // 2 days ago
+  },
 ]);
 
 const showModal = ref(false);
 const isEditing = ref(false);
 const currentSaleIndex = ref(null);
-const currentSale = reactive({ product: '', quantity: 1, unitPrice: 0, description: '' });
+const currentSale = reactive({ 
+  product: '', 
+  quantity: 1, 
+  unitPrice: 0, 
+  description: '',
+  date: new Date().toISOString().split('T')[0] // Default to today's date
+});
 const activeIndex = ref(null);
 const showDeleteModal = ref(false);
 const deleteIndex = ref(null);
@@ -222,12 +258,19 @@ const averagePrice = computed(() => {
 });
 
 // Methods
+function formatDateForDisplay(dateString) {
+  if (!dateString) return '';
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
 function openAddModal() {
   isEditing.value = false;
   currentSale.product = '';
   currentSale.quantity = 1;
   currentSale.unitPrice = 0;
   currentSale.description = '';
+  currentSale.date = new Date().toISOString().split('T')[0]; // Reset to today
   showModal.value = true;
 }
 
@@ -240,7 +283,8 @@ function addNewSale() {
     product: currentSale.product, 
     quantity: currentSale.quantity, 
     unitPrice: currentSale.unitPrice,
-    description: currentSale.description || ''
+    description: currentSale.description || '',
+    date: currentSale.date
   });
   closeModal();
 }
@@ -251,6 +295,7 @@ function editSale(index) {
   currentSale.quantity = sale.quantity;
   currentSale.unitPrice = sale.unitPrice;
   currentSale.description = sale.description;
+  currentSale.date = sale.date;
   currentSaleIndex.value = index;
   isEditing.value = true;
   showModal.value = true;
@@ -263,7 +308,8 @@ function updateSale() {
       product: currentSale.product, 
       quantity: currentSale.quantity, 
       unitPrice: currentSale.unitPrice,
-      description: currentSale.description || ''
+      description: currentSale.description || '',
+      date: currentSale.date
     };
     closeModal();
   }
@@ -294,4 +340,12 @@ function deleteSale() {
 
 <style scoped>
 /* Optional custom styles can be added here */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  filter: invert(0.3);
+}
 </style>
