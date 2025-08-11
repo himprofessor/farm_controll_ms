@@ -11,8 +11,8 @@
           </svg>
         </div>
         <div>
-          <h3 class="text-xl font-semibold text-gray-900">{{ employee.name }}</h3>
-          <p class="text-gray-600">{{ employee.position }}</p>
+          <h3 class="text-xl font-semibold text-gray-900">{{ localEmployee.name }}</h3>
+          <p class="text-gray-600">{{ localEmployee.position }}</p>
         </div>
       </div>
       <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
@@ -28,47 +28,94 @@
     <div class="space-y-4 mb-6">
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Base Salary:</span>
-        <span class="font-semibold text-gray-900">{{ formatCurrency(employee.baseSalary) }}</span>
+        <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.baseSalary) }}</span>
       </div>
-
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Current Balance:</span>
-        <span class="font-semibold text-green-600">{{ formatCurrency(employee.currentBalance) }}</span>
+        <span :class="{'text-green-600': localEmployee.currentBalance >= 0, 'text-red-600': localEmployee.currentBalance < 0}" class="font-semibold">
+          {{ formatCurrency(localEmployee.currentBalance) }}
+        </span>
       </div>
-
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Total Earned:</span>
-        <span class="font-semibold text-gray-900">{{ formatCurrency(employee.totalEarned) }}</span>
+        <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.totalEarned) }}</span>
       </div>
-
       <div class="flex justify-between items-center">
         <span class="text-gray-600">Last Payment:</span>
-        <span class="font-semibold text-gray-900">{{ employee.lastPayment }}</span>
+        <span class="font-semibold text-gray-900">{{ localEmployee.lastPayment }}</span>
       </div>
     </div>
 
     <!-- Action Buttons -->
     <div class="flex space-x-2">
-      <button @click="openPaymentModal"
+      <button v-if="localEmployee.currentBalance >= 0" @click="openPaymentModal"
         class="flex items-center justify-center gap-1 flex-1 w-24 bg-green-500 hover:bg-green-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
         Pay Salary
       </button>
-      <button @click="viewDetails"
+      <button v-if="localEmployee.currentBalance < 0" @click="openPaymentModal"
+        class="flex items-center justify-center gap-1 flex-1 w-24 bg-blue-500 hover:bg-blue-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
+        Repay Debt
+      </button>
+      <button @click="openDetailsModal"
         class="text-blue-600 border border-blue-200 hover:bg-blue-50 bg-transparent font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
         Details
       </button>
     </div>
 
     <!-- Payment Modal -->
-    <PaymentModal :is-open="showPaymentModal" :employee="employee" @close="showPaymentModal = false"
+    <PaymentModal :is-open="showPaymentModal" :employee="localEmployee" @close="showPaymentModal = false"
       @payment-processed="handlePaymentProcessed" />
+
+    <!-- Details Modal -->
+    <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-gray-900">Employee Details - {{ localEmployee.name }}</h3>
+            <button @click="closeDetailsModal" class="text-gray-400 hover:text-gray-600">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="px-6 py-4">
+          <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th class="px-4 py-2">Date</th>
+                <th class="px-4 py-2">Transaction Type</th>
+                <th class="px-4 py-2">Amount</th>
+                <th class="px-4 py-2">New Balance</th>
+                <th class="px-4 py-2">Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(transaction, index) in transactionHistory" :key="index" class="bg-white border-b">
+                <td class="px-4 py-2">{{ transaction.date }}</td>
+                <td class="px-4 py-2">{{ transaction.type }}</td>
+                <td class="px-4 py-2">{{ formatCurrency(transaction.amount) }}</td>
+                <td class="px-4 py-2" :class="{'text-green-600': transaction.newBalance >= 0, 'text-red-600': transaction.newBalance < 0}">
+                  {{ formatCurrency(transaction.newBalance) }}
+                </td>
+                <td class="px-4 py-2">{{ transaction.notes || '-' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
+          <button @click="closeDetailsModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-
-
 </template>
 
 <script>
 import PaymentModal from './PaymentModal.vue'
+import { reactive, ref } from 'vue'
 
 export default {
   name: 'SalaryCard',
@@ -90,34 +137,56 @@ export default {
       })
     }
   },
-  data() {
-    return {
-      showPaymentModal: false
+  setup(props) {
+    const localEmployee = reactive({ ...props.employee })
+    const showPaymentModal = ref(false)
+    const showDetailsModal = ref(false)
+
+    // Mock transaction history
+    const transactionHistory = ref([
+      { date: '1/1/2024', type: 'Salary Payment', amount: 4500, newBalance: 2340, notes: 'Monthly salary' },
+      { date: '7/1/2025', type: 'Salary Payment', amount: 4500, newBalance: -2160, notes: 'Overpayment' },
+    ])
+
+    const openPaymentModal = () => {
+      showPaymentModal.value = true
     }
-  },
-  methods: {
-    openPaymentModal() {
-      this.showPaymentModal = true
-    },
-    viewDetails() {
-      this.$emit('view-details', this.employee)
-    },
-    handlePaymentProcessed(paymentInfo) {
-      // Handle the payment processing
-      console.log('Payment processed:', paymentInfo)
 
-      // You can emit this to parent component or handle via Vuex/Pinia
-      this.$emit('payment-processed', paymentInfo)
+    const openDetailsModal = () => {
+      showDetailsModal.value = true
+    }
 
-      // Show success message
-      alert('Payment processed successfully!')
-    },
-    formatCurrency(amount) {
-      return new Intl.NumberFormat('en-US', {
+    const closeDetailsModal = () => {
+      showDetailsModal.value = false
+    }
+
+    const handlePaymentProcessed = (updatedEmployee) => {
+      // Update localEmployee with new data
+      Object.assign(localEmployee, updatedEmployee)
+      // Close the modal after processing
+      showPaymentModal.value = false
+      // Optionally update transaction history
+      transactionHistory.value.push({
+        date: new Date().toLocaleDateString(),
+        type: updatedEmployee.currentBalance < 0 ? 'Debt Repayment' : 'Salary Payment',
+        amount: Math.abs(updatedEmployee.amount),
+        newBalance: updatedEmployee.currentBalance,
+        notes: updatedEmployee.notes || ''
+      })
+    }
+
+    const formatCurrency = (amount) => {
+      const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-      }).format(amount)
+      })
+      if (amount < 0) {
+        return '-' + formatter.format(Math.abs(amount))
+      }
+      return formatter.format(amount)
     }
+
+    return { localEmployee, showPaymentModal, showDetailsModal, transactionHistory, openPaymentModal, openDetailsModal, closeDetailsModal, handlePaymentProcessed, formatCurrency }
   }
 }
 </script>

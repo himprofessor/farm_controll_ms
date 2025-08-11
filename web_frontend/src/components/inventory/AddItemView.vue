@@ -46,7 +46,7 @@
 
         <div>
           <label class="block text-sm font-medium mb-1">Total Value</label>
-          <input v-model.number="form.value" type="number" class="input" required />
+          <input :value="form.value" type="number" class="input bg-gray-100 text-gray-600" readonly/>
         </div>
 
         <div>
@@ -144,6 +144,13 @@ watch(
   },
   { immediate: true }
 )
+watch(
+  () => [form.currentStock, form.pricePerUnit],
+  ([stock, price]) => {
+    form.value = stock * price
+  },
+  { immediate: true }
+)
 
 const submit = async () => {
   const isUpdating = isEdit.value
@@ -155,11 +162,11 @@ const submit = async () => {
     if (isUpdating) {
       const { data } = await API.put(`/materials/${props.item.id}`, payload)
       emit('material-updated', data.data)
-      toast.success('Material updated!')
+      // toast.success('Material updated!')
     } else {
       const { data } = await API.post('/materials', payload)
       emit('material-added', data.material)
-      toast.success('Material added!')
+      // toast.success('Material added!')
     }
   } catch (error) {
     toast.error(`Failed to ${isUpdating ? 'update' : 'add'} material.`)
