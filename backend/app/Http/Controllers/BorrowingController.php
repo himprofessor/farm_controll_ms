@@ -1,65 +1,38 @@
 <?php
 
+namespace App\Http\Controllers\Api;
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
 use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Return all borrowing records
     public function index()
     {
-        return Borrowing::all();
+        $borrows = Borrowing::all();
+        return response()->json($borrows);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Store a new borrowing record
     public function store(Request $request)
     {
-        $validated = $request->validated();
-
-        $borrowing = Borrowing::create($validated);
-        return response()->json([
-            'message'=>'borrowing successfully.!',
-            'data'=>$borrowing
-        ], 201);
-
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Borrowing $borrowing)
-    {
-        return response()->json([
-            'data'=>$borrowing
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'purpose' => 'required|string|max:255',
+            'borrowed_date' => 'required|date',
+            'retunred_date' => 'nullable|date|after_or_equal:borrowed_date',
+            'material_id' => 'required|exists:materials,id',
+            'staff_id' => 'required|exists:staffs,id',
         ]);
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Borrowing $borrowing)
-    {
-        $validated = $request->validated();
+        $borrow = Borrowing::create($validated);
 
-        $borrowing->update($validated);
         return response()->json([
-            'message'=>'update successfully.!',
-            'data'=>$borrowing
-        ], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Borrowing $borrowing)
-    {
-        $borrowing->delete();
-        return response()->json('delete successfully!');
+            'message' => 'Borrow record created successfully',
+            'borrow' => $borrow,
+        ], 201);
     }
 }

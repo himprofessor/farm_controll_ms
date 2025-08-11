@@ -32,14 +32,15 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-
+// Route::get('/borrowings', [BorrowingController::class, 'index']);
+// Route::post('/borrowings', [BorrowingController::class, 'store']);
 
 // Resources
 Route::resource('users', UserController::class);
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);
 Route::resource('supplires', SupplireController::class);
-Route::resource('borrowings', BorrowingController::class);
+Route::apiResource('borrowings', BorrowingController::class);
 Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
 Route::resource('equipment', EquipmentController::class);
 Route::resource('withdrawals', WithdrawalController::class);
