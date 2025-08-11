@@ -15,12 +15,10 @@
           <p class="text-gray-600">{{ localEmployee.position }}</p>
         </div>
       </div>
-      <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
-          </path>
-        </svg>
+      <div>
+        <button @click="openSalaryPaymentModal" class="px-3 py-1 bg-green-600 hover:bg-blue-700 text-white text-lg font-bold transition duration-300 rounded-lg shadow">
+          +
+        </button>
       </div>
     </div>
 
@@ -62,49 +60,70 @@
       </button>
     </div>
 
-    <!-- Payment Modal -->
+    <!-- Payment Modal (for Withdrawals) -->
     <PaymentModal :is-open="showPaymentModal" :employee="localEmployee" @close="showPaymentModal = false"
       @payment-processed="handlePaymentProcessed" />
 
+    <!-- Salary Payment Modal (for Base Salary Payment) -->
+    <div v-if="showSalaryPaymentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Pay Base Salary - {{ localEmployee.name }}</h3>
+        <form @submit.prevent="processSalaryPayment">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Amount</label>
+            <input v-model.number="salaryAmount" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Notes</label>
+            <input v-model="salaryNotes" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+          </div>
+          <div class="flex justify-end space-x-2">
+            <button type="button" @click="closeSalaryPaymentModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              Cancel
+            </button>
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md">
+              Pay Salary
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Details Modal -->
     <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div class="px-6 py-4 border-b border-gray-200">
+      <div class="bg-white  rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <div class="px-6 py-4 border-b border-gray-200 ">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900">Employee Details - {{ localEmployee.name }}</h3>
-            <button @click="closeDetailsModal" class="text-gray-400 hover:text-gray-600">
+            <button @click="closeDetailsModal" class="text-gray-400 hover:text-gray-600 ">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
         </div>
-        <div class="px-6 py-4">
-          <table class="w-full text-sm text-left text-gray-500">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-              <tr>
-                <th class="px-4 py-2">Date</th>
-                <th class="px-4 py-2">Transaction Type</th>
-                <th class="px-4 py-2">Amount</th>
-                <th class="px-4 py-2">New Balance</th>
-                <th class="px-4 py-2">Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(transaction, index) in transactionHistory" :key="index" class="bg-white border-b">
-                <td class="px-4 py-2">{{ transaction.date }}</td>
-                <td class="px-4 py-2">{{ transaction.type }}</td>
-                <td class="px-4 py-2">{{ formatCurrency(transaction.amount) }}</td>
-                <td class="px-4 py-2" :class="{'text-green-600': transaction.newBalance >= 0, 'text-red-600': transaction.newBalance < 0}">
-                  {{ formatCurrency(transaction.newBalance) }}
-                </td>
-                <td class="px-4 py-2">{{ transaction.notes || '-' }}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="px-6 py-4 space-y-4">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Base Salary:</span>
+            <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.baseSalary) }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Current Balance:</span>
+            <span :class="{'text-green-600': localEmployee.currentBalance >= 0, 'text-red-600': localEmployee.currentBalance < 0}" class="font-semibold">
+              {{ formatCurrency(localEmployee.currentBalance) }}
+            </span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Total Earned:</span>
+            <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.totalEarned) }}</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Last Payment:</span>
+            <span class="font-semibold text-gray-900">{{ localEmployee.lastPayment }}</span>
+          </div>
         </div>
         <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
-          <button @click="closeDetailsModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+          <button @click="closeDetailsModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-red-500 hover:text-white">
             Close
           </button>
         </div>
@@ -141,12 +160,9 @@ export default {
     const localEmployee = reactive({ ...props.employee })
     const showPaymentModal = ref(false)
     const showDetailsModal = ref(false)
-
-    // Mock transaction history
-    const transactionHistory = ref([
-      { date: '1/1/2024', type: 'Salary Payment', amount: 4500, newBalance: 2340, notes: 'Monthly salary' },
-      { date: '7/1/2025', type: 'Salary Payment', amount: 4500, newBalance: -2160, notes: 'Overpayment' },
-    ])
+    const showSalaryPaymentModal = ref(false)
+    const salaryAmount = ref(0)
+    const salaryNotes = ref('')
 
     const openPaymentModal = () => {
       showPaymentModal.value = true
@@ -160,19 +176,38 @@ export default {
       showDetailsModal.value = false
     }
 
+    const openSalaryPaymentModal = () => {
+      showSalaryPaymentModal.value = true
+      salaryAmount.value = localEmployee.baseSalary
+      salaryNotes.value = 'Monthly salary'
+    }
+
+    const closeSalaryPaymentModal = () => {
+      showSalaryPaymentModal.value = false
+      salaryAmount.value = 0
+      salaryNotes.value = ''
+    }
+
     const handlePaymentProcessed = (updatedEmployee) => {
-      // Update localEmployee with new data
       Object.assign(localEmployee, updatedEmployee)
-      // Close the modal after processing
       showPaymentModal.value = false
-      // Optionally update transaction history
-      transactionHistory.value.push({
-        date: new Date().toLocaleDateString(),
-        type: updatedEmployee.currentBalance < 0 ? 'Debt Repayment' : 'Salary Payment',
-        amount: Math.abs(updatedEmployee.amount),
-        newBalance: updatedEmployee.currentBalance,
-        notes: updatedEmployee.notes || ''
-      })
+    }
+
+    const processSalaryPayment = () => {
+      const amount = salaryAmount.value
+      const wasPositiveBeforePayment = localEmployee.currentBalance >= 0
+
+      // Always update the current balance
+      localEmployee.currentBalance += amount
+
+      // Only update total earned if the balance was positive before payment
+      // (meaning this is a salary payment, not debt repayment)
+      if (wasPositiveBeforePayment) {
+        localEmployee.totalEarned += amount
+      }
+
+      localEmployee.lastPayment = new Date().toLocaleDateString()
+      closeSalaryPaymentModal()
     }
 
     const formatCurrency = (amount) => {
@@ -186,7 +221,22 @@ export default {
       return formatter.format(amount)
     }
 
-    return { localEmployee, showPaymentModal, showDetailsModal, transactionHistory, openPaymentModal, openDetailsModal, closeDetailsModal, handlePaymentProcessed, formatCurrency }
+    return {
+      localEmployee,
+      showPaymentModal,
+      showDetailsModal,
+      openPaymentModal,
+      openDetailsModal,
+      closeDetailsModal,
+      handlePaymentProcessed,
+      formatCurrency,
+      showSalaryPaymentModal,
+      openSalaryPaymentModal,
+      closeSalaryPaymentModal,
+      salaryAmount,
+      salaryNotes,
+      processSalaryPayment
+    }
   }
 }
 </script>
