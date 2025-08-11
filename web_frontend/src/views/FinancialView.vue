@@ -32,6 +32,11 @@
               class="py-2 px-1 text-sm font-medium">
               Reports
             </button>
+            <button @click="setActiveTab('sales')"
+              :class="activeTab === 'sales' ? 'border-b-2 border-green-500 text-green-600' : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+              class="py-2 px-1 text-sm font-medium">
+              Sales
+            </button>
           </nav>
         </div>
       </div>
@@ -41,6 +46,7 @@
       <IncomeView v-if="activeTab === 'income'" />
       <ExpenseView v-if="activeTab === 'expenses'" />
       <ReportView v-if="activeTab === 'reports'" />
+      <SalesView v-if="activeTab === 'sales'" />
     </div>
   </div>
 
@@ -52,6 +58,8 @@ import OverViewView from '../components/financial/OverViewView.vue'
 import IncomeView from '../components/financial/IncomeView.vue'
 import ExpenseView from '../components/financial/ExpenseView.vue'
 import ReportView from '../components/financial/ReportView.vue'
+// import ReportView from '../components/financial/SalesView.vue'
+import SalesView from '../components/financial/SalesView.vue'
 
 const activeTab = ref('overview')
 

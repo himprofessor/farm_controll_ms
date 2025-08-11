@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-6">
     <!-- Header Controls -->
-    <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+    <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4 bg-white p-6 rounded-lg shadow">
       <div class="flex flex-col sm:flex-row gap-4 flex-1">
         <!-- Search Bar -->
         <div class="relative flex-1 max-w-md">
@@ -19,11 +19,11 @@
           v-model="timeFilter"
           class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
         >
+        <option value="all">All Time</option>
           <option value="this-month">This Month</option>
           <option value="last-month">Last Month</option>
           <option value="this-quarter">This Quarter</option>
           <option value="this-year">This Year</option>
-          <option value="all">All Time</option>
         </select>
       </div>
       

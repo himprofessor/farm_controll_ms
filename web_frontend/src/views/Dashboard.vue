@@ -2,10 +2,7 @@
   <div class="p-6 bg-gray-100 rounded-lg shadow">
     <!-- Language Toggle Button -->
     <div class="flex justify-end mb-4">
-      <button
-        @click="toggleLanguage"
-        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-      >
+      <button @click="toggleLanguage" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
         {{ currentLanguage === 'en' ? 'ភាសាខ្មែរ' : 'English' }}
       </button>
     </div>
@@ -18,64 +15,29 @@
 
     <!-- Top Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-      <StatsCard
-        :title="texts.totalStaff.title"
-        :value="texts.totalStaff.value"
-        :change="texts.totalStaff.change"
-        icon="users"
-        bg="bg-blue-600"
-      />
-      <StatsCard
-        :title="texts.monthlyExpenses.title"
-        :value="texts.monthlyExpenses.value"
-        :change="texts.monthlyExpenses.change"
-        icon="dollar"
-        bg="bg-red-500"
-      />
-      <StatsCard
-      :title="'Inventory Items'"
-      :value="store.materials.length"
-      :change="store.lowStockCount + ' Low Stock Alerts'"
-      icon="box"
-      bg="bg-green-600"
-    />
-      <StatsCard
-        :title="texts.monthlyRevenue.title"
-        :value="texts.monthlyRevenue.value"
-        :change="texts.monthlyRevenue.change"
-        icon="trending"
-        bg="bg-purple-600"
-      />
+      <StatsCard title="Total Staff" :value="staffStore.totalStaff" 
+      :change="staffStore.smoothChangeText" icon="users" bg="bg-blue-600" />
+
+      <StatsCard :title="texts.monthlyExpenses.title" :value="texts.monthlyExpenses.value"
+        :change="texts.monthlyExpenses.change" icon="dollar" bg="bg-red-500" />
+
+      <StatsCard :title="'Inventory Items'" :value="store.materials.length"
+        :change="store.lowStockCount + ' Low Stock Alerts'" icon="box" bg="bg-green-600" />
+
+      <StatsCard :title="texts.monthlyRevenue.title" :value="texts.monthlyRevenue.value"
+        :change="texts.monthlyRevenue.change" icon="trending" bg="bg-purple-600" />
     </div>
 
     <!-- Bottom Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <StatsCard
-        :title="texts.salariesPaid.title"
-        :value="texts.salariesPaid.value"
-        :desc="texts.salariesPaid.desc"
-        icon="credit-card"
-        bg="bg-white"
-        textColor="text-green-700"
-      />
-      <StatsCard
-        :title="texts.activeBorrows.title"
-        :value="texts.activeBorrows.value"
-        :desc="texts.activeBorrows.desc"
-        icon="archive"
-        bg="bg-white"
-        textColor="text-purple-700"
-      />
-      <StatsCard
-        :title="texts.maintenanceCosts.title"
-        :value="texts.maintenanceCosts.value"
-        :desc="texts.maintenanceCosts.desc"
-        icon="settings"
-        bg="bg-white"
-        textColor="text-orange-700"
-      />
+      <StatsCard :title="texts.salariesPaid.title" :value="texts.salariesPaid.value" :desc="texts.salariesPaid.desc"
+        icon="credit-card" bg="bg-white" textColor="text-green-700" />
+      <StatsCard :title="texts.activeBorrows.title" :value="texts.activeBorrows.value" :desc="texts.activeBorrows.desc"
+        icon="archive" bg="bg-white" textColor="text-purple-700" />
+      <StatsCard :title="texts.maintenanceCosts.title" :value="texts.maintenanceCosts.value"
+        :desc="texts.maintenanceCosts.desc" icon="settings" bg="bg-white" textColor="text-orange-700" />
     </div>
-     <!-- Bottom Section -->
+    <!-- Bottom Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
       <RecentActivities />
       <LowStockAlerts />
@@ -88,6 +50,7 @@ import { ref, computed, onMounted } from 'vue'
 import StatsCard from '@/components/dashboard/StatsCard.vue'
 import RecentActivities from '@/components/dashboard/RecentActivities.vue'
 import { useMaterialsStore } from '@/stores/material'
+import { useStoreStaff } from '@/stores/staffStore'
 import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
 
 // Language state
@@ -108,11 +71,7 @@ const textContent = {
       value: "$12,450",
       change: "+5.2% from last month"
     },
-    inventoryItems: {
-      title: "Inventory Items",
-      value: "156",
-      change: "12 low stock alerts"
-    },
+
     monthlyRevenue: {
       title: "Monthly Revenue",
       value: "$18,750",
@@ -184,5 +143,10 @@ const store = useMaterialsStore()
 
 onMounted(() => {
   store.fetchMaterials()
-});
+})
+
+const staffStore = useStoreStaff()
+onMounted(() => {
+  staffStore.fetchStaff()
+})
 </script>

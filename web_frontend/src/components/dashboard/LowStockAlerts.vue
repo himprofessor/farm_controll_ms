@@ -31,7 +31,9 @@
           </div>
         </div>
       </div>
-      <div v-else class="text-gray-500 text-sm">All materials are sufficiently stocked.</div>
+      <div v-else class="text-gray-500 text-sm">
+        All materials are sufficiently stocked.
+      </div>
     </div>
   </div>
 </template>
@@ -42,14 +44,13 @@ import { useMaterialsStore } from '@/stores/material'
 
 const store = useMaterialsStore()
 
-onMounted(() => {
-  store.fetchMaterials()
+onMounted(async () => {
+  await store.fetchMaterials()
 })
 
-// Only show materials with stock <= 60
-const filteredItems = computed(() =>
-  store.lowStockItems.filter(item => item.currentStock <= 60)
-)
+const filteredItems = computed(() => {
+  return store.lowStockItems || []
+})
 
 const getStatusLabel = (item) => {
   if (item.currentStock <= 40) return 'Critical'
