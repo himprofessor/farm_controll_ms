@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-white rounded-lg shadow p-4">
+  <div class="">
     <!-- Header -->
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold text-gray-800">Materials Inventory</h2>
       <button
         @click="openAdd"
-        class="bg-green-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-1"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-1"
       >
         <Plus class="w-4 h-4" /><span>Add Material</span>
       </button>
@@ -51,15 +51,15 @@
     <!-- Table -->
     <div class="overflow-x-auto rounded-lg border border-gray-200">
       <table class="min-w-full text-sm">
-        <thead class="bg-gray-50">
+        <thead class="bg-green-600">
           <tr>
-            <th class="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Item Name</th>
-            <th class="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Category</th>
-            <th class="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Current Stock</th>
-            <th class="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Status</th>
-            <th class="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Value</th>
-            <th class="px-6 py-3 text-left font-semibold text-gray-600 uppercase tracking-wider">Supplier</th>
-            <th class="px-6 py-3 text-center font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
+            <th class="px-6 py-3 text-left font-semibold text-white uppercase tracking-wider">Item Name</th>
+            <th class="px-6 py-3 text-left font-semibold text-white uppercase tracking-wider">Category</th>
+            <th class="px-6 py-3 text-left font-semibold text-white uppercase tracking-wider">Current Stock</th>
+            <th class="px-6 py-3 text-left font-semibold text-white uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left font-semibold text-white uppercase tracking-wider">Value</th>
+            <th class="px-6 py-3 text-left font-semibold text-white uppercase tracking-wider">Supplier</th>
+            <th class="px-6 py-3 text-center font-semibold text-white uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100 bg-white">
