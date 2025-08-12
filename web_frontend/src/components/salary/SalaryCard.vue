@@ -16,7 +16,7 @@
         </div>
       </div>
       <div>
-        <button @click="openSalaryPaymentModal" class="px-3 py-1 bg-green-600 hover:bg-blue-700 text-white text-lg font-bold transition duration-300 rounded-lg shadow">
+        <button @click="openSalaryPaymentModal" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-lg font-bold transition duration-300 rounded-lg shadow">
           +
         </button>
       </div>

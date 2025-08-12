@@ -1,23 +1,16 @@
 <template>
-  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-    <div class="p-5 border-b border-gray-200 text-left">
-      <h2 class="text-xl font-semibold text-gray-800">Individual Sales</h2>
-      <span class="text-sm text-gray-500 block mt-1">
-        Showing {{ salesData.length }} {{ salesData.length === 1 ? 'record' : 'records' }}
-      </span>
-    </div>
-    
-    <div class="overflow-x-auto">
+  <div class="bg-white rounded-lg shadow-lg shadow-gray-250 overflow-hidden"> 
+    <div class="overflow-x-auto ">
       <table class="min-w-full divide-y divide-gray-200 text-left">
-        <thead class="bg-gray-50">
+        <thead class="bg-green-600">
           <tr>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-            <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th class="px-6 py-2 text-xs font-medium text-white uppercase tracking-wider">Date</th>
+            <th class="px-6 py-2 text-xs font-medium text-white uppercase tracking-wider">Product</th>
+            <th class="px-6 py-2 text-xs font-medium text-white uppercase tracking-wider">Quantity</th>
+            <th class="px-6 py-2 text-xs font-medium text-white uppercase tracking-wider">Unit Price</th>
+            <th class="px-6 py-2 text-xs font-medium text-white uppercase tracking-wider">Total</th>
+            <th class="px-6 py-2 text-xs font-medium text-white uppercase tracking-wider">Description</th>
+            <th class="px-6 py-2 text-right text-xs font-medium text-white uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
