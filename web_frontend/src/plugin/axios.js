@@ -19,4 +19,16 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Handle unauthorized error (e.g., redirect to login)
+      localStorage.removeItem('token');
+      window.location.href = '/login'; // Adjust to your login route
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;
