@@ -5,6 +5,7 @@ use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentMaintenanceController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\SalaryController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\SupplireController;
 use App\Http\Controllers\StaffController;
@@ -46,6 +47,7 @@ Route::resource('withdrawals', WithdrawalController::class);
 Route::resource('savings', SavingController::class);
 Route::resource('salaries', SalaryController::class);
 Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
+Route::resource('sales', SaleController::class);
 
 
 

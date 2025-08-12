@@ -22,9 +22,11 @@ class UpdateSaleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'material_id' => 'required|exists:materials,id',
+            'product_name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
-            'description' => 'nullable|string',
+            'unit_price' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0',
+            'description' => 'required|string',  // note the typo matches DB column
             'sale_date' => 'required|date',
         ];
     }
