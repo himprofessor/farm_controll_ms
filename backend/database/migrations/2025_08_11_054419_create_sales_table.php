@@ -19,7 +19,6 @@ return new class extends Migration
             $table->decimal('total_price', 12, 2);
             $table->text('descrition')->nullable();
             $table->date('sale_date');
-            $table->foreignId('material_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
