@@ -3,7 +3,7 @@
     <div class="p-5 border-b border-gray-200 text-left">
       <h2 class="text-xl font-semibold text-gray-800">Individual Sales</h2>
       <span class="text-sm text-gray-500 block mt-1">
-        Showing {{ salesData.length }} {{ salesData.length === 1 ? 'record' : 'records' }}
+        Showing {{ salesData?.length ?? 0 }} {{ (salesData?.length ?? 0) === 1 ? 'record' : 'records' }}
       </span>
     </div>
 
@@ -22,7 +22,7 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <tr 
-            v-for="(sale, index) in salesData" 
+            v-for="(sale, index) in salesData ?? []" 
             :key="sale.id || index" 
             class="hover:bg-gray-50 transition-colors duration-200"
           >
@@ -30,7 +30,7 @@
             <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-gray-900">{{ sale.product }}</td>
             <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">{{ sale.quantity }}</td>
             <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">${{ sale.unitPrice }}</td>
-            <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">${{ (sale.quantity * sale.unitPrice).toFixed(2) }}</td>
+            <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">${{ ((sale.quantity ?? 0) * (sale.unitPrice ?? 0)).toFixed(2) }}</td>
             <td class="px-6 py-2 whitespace-nowrap text-xs text-gray-500">{{ sale.description || '-' }}</td>
             <td class="px-6 py-2 whitespace-nowrap text-xs font-medium text-right">
               <button 
@@ -54,7 +54,10 @@
 
 <script setup>
 const props = defineProps({
-  salesData: Array
+  salesData: {
+    type: Array,
+    default: () => [] // ✅ default to empty array
+  }
 })
 
 const emit = defineEmits(['confirm-delete'])

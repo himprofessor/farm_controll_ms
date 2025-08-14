@@ -29,10 +29,9 @@
 
     <ModalSale 
       :show="salesStore.showModal" 
-      :isEditing="salesStore.isEditing" 
-      :saleData="salesStore.currentSale" 
-      @close="salesStore.closeModal" 
-      @save="salesStore.isEditing ? salesStore.updateSale : salesStore.addNewSale" 
+      :saleData="salesStore.currentSale"
+      @close="salesStore.closeModal"
+      @save="salesStore.addNewSale"
     />
 
     <div v-if="salesStore.showDeleteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
