@@ -1,71 +1,44 @@
 <template>
-  <div v-if="show" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 transform transition-all duration-300 ease-in-out">
-      <h2 class="text-2xl font-semibold mb-6 text-gray-800">{{ isEditing ? 'Edit Sale' : 'Add New Sale' }}</h2>
+  <div v-if="show" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg relative">
+      <h2 class="text-xl font-semibold mb-4">Add Sale</h2>
+      
+      <form @submit.prevent="onSave">
+        <label class="block mb-2">
+          Product Name:
+          <input v-model="form.product_name" type="text" required class="w-full border rounded p-2"/>
+        </label>
 
-      <form @submit.prevent="handleSubmit" class="space-y-6">
-        <div class="grid grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
-            <input 
-              v-model="localSale.date"
-              type="date" 
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-              required>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Product</label>
-            <input 
-              v-model="localSale.product"
-              type="text" 
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-              required>
-          </div>
-        </div>
+        <label class="block mb-2">
+          Quantity:
+          <input v-model.number="form.quantity" type="number" min="1" required class="w-full border rounded p-2"/>
+        </label>
 
-        <div class="grid grid-cols-2 gap-6">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Quantity</label>
-            <input 
-              v-model.number="localSale.quantity"
-              type="number" 
-              min="1"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-              required>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Unit Price ($)</label>
-            <input 
-              v-model.number="localSale.unitPrice"
-              type="number" 
-              min="0.01"
-              step="0.01"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200"
-              required>
-          </div>
-        </div>
+        <label class="block mb-2">
+          Unit Price:
+          <input v-model.number="form.unit_price" type="number" step="0.01" min="0" required class="w-full border rounded p-2"/>
+        </label>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-          <textarea
-            v-model="localSale.description"
-            rows="3"
-            placeholder="Enter description or notes about the sale"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200 resize-none"
-          ></textarea>
-        </div>
+        <!-- Auto-calculated total price -->
+        <label class="block mb-2">
+          Total Price:
+          <input :value="totalPrice.toFixed(2)" type="text" readonly class="w-full border rounded p-2 bg-gray-100"/>
+        </label>
 
-        <div class="flex justify-start space-x-4">
-          <button 
-            type="button"
-            @click="$emit('close')"
-            class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-700 transition duration-200">
-            Cancel
-          </button>
-          <button 
-            type="submit"
-            class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">
-            {{ isEditing ? 'Update' : 'Save' }} Sale
+        <label class="block mb-2">
+          Sale Date:
+          <input v-model="form.sale_date" type="date" required class="w-full border rounded p-2"/>
+        </label>
+
+        <label class="block mb-4">
+          Description:
+          <textarea v-model="form.description" rows="3" class="w-full border rounded p-2"></textarea>
+        </label>
+
+        <div class="flex justify-end gap-4">
+          <button type="button" @click="$emit('close')" class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700">
+            Add
           </button>
         </div>
       </form>
@@ -74,32 +47,34 @@
 </template>
 
 <script setup>
-import { reactive, watch, toRefs } from 'vue'
+import { reactive, computed, watch } from 'vue'
 
 const props = defineProps({
   show: Boolean,
-  isEditing: Boolean,
   saleData: Object
 })
 
 const emit = defineEmits(['close', 'save'])
 
-// Local copy to edit form without mutating prop directly
-const localSale = reactive({
-  date: '',
-  product: '',
+const form = reactive({
+  id: null,
+  product_name: '',
   quantity: 1,
-  unitPrice: 0,
-  description: ''
+  unit_price: 0,
+  description: '',
+  sale_date: new Date().toISOString().split('T')[0],
 })
+
+// Computed total price
+const totalPrice = computed(() => form.quantity * form.unit_price)
 
 watch(() => props.saleData, (newVal) => {
   if (newVal) {
-    Object.assign(localSale, newVal)
+    Object.assign(form, newVal)
   }
-}, { immediate: true })
+})
 
-function handleSubmit() {
-  emit('save', { ...localSale })
+function onSave() {
+  emit('save', { ...form, total_price: totalPrice.value })
 }
 </script>
