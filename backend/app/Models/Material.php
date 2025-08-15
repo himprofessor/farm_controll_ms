@@ -9,11 +9,12 @@ class Material extends Model
 {
     use HasFactory;
 
-    public function material_purchases(){
-        return $this->hasMany(MaterialPurchase::class);
-    }
+
     public function borrowings(){
         return $this->hasMany(Borrowing::class);
+    }
+    public function sales(){
+        return $this->hasMany(Sale::class);
     }
 
      protected $fillable = [

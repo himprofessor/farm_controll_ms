@@ -19,11 +19,11 @@
           v-model="timeFilter"
           class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
         >
+          <option value="all">All Time</option>
           <option value="this-month">This Month</option>
           <option value="last-month">Last Month</option>
           <option value="this-quarter">This Quarter</option>
           <option value="this-year">This Year</option>
-          <option value="all">All Time</option>
         </select>
       </div>
       
@@ -90,26 +90,103 @@
       </form>
     </div>
     
+    <!-- Edit Expense Form (Modal) -->
+    <div v-if="showEditForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-lg shadow-sm border p-6 w-full max-w-2xl">
+        <h4 class="font-medium text-gray-900 mb-4">Edit Expense</h4>
+        <form @submit.prevent="updateExpense" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <input 
+            v-model="editingExpense.category"
+            type="text" 
+            placeholder="Category" 
+            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          >
+          <input 
+            v-model="editingExpense.description"
+            type="text" 
+            placeholder="Description" 
+            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          >
+          <input 
+            v-model="editingExpense.vendor"
+            type="text" 
+            placeholder="Vendor" 
+            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          >
+          <input 
+            v-model="editingExpense.amount"
+            type="number" 
+            placeholder="Amount" 
+            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          >
+          <input 
+            v-model="editingExpense.date"
+            type="date" 
+            class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          >
+          <div class="md:col-span-2 lg:col-span-5 flex gap-2">
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">
+              Save Changes
+            </button>
+            <button 
+              type="button" 
+              @click="showEditForm = false"
+              class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div v-if="showDeleteConfirmation" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-lg shadow-sm border p-6 max-w-md w-full">
+        <h4 class="font-medium text-gray-900 mb-4">Confirm Deletion</h4>
+        <p class="text-gray-700 mb-6">Are you sure you want to delete this expense record? This action cannot be undone.</p>
+        <div class="flex gap-2 justify-end">
+          <button 
+            @click="showDeleteConfirmation = false"
+            class="bg-white border text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition duration-200"
+          >
+            Cancel
+          </button>
+          <button 
+            @click="confirmDelete"
+            class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-200"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    
     <!-- Expense Table -->
     <div class="bg-white rounded-lg shadow-sm border overflow-hidden">
       <div class="overflow-x-auto">
         <table class="w-full">
-          <thead class="bg-gray-50 border-b border-gray-200">
+          <thead class="bg-green-600 border-b border-gray-200">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100" @click="toggleSort">
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Description</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Vendor</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-green-500" @click="toggleSort">
                 <div class="flex items-center gap-1">
                   Amount
                   <div class="flex flex-col">
-                    <ChevronUp class="w-3 h-3" :class="sortOrder === 'asc' ? 'text-gray-900' : 'text-gray-400'" />
-                    <ChevronDown class="w-3 h-3 -mt-1" :class="sortOrder === 'desc' ? 'text-gray-900' : 'text-gray-400'" />
+                    <ChevronUp class="w-3 h-3" :class="sortOrder === 'asc' ? 'text-white' : 'text-gray-400'" />
+                    <ChevronDown class="w-3 h-3 -mt-1" :class="sortOrder === 'desc' ? 'text-white' : 'text-gray-400'" />
                   </div>
                 </div>
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
@@ -130,19 +207,34 @@
                 ${{ expense.amount.toLocaleString() }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <div class="flex items-center gap-2">
+                <div class="relative inline-block text-left">
                   <button 
-                    @click="editExpense(expense)"
-                    class="text-blue-600 hover:text-blue-800"
+                    @click="toggleMenu(expense.id)" 
+                    class="inline-flex justify-center w-full rounded-md px-2 py-1 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none"
                   >
-                    <Edit class="w-4 h-4" />
+                    <MoreVertical class="w-5 h-5" />
                   </button>
-                  <button 
-                    @click="deleteExpense(expense.id)"
-                    class="text-red-600 hover:text-red-800"
+                  <div 
+                    v-if="openMenuId === expense.id" 
+                    class="absolute right-0 z-10 mt-2 w-48 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5"
                   >
-                    <Trash2 class="w-4 h-4" />
-                  </button>
+                    <div class="py-1">
+                      <button 
+                        @click="startEdit(expense); toggleMenu(expense.id)" 
+                        class="flex items-center px-4 py-2 text-sm text-blue-600 hover:bg-gray-100 w-full text-left"
+                      >
+                        <svg class="mr-3 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 110 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+                        Edit
+                      </button>
+                      <button 
+                        @click="prepareDelete(expense.id); toggleMenu(expense.id)" 
+                        class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100 w-full text-left"
+                      >
+                        <svg class="mr-3 h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -164,14 +256,27 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { Search, Plus, Edit, Trash2, CreditCard, ChevronUp, ChevronDown } from 'lucide-vue-next'
+import { Search, Plus, CreditCard, ChevronUp, ChevronDown, MoreVertical } from 'lucide-vue-next'
 
 const showAddForm = ref(false)
+const showEditForm = ref(false)
+const showDeleteConfirmation = ref(false)
 const searchQuery = ref('')
 const timeFilter = ref('this-month')
 const sortOrder = ref('desc')
+const expenseToDelete = ref(null)
+const openMenuId = ref(null)
 
 const newExpense = ref({
+  category: '',
+  description: '',
+  vendor: '',
+  amount: '',
+  date: ''
+})
+
+const editingExpense = ref({
+  id: null,
   category: '',
   description: '',
   vendor: '',
@@ -302,14 +407,39 @@ const addExpense = () => {
   }
 }
 
-const editExpense = (expense) => {
-  // Implement edit functionality
-  console.log('Edit expense:', expense)
+const startEdit = (expense) => {
+  editingExpense.value = {
+    id: expense.id,
+    category: expense.category,
+    description: expense.description,
+    vendor: expense.vendor,
+    amount: expense.amount,
+    date: expense.date
+  }
+  showEditForm.value = true
 }
 
-const deleteExpense = (id) => {
-  if (confirm('Are you sure you want to delete this expense record?')) {
-    expenseHistory.value = expenseHistory.value.filter(expense => expense.id !== id)
+const updateExpense = () => {
+  const index = expenseHistory.value.findIndex(item => item.id === editingExpense.value.id)
+  if (index !== -1) {
+    expenseHistory.value[index] = {
+      ...editingExpense.value,
+      amount: parseFloat(editingExpense.value.amount)
+    }
+    showEditForm.value = false
+  }
+}
+
+const prepareDelete = (id) => {
+  expenseToDelete.value = id
+  showDeleteConfirmation.value = true
+}
+
+const confirmDelete = () => {
+  if (expenseToDelete.value) {
+    expenseHistory.value = expenseHistory.value.filter(expense => expense.id !== expenseToDelete.value)
+    showDeleteConfirmation.value = false
+    expenseToDelete.value = null
   }
 }
 
@@ -323,5 +453,9 @@ const formatDate = (dateString) => {
     day: 'numeric',
     year: 'numeric'
   })
+}
+
+const toggleMenu = (id) => {
+  openMenuId.value = openMenuId.value === id ? null : id
 }
 </script>

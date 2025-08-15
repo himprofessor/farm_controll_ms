@@ -9,16 +9,22 @@ class Borrowing extends Model
 {
     use HasFactory;
 
-    public function materials(){
-        return $this->belongsTo(Material::class);
-    }
-
     protected $fillable = [
         'quantity',
         'purpose',
         'borrowed_date',
         'retunred_date',
         'material_id',
-        'user_id'
+        'staff_id',
     ];
+
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
 }

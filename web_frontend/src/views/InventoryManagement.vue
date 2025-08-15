@@ -19,6 +19,11 @@
         @delete-item="deleteItem"
         @edit-item="editItem"
         @item-added="handleItemAdded"
+        @open-borrow="showBorrowForm = true"  
+      />
+      <InventoryBorrowing
+        v-if="showBorrowForm"
+        @close="showBorrowForm = false"
       />
     </div>
   </div>
@@ -39,23 +44,23 @@ const searchFilter = ref(null)
 
 const fetchInventory = async () => {
   try {
-    console.log('Fetching inventory...') // Debug log
-    const res = await API.get('/materials') // Fetch all data
+    console.log('Fetching inventory...') 
+    const res = await API.get('/materials') 
     if (res.data && Array.isArray(res.data)) {
       inventoryItems.value = res.data
     } else {
-      inventoryItems.value = [] // Fallback if API returns invalid data
+      inventoryItems.value = [] 
       console.warn('API returned invalid data format:', res.data)
     }
-    console.log('API Response:', inventoryItems.value) // Debug log
+    console.log('API Response:', inventoryItems.value) 
   } catch (error) {
     console.error('Failed to fetch inventory:', error)
-    inventoryItems.value = [] // Fallback on error
+    inventoryItems.value = [] 
   }
 }
 
 watch([searchQuery, selectedCategory], (newValues) => {
-  console.log('Search/Category Changed:', newValues) // Debug log
+  console.log('Search/Category Changed:', newValues)
 }, { immediate: true })
 
 onMounted(fetchInventory)
@@ -85,11 +90,11 @@ const filteredItems = computed(() => {
       i.name?.toLowerCase().includes(query) ||
       i.category?.toLowerCase().includes(query) ||
       i.status?.toLowerCase().includes(query) ||
-      i.currentStock?.toString().includes(query) || // 'stock' mapped to currentStock
+      i.currentStock?.toString().includes(query) || 
       i.supplier?.toLowerCase().includes(query)
     )
   }
-  console.log('Filtered Items:', items) // Debug log
+  console.log('Filtered Items:', items) 
   return items
 })
 
