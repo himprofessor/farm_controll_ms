@@ -4,7 +4,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <CardOver
           title="Total Income"
-          :value="`$${saleStore.totalIncome}`"
+          :value="formatCurrency(saleStore.totalIncome)"
           change="+12.5% from last month"
           :icon="TrendingUp"
           iconColor="text-green-600"
@@ -13,7 +13,7 @@
         />
         <CardOver
           title="Total Expenses"
-          :value="`$${materialStore.totalExpenses}`"
+          :value="formatCurrency(materialStore.totalExpenses)"
           change="+5.2% from last month"
           :icon="TrendingDown"
           iconColor="text-red-600"
@@ -22,7 +22,7 @@
         />
         <CardOver
           title="Net Profit"
-          value="$7,600"
+          :value="formatCurrency(netProfit)"
           change="This month"
           :icon="DollarSign"
           iconColor="text-green-600"
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { TrendingUp, TrendingDown, DollarSign } from 'lucide-vue-next'
 import RecentTransactions from './Over/RecentTransactions.vue'
 import CardOver from './Over/CardOver.vue'
@@ -73,14 +73,12 @@ onMounted(async () => {
     await saleStore.fetchSales()
   }
 })
+const netProfit = computed(() => 
+  saleStore.totalIncome - materialStore.totalExpenses
+)
 
-// Sample transactions data
-const transactions = [
-  {
-    title: '50 pigs sold to local market',
-    category: 'Pig Sales',
-    date: '1/15/2024',
-    amount: '+$15,000'
-  }
-]
+// Format with commas and dollar sign
+const formatCurrency = (value) => {
+  return `$${value.toLocaleString()}`
+}
 </script>

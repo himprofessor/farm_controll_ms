@@ -24,16 +24,34 @@
       <StatsCard :title="'Inventory Items'" :value="store.materials.length"
         :change="store.lowStockCount + ' Low Stock Alerts'" icon="box" bg="bg-green-600" />
 
-      <StatsCard :title="texts.monthlyRevenue.title" :value="texts.monthlyRevenue.value"
-        :change="texts.monthlyRevenue.change" icon="trending" bg="bg-purple-600" />
-    </div>
-
+      <!-- StatsCard reusing the same value -->
+      <StatsCard
+        :title="texts.monthlyRevenue.title"
+        :value="totalIncomeFormatted"
+        :change="texts.monthlyRevenue.change"
+        icon="trending"
+        bg="bg-purple-600"
+  />
+</div>
     <!-- Bottom Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <StatsCard :title="texts.salariesPaid.title" :value="texts.salariesPaid.value" :desc="texts.salariesPaid.desc"
-        icon="credit-card" bg="bg-white" textColor="text-green-700" />
-      <StatsCard :title="texts.activeBorrows.title" :value="texts.activeBorrows.value" :desc="texts.activeBorrows.desc"
-        icon="archive" bg="bg-white" textColor="text-purple-700" />
+      <StatsCard 
+        :title="texts.salariesPaid.title" 
+        :value="texts.salariesPaid.value" 
+        :desc="texts.salariesPaid.desc"
+        icon="credit-card" bg="bg-white" 
+        textColor="text-green-700" 
+      />
+
+      <StatsCard 
+        title="Active Borrows" 
+        :value="borrowStore.activeBorrows" 
+        desc="Materials currently borrowed by staff"
+        icon="archive" 
+        bg="bg-white" 
+        textColor="text-purple-700" 
+      />
+
       <StatsCard :title="texts.maintenanceCosts.title" :value="texts.maintenanceCosts.value"
         :desc="texts.maintenanceCosts.desc" icon="settings" bg="bg-white" textColor="text-orange-700" />
     </div>
@@ -52,6 +70,8 @@ import RecentActivities from '@/components/dashboard/RecentActivities.vue'
 import { useMaterialsStore } from '@/stores/material'
 import { useStoreStaff } from '@/stores/staffStore'
 import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
+import { useSalesStore } from '@/stores/sale'
+import { useBorrowStore } from '@/stores/borrowing'
 
 // Language state
 const currentLanguage = ref('en')
@@ -149,4 +169,18 @@ const staffStore = useStoreStaff()
 onMounted(() => {
   staffStore.fetchStaff()
 })
+const saleStore = useSalesStore()
+
+const formatCurrency = (value) => {
+  return `$${(value || 0).toLocaleString()}`
+}
+
+// Shared computed value for both cards
+const totalIncomeFormatted = computed(() => formatCurrency(saleStore.totalIncome))
+
+const borrowStore = useBorrowStore()
+onMounted(() => {
+  borrowStore.fetchBorrowReports()
+})
+
 </script>
