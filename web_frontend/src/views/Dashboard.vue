@@ -18,8 +18,13 @@
       <StatsCard title="Total Staff" :value="staffStore.totalStaff" 
       :change="staffStore.smoothChangeText" icon="users" bg="bg-blue-600" />
 
-      <StatsCard :title="texts.monthlyExpenses.title" :value="texts.monthlyExpenses.value"
-        :change="texts.monthlyExpenses.change" icon="dollar" bg="bg-red-500" />
+      <StatsCard 
+        :title="texts.monthlyExpenses.title" 
+        :value="totalExpenseFormatted"
+        :change="texts.monthlyExpenses.change" 
+        icon="dollar" 
+        bg="bg-red-500" 
+      />
 
       <StatsCard :title="'Inventory Items'" :value="store.materials.length"
         :change="store.lowStockCount + ' Low Stock Alerts'" icon="box" bg="bg-green-600" />
@@ -72,6 +77,7 @@ import { useStoreStaff } from '@/stores/staffStore'
 import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
 import { useSalesStore } from '@/stores/sale'
 import { useBorrowStore } from '@/stores/borrowing'
+import { useMaterialStore } from '@/stores/overmaterial'
 
 // Language state
 const currentLanguage = ref('en')
@@ -170,6 +176,7 @@ onMounted(() => {
   staffStore.fetchStaff()
 })
 const saleStore = useSalesStore()
+const materialStore = useMaterialStore()
 
 const formatCurrency = (value) => {
   return `$${(value || 0).toLocaleString()}`
@@ -177,6 +184,7 @@ const formatCurrency = (value) => {
 
 // Shared computed value for both cards
 const totalIncomeFormatted = computed(() => formatCurrency(saleStore.totalIncome))
+const totalExpenseFormatted = computed(() => formatCurrency(materialStore.totalExpenses))
 
 const borrowStore = useBorrowStore()
 onMounted(() => {
