@@ -72,4 +72,38 @@ class MaterialController extends Controller
             'message' => 'delete successfully!'
         ], 200);
     }
+
+    public function decreaseStock(Request $request, $id)
+    {
+        $material = Material::findOrFail($id);
+
+        $request->validate([
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        if ($material->currentStock < $request->quantity) {
+            return response()->json(['message' => 'Not enough stock available'], 400);
+        }
+
+        $material->currentStock -= $request->quantity;
+
+        $material->value = $material->currentStock * $material->pricePerUnit;
+
+        if ($material->currentStock <= 0) {
+            $material->status = 'critical';
+        } elseif ($material->currentStock <= $material->minStock) {
+            $material->status = 'low';
+        } else {
+            $material->status = 'ok';
+        }
+
+        $material->save();
+
+        return response()->json([
+            'message' => 'Stock updated successfully',
+            'material' => $material
+        ]);
+    }
+
+
 }

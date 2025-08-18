@@ -25,6 +25,11 @@ class Staff extends Authenticatable
         'remember_token',
     ];
 
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
+
     public function salaries()
     {
         return $this->hasMany(Salary::class);
