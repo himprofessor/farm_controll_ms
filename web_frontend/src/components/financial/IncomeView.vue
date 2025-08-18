@@ -174,7 +174,7 @@
           <thead class="bg-green-600 border-b border-gray-200">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Product_Name</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Description</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Customer</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Amount</th>
@@ -254,7 +254,7 @@ const showAddForm = ref(false)
 const showEditForm = ref(false)
 const showDeleteConfirmation = ref(false)
 const searchQuery = ref('')
-const timeFilter = ref('this-month')
+const timeFilter = ref('all')
 const incomeToDelete = ref(null)
 const openMenuId = ref(null)
 
