@@ -12,9 +12,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone')->unique()->nullable();
             $table->string('email')->unique()->nullable();
-            $table->enum('role', ['manager', 'worker']);
+            $table->enum('role', ['manager', 'staff']);
             $table->string('department')->nullable();
-            $table->enum('status', ['active', 'inactive'])->nullable();
+            $table->enum('status', ['active', 'inactive', 'onleave'])->nullable();
             $table->date('start_date')->nullable();
             $table->rememberToken();
             $table->timestamps();

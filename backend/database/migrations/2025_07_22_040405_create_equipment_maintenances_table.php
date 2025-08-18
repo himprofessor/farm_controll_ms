@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('equipment_maintenances', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
             $table->date('maintenance_date');
             $table->text('description');
             $table->decimal('cost');
             $table->string('performed_by');
-            $table->foreignId('equipment_id')->constrained()->onDelete('cascade');
+            $table->enum('status', ['pending', 'in-progress', 'completed', 'scheduled'])->default('completed');
             $table->timestamps();
         });
     }

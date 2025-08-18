@@ -9,10 +9,6 @@ class Supplire extends Model
 {
     use HasFactory;
     
-    public function material_purchases(){
-        return $this->hasMany(MaterialPurchase::class);
-    }
-
     protected $fillable = [
         'name',
         'context_info'
