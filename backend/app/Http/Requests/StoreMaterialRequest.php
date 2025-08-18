@@ -22,11 +22,17 @@ class StoreMaterialRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string|max:255',
-            'category'=>'required|string|max:255',
-            'unit'=>'required|string|max:255',
-            'quantity'=>'required|integer|min:1',
-            'reorder-level'=> 'required|integer|min:1'
+            'name' => 'required|string',
+            'expires' => 'nullable|string',
+            'category' => 'required|string',
+            'currentStock' => 'required|integer',
+            'minStock' => 'required|integer',
+            'unit' => 'required|string',
+            'status' => 'required|in:critical,low,ok',
+            'value' => 'required|numeric',
+            'pricePerUnit' => 'required|numeric',
+            'supplier' => 'required|string',
+            'lastUpdated' => 'required|date',
         ];
     }
 }

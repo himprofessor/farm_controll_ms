@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        'passwords' => 'auth',
     ],
 
     /*
@@ -38,7 +38,12 @@ return [
     'guards' => [
         'web' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'auth_users', 
+        ],
+
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'auth_users', 
         ],
     ],
 
@@ -60,9 +65,9 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'auth_users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Auth::class,
+            'model' => App\Models\Auth::class, 
         ],
 
         // 'users' => [
@@ -92,7 +97,7 @@ return [
 
     'passwords' => [
         'users' => [
-            'provider' => 'users',
+            'provider' => 'auth',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
