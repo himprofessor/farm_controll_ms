@@ -130,9 +130,6 @@
       <h2 class="text-xl font-bold text-gray-800">Borrow Inventory</h2>
       <button @click="toggleBorrowForm"
         class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow flex items-center space-x-1">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
         <span>Borrow</span>
       </button>
     </div>
@@ -154,8 +151,8 @@
             <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Purpose</th>
             <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Borrowed Date</th>
             <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Returned Date</th>
-            <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Material ID</th>
-            <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Staff ID</th>
+            <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Material Name</th>
+            <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Staff Name</th>
             <th class="px-3 py-3 text-left font-semibold text-white uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
@@ -165,8 +162,8 @@
             <td class="px-4 py-2 text-sm text-gray-500">{{ report.purpose }}</td>
             <td class="px-4 py-2 text-sm text-gray-500">{{ report.borrowed_date }}</td>
             <td class="px-4 py-2 text-sm text-gray-500">{{ report.retunred_date || 'Not Returned' }}</td>
-            <td class="px-4 py-2 text-sm text-gray-500">{{ report.material_id }}</td>
-            <td class="px-4 py-2 text-sm text-gray-500">{{ report.staff_id }}</td>
+            <td class="px-4 py-2 text-sm text-gray-500">{{ report.material.name }}</td>
+            <td class="px-4 py-2 text-sm text-gray-500">{{ report.staff.name }}</td>
             <td class="px-4 py-2 text-sm text-right relative">
               <button @click="showMenuId = showMenuId === report.id ? null : report.id"
                 class="w-6 h-6 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500"
@@ -252,21 +249,29 @@ onMounted(() => {
   fetchBorrowReports()
 })
 
+
 const handleBorrowSubmitted = async (data) => {
   isLoading.value = true
   try {
     await API.post('/borrowings', data)
+    if (data.material_id && data.quantity) {
+      await API.put(`/materials/${data.material_id}/decrease-stock`, {
+        quantity: data.quantity
+      })
+    }
     await fetchBorrowReports()
+    emit('item-added') 
     showBorrowForm.value = false
-    successMessage.value = 'Borrow record added successfully!'
+    successMessage.value = 'Borrow record added successfully, inventory updated!'
     setTimeout(() => { successMessage.value = '' }, 3000)
   } catch (error) {
     console.error('Borrow submission error:', error)
-    errorMessage.value = error.response?.data?.message || 'Failed to add borrow record. Please check the input data.'
+    errorMessage.value = error.response?.data?.message || 'Failed to add borrow record.'
   } finally {
     isLoading.value = false
   }
 }
+
 
 const cancelDelete = () => { showDeleteConfirm.value = false; selectedMaterialToDelete.value = null }
 const confirmDelete = async () => {

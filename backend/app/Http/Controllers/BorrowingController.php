@@ -11,8 +11,9 @@ class BorrowingController extends Controller
 {
     public function index()
     {
-        $borrows = Borrowing::all();
-        return response()->json($borrows);
+        $borrowings = Borrowing::with(['material', 'staff'])->get();
+
+        return response()->json($borrowings);
     }
 
     public function store(Request $request)
