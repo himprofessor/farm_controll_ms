@@ -33,12 +33,12 @@
         bg="bg-red-500"
       />
       <StatsCard
-        :title="texts.inventoryItems.title"
-        :value="texts.inventoryItems.value"
-        :change="texts.inventoryItems.change"
-        icon="box"
-        bg="bg-green-600"
-      />
+      :title="'Inventory Items'"
+      :value="store.materials.length"
+      :change="store.lowStockCount + ' Low Stock Alerts'"
+      icon="box"
+      bg="bg-green-600"
+    />
       <StatsCard
         :title="texts.monthlyRevenue.title"
         :value="texts.monthlyRevenue.value"
@@ -84,9 +84,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import StatsCard from '@/components/dashboard/StatsCard.vue'
 import RecentActivities from '@/components/dashboard/RecentActivities.vue'
+import { useMaterialsStore } from '@/stores/material'
 import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
 
 // Language state
@@ -178,4 +179,10 @@ const texts = computed(() => textContent[currentLanguage.value])
 function toggleLanguage() {
   currentLanguage.value = currentLanguage.value === 'en' ? 'kh' : 'en'
 }
+
+const store = useMaterialsStore()
+
+onMounted(() => {
+  store.fetchMaterials()
+});
 </script>
