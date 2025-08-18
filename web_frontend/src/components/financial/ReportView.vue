@@ -1,3 +1,4 @@
+Ya Chhoeun(Class 2025 B), [8/16/2025 3:40 PM]
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Header -->
@@ -459,6 +460,78 @@
         </div>
       </div>
     </div>
+
+    <!-- Report View Modal -->
+    <div v-if="selectedReport" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" @click="closeModal"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="header text-center mb-8">
+              <h1 class="text-2xl font-bold">{{ selectedReportData.farmName }}</h1>
+              <h2 class="text-xl font-semibold">{{ selectedReportData.reportType.replace('-', ' ').toUpperCase() }} REPORT</h2>
+              <p class="text-sm text-gray-600">Generated: {{ new Date(selectedReportData.generatedAt).toLocaleString() }}</p>
+              <p class="text-sm text-gray-600">Period: {{ selectedReportData.reportPeriod }}</p>
+            </div>
+            
+            <div v-if="selectedReportData.financialData" class="section mb-6">
+              <h3 class="text-lg font-medium mb-4">Financial Summary</h3>
+              <div class="summary bg-gray-50 p-4 rounded-md mb-4">
+                <p><strong>Total Revenue:</strong> ${{ selectedReportData.financialData.totalRevenue.toLocaleString() }}</p>
+                <p><strong>Total Expenses:</strong> ${{ selectedReportData.financialData.totalExpenses.toLocaleString() }}</p>
+                <p><strong>Net Profit:</strong> ${{ selectedReportData.financialData.netProfit.toLocaleString() }}</p>
+                <p><strong>Profit Margin:</strong> {{ selectedReportData.financialData.profitMargin }}%</p>
+              </div>
+              
+              <h4 class="text-md font-medium mb-2">Revenue Breakdown</h4>
+              <table class="data-table w-full border-collapse border border-gray-300">
+                <thead>
+                  <tr class="bg-gray-100">
+                    <th class="border border-gray-300 p-2 text-left">Source</th>
+                    <th class="border border-gray-300 p-2 text-left">Amount</th>
+                    <th class="border border-gray-300 p-2 text-left">Percentage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in selectedReportData.financialData.revenueBreakdown" :key="item.source">
+                    <td class="border border-gray-300 p-2">{{ item.source }}</td>
+                    <td class="border border-gray-300 p-2">${{ item.amount.toLocaleString() }}</td>
+                    <td class="border border-gray-300 p-2">{{ item.percentage }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <div v-if="selectedReportData.operationsData" class="section mb-6">
+              <h3 class="text-lg font-medium mb-4">Operations Summary</h3>
+              <div class="summary bg-gray-50 p-4 rounded-md">
+                <p><strong>Total Inventory Items:</strong> {{ selectedReportData.operationsData.inventoryItems }}</p>
+                <p><strong>Low Stock Alerts:</strong> {{ selectedReportData.operationsData.lowStockAlerts }}</p>
+                <p><strong>Production Output:</strong> {{ selectedReportData.operationsData.productionOutput }}</p>
+                <p><strong>Equipment Operational:</strong> {{ selectedReportData.operationsData.equipmentOperational }}</p>
+                <p><strong>Animal Health Rate:</strong> {{ selectedReportData.operationsData.animalHealthRate }}%</p>
+              </div>
+            </div>
+            
+            <div v-if="selectedReportData.staffData" class="section mb-6">
+              <h3 class="text-lg font-medium mb-4">Staff Summary</h3>
+              <div class="summary bg-gray-50 p-4 rounded-md">
+                <p><strong>Total Staff:</strong> {{ selectedReportData.staffData.totalStaff }}</p>
+                <p><strong>Attendance Rate:</strong> {{ selectedReportData.staffData.attendanceRate }}%</p>
+                <p><strong>Payroll Total:</strong> ${{ selectedReportData.staffData.payrollTotal.toLocaleString() }}</p>
+                <p><strong>Training Complete:</strong> {{ selectedReportData.staffData.trainingComplete }}%</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button @click="closeModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-red-500 hover:text-white sm:mt-0 sm:w-auto sm:text-sm">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -569,6 +642,7 @@ const generateReportData = (category, reportType) => {
     category: category,
     reportType: reportType
   }
+
 
   switch (category) {
     case 'financial':
@@ -842,6 +916,7 @@ const generateAndDownload = (category) => {
   }
 }
 
+
 // Methods
 const generateReport = (category) => {
   console.log(`[v0] Generating ${category} report`)
@@ -932,8 +1007,22 @@ const clearCompleted = () => {
   reportQueue.value = reportQueue.value.filter(report => report.status !== 'completed')
 }
 
+const selectedReport = ref(null)
+
+const selectedReportData = computed(() => {
+  if (!selectedReport.value) return null
+  return generateReportData(selectedReport.value.category, selectedReport.value.reportType)
+})
+
 const viewReportDetails = (reportId) => {
   console.log(`[v0] Viewing details for report ${reportId}`)
-  // Add view details logic here
+  const report = reportQueue.value.find(r => r.id === reportId)
+  if (report) {
+    selectedReport.value = report
+  }
+}
+
+const closeModal = () => {
+  selectedReport.value = null
 }
 </script>
