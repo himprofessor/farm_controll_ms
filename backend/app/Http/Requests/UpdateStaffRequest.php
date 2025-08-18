@@ -27,7 +27,7 @@ class UpdateStaffRequest extends FormRequest
             'email' => 'required|email|unique:staff,email,',
             'role' => 'required|string',
             'department' => 'required|string',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:active,inactive,onleave',
             'start_date' => 'required|date',
         ];
     }
