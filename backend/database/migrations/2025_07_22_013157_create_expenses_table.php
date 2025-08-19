@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplires', function (Blueprint $table) {
+        Schema::create('expenses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('context_info');
+            $table->text('description');
+            $table->date('date');
+            $table->decimal('amount');
+            $table->string('vendor');
             $table->timestamps();
         });
     }

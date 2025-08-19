@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreSupplireRequest;
+use App\Http\Requests\StoreExpenseRequest;
+use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Requests\UpdateSupplireRequest;
 use App\Models\Supplire;
 use Illuminate\Http\Request;
 
-class SupplireController extends Controller
+class ExpenseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,7 +21,7 @@ class SupplireController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreSupplireRequest $request)
+    public function store(StoreExpenseRequest $request)
     {
         $validated = $request->validated();
 
@@ -44,7 +45,7 @@ class SupplireController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateSupplireRequest $request, Supplire $supplire)
+    public function update(UpdateExpenseRequest $request, Supplire $supplire)
     {
         
         $validated = $request->validated();
