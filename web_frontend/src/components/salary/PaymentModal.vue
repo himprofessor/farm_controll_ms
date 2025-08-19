@@ -63,6 +63,12 @@
                 </svg>
                 <span>Employee will owe {{ formatCurrency(Math.abs(newBalance)) }}</span>
               </div>
+              <div v-else-if="employee.currentBalance < 0 && newBalance >= 0" class="mt-1 text-xs text-green-600 flex items-start">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>Debt will be fully repaid</span>
+              </div>
             </div>
           </div>
         </div>
@@ -189,12 +195,19 @@ export default {
 
     const newBalance = computed(() => {
       const amount = parseFloat(paymentAmount.value) || 0
-      return props.employee.currentBalance - amount
+      // For debt repayment (negative balance), we ADD the payment amount to reduce the debt
+      // Example: -1000 (debt) + 200 (payment) = -800 (remaining debt)
+      return props.employee.currentBalance + amount
     })
 
     watch(() => props.isOpen, (newVal) => {
       if (newVal) {
-        paymentAmount.value = Math.min(props.employee.baseSalary, props.employee.currentBalance)
+        // Initialize with the full debt amount when opening modal
+        if (props.employee.currentBalance < 0) {
+          paymentAmount.value = Math.abs(props.employee.currentBalance)
+        } else {
+          paymentAmount.value = Math.min(props.employee.baseSalary, props.employee.currentBalance)
+        }
         paymentNote.value = ''
       }
     })
@@ -204,11 +217,15 @@ export default {
     }
 
     const setAmount = (amount) => {
-      paymentAmount.value = amount
+      // When setting amount from "Current Balance" button for debt repayment
+      if (props.employee.currentBalance < 0) {
+        paymentAmount.value = Math.abs(amount) // Show positive amount to repay
+      } else {
+        paymentAmount.value = amount
+      }
     }
 
     const validatePayment = () => {
-      // Ensure the payment amount is a valid number
       paymentAmount.value = parseFloat(paymentAmount.value) || 0
     }
 
@@ -222,21 +239,35 @@ export default {
       const today = new Date().toISOString().split('T')[0]
 
       try {
+        // Calculate new balance based on whether it's debt repayment or salary payment
+        let updatedBalance
+        let updatedTotalEarned = props.employee.totalEarned
+        
+        if (props.employee.currentBalance < 0) {
+          // Debt repayment - ADD payment amount to negative balance to reduce debt
+          updatedBalance = props.employee.currentBalance + amount
+          // Don't add to totalEarned when repaying debt
+        } else {
+          // Salary payment - SUBTRACT payment amount from positive balance
+          updatedBalance = props.employee.currentBalance - amount
+          updatedTotalEarned = props.employee.totalEarned + amount
+        }
+
         // Simulate API call
         const response = await mockApiCall({
           employeeId: props.employee.id,
           amount: amount,
           note: paymentNote.value,
           date: today,
-          willCreateDebt: newBalance.value < 0
+          isDebtRepayment: props.employee.currentBalance < 0
         })
 
         if (response.success) {
           // Emit the complete updated employee data
           emit('payment-processed', {
             ...props.employee,
-            currentBalance: newBalance.value,
-            totalEarned: props.employee.totalEarned + amount,
+            currentBalance: updatedBalance,
+            totalEarned: updatedTotalEarned,
             lastPayment: today
           })
           
@@ -250,7 +281,7 @@ export default {
       }
     }
 
-    // Mock API function (replace with your actual API call)
+    // Mock API function
     const mockApiCall = (paymentData) => {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -268,8 +299,6 @@ export default {
         style: 'currency',
         currency: 'USD'
       })
-      
-      // Handle negative amounts by adding a minus sign
       if (amount < 0) {
         return '-' + formatter.format(Math.abs(amount))
       }

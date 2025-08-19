@@ -16,8 +16,8 @@
         </div>
       </div>
       <div>
-        <button @click="openSalaryPaymentModal" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-lg font-bold transition duration-300 rounded-lg shadow">
-          +
+        <button @click="openSalaryPaymentModal" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-m font-bold transition duration-300 rounded-lg shadow">
+          Tranfer
         </button>
       </div>
     </div>
@@ -91,11 +91,11 @@
 
     <!-- Details Modal -->
     <div v-if="showDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white  rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-        <div class="px-6 py-4 border-b border-gray-200 ">
+      <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <div class="px-6 py-4 border-b border-gray-200">
           <div class="flex items-center justify-between">
             <h3 class="text-lg font-semibold text-gray-900">Employee Details - {{ localEmployee.name }}</h3>
-            <button @click="closeDetailsModal" class="text-gray-400 hover:text-gray-600 ">
+            <button @click="closeDetailsModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
@@ -197,13 +197,18 @@ export default {
       const amount = salaryAmount.value
       const wasPositiveBeforePayment = localEmployee.currentBalance >= 0
 
-      // Always update the current balance
-      localEmployee.currentBalance += amount
-
-      // Only update total earned if the balance was positive before payment
-      // (meaning this is a salary payment, not debt repayment)
       if (wasPositiveBeforePayment) {
+        // Salary payment - add to balance and total earned
+        localEmployee.currentBalance += amount
         localEmployee.totalEarned += amount
+      } else {
+        // Correct debt repayment logic:
+        // Subtract repayment amount from negative balance to reduce debt
+        // Example: -4160 - 1000 = -3160 (remaining debt)
+        const repaymentAmount = Math.min(amount, Math.abs(localEmployee.currentBalance))
+        localEmployee.currentBalance = localEmployee.currentBalance + repaymentAmount
+        
+        // Don't add to totalEarned when repaying debt
       }
 
       localEmployee.lastPayment = new Date().toLocaleDateString()
