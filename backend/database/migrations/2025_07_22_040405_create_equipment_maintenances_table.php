@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('description');
             $table->decimal('cost');
             $table->string('performed_by');
-            $table->enum('status', ['pending', 'in-progress', 'completed', 'scheduled'])->default('completed');
             $table->timestamps();
         });
     }
