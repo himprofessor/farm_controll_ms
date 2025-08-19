@@ -11,6 +11,9 @@ class Supplire extends Model
     
     protected $fillable = [
         'name',
-        'context_info'
+        'description',
+        'date',
+        'amount',
+        'vendor',
     ];
 }
