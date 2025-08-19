@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
-use App\Http\Requests\UpdateSupplireRequest;
-use App\Models\Supplire;
+use App\Models\Expense;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
@@ -15,7 +14,7 @@ class ExpenseController extends Controller
      */
     public function index()
     {
-        return Supplire::all();
+        return Expense::all();
     }
 
     /**
@@ -25,44 +24,44 @@ class ExpenseController extends Controller
     {
         $validated = $request->validated();
 
-        $supplire = Supplire::create($validated);
+        $Expense = Expense::create($validated);
         return response()->json([
-            'message'=>'supplier create successfully!',
-            'data'=> $supplire
+            'message'=>'expense create successfully!',
+            'data'=> $Expense
         ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Supplire $supplire)
+    public function show(Expense $Expense)
     {
         return response()->json([
-            'data'=>$supplire
+            'data'=>$Expense
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateExpenseRequest $request, Supplire $supplire)
+    public function update(UpdateExpenseRequest $request, Expense $Expense)
     {
         
         $validated = $request->validated();
-        $supplire->update($validated);
+        $Expense->update($validated);
 
         return response()->json([
-            'message'=> 'supplier update successfully.!',
-            'data'=>$supplire
+            'message'=> 'expense update successfully.!',
+            'data'=>$Expense
         ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Supplire $supplire)
+    public function destroy(Expense $Expense)
     {
-        $supplire->delete();
+        $Expense->delete();
         return response()->json([
             'message'=> 'delete Success.!'
         ], 200);
