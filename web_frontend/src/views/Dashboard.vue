@@ -15,8 +15,13 @@
 
     <!-- Top Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-      <StatsCard title="Total Staff" :value="staffStore.totalStaff" 
-      :change="staffStore.smoothChangeText" icon="users" bg="bg-blue-600" />
+      <StatsCard 
+        :title="texts.totalStaff.title" 
+        :value="staffStore.totalStaff" 
+        :change="`${texts.totalStaff.change}${staffStore.smoothChangeText ? ` ${texts.totalStaff.changeSuffix}` : ''}`" 
+        icon="users" 
+        bg="bg-blue-600" 
+      />
 
       <StatsCard 
         :title="texts.monthlyExpenses.title" 
@@ -26,44 +31,57 @@
         bg="bg-red-500" 
       />
 
-      <StatsCard :title="'Inventory Items'" :value="store.materials.length"
-        :change="store.lowStockCount + ' Low Stock Alerts'" icon="box" bg="bg-green-600" />
+      <StatsCard 
+        :title="texts.inventoryItems.title" 
+        :value="store.materials.length"
+        :change="`${store.lowStockCount} ${texts.inventoryItems.change}`" 
+        icon="box" 
+        bg="bg-green-600" 
+      />
 
-      <!-- StatsCard reusing the same value -->
       <StatsCard
         :title="texts.monthlyRevenue.title"
         :value="totalIncomeFormatted"
         :change="texts.monthlyRevenue.change"
         icon="trending"
         bg="bg-purple-600"
-  />
-</div>
+      />
+    </div>
+
     <!-- Bottom Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <StatsCard 
         :title="texts.salariesPaid.title" 
         :value="texts.salariesPaid.value" 
         :desc="texts.salariesPaid.desc"
-        icon="credit-card" bg="bg-white" 
+        icon="credit-card" 
+        bg="bg-white" 
         textColor="text-green-700" 
       />
 
       <StatsCard 
-        title="Active Borrows" 
+        :title="texts.activeBorrows.title" 
         :value="borrowStore.activeBorrows" 
-        desc="Materials currently borrowed by staff"
+        :desc="texts.activeBorrows.desc"
         icon="archive" 
         bg="bg-white" 
         textColor="text-purple-700" 
       />
 
-      <StatsCard :title="texts.maintenanceCosts.title" :value="texts.maintenanceCosts.value"
-        :desc="texts.maintenanceCosts.desc" icon="settings" bg="bg-white" textColor="text-orange-700" />
+      <StatsCard 
+        :title="texts.maintenanceCosts.title" 
+        :value="texts.maintenanceCosts.value"
+        :desc="texts.maintenanceCosts.desc" 
+        icon="settings" 
+        bg="bg-white" 
+        textColor="text-orange-700" 
+      />
     </div>
+
     <!-- Bottom Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
-      <RecentActivities />
-      <LowStockAlerts />
+      <RecentActivities :title="texts.recentActivities" :items="texts.recentActivitiesItems" />
+      <LowStockAlerts :title="texts.lowStockAlerts" :items="texts.lowStockAlertsItems" />
     </div>
   </div>
 </template>
@@ -89,18 +107,19 @@ const textContent = {
     dashboardSubtitle: "Welcome back! Here's what's happening at your farm today.",
     totalStaff: {
       title: "Total Staff",
-      value: "24",
-      change: "+2 this month"
+      change: "+3",
+      changeSuffix: "this month"
     },
     monthlyExpenses: {
       title: "Monthly Expenses",
-      value: "$12,450",
       change: "+5.2% from last month"
     },
-
+    inventoryItems: {
+      title: "Inventory Items",
+      change: "Low Stock Alerts"
+    },
     monthlyRevenue: {
       title: "Monthly Revenue",
-      value: "$18,750",
       change: "+8.1% from last month"
     },
     salariesPaid: {
@@ -110,36 +129,36 @@ const textContent = {
     },
     activeBorrows: {
       title: "Active Borrows",
-      value: "0",
       desc: "Materials currently borrowed by staff"
     },
     maintenanceCosts: {
       title: "Maintenance Costs",
       value: "$0.00",
       desc: "Total equipment maintenance expenses"
-    }
+    },
+    recentActivities: "Recent Activities",
+    recentActivitiesItems: ["Staff added: John Doe - 2025-08-20", "Inventory updated - 2025-08-19"],
+    lowStockAlerts: "Low Stock Alerts",
+    lowStockAlertsItems: ["Fertilizer - 5 remaining", "Seeds - 2 remaining"]
   },
   kh: {
     dashboardTitle: "ផ្ទាំងគ្រប់គ្រង",
     dashboardSubtitle: "សូមស្វាគមន៍វិញ! នេះជាអ្វីដែលកំពុងកើតឡើងនៅក្នុងចម្ការរបស់អ្នកថ្ងៃនេះ។",
     totalStaff: {
       title: "បុគ្គលិកសរុប",
-      value: "២៤",
-      change: "+២ ក្នុងខែនេះ"
+      change: "+3",
+      changeSuffix: "ក្នុងខែនេះ"
     },
     monthlyExpenses: {
       title: "ចំណាយប្រចាំខែ",
-      value: "$12,450",
       change: "+5.2% ពីខែមុន"
     },
     inventoryItems: {
       title: "ស្តុកទំនិញ",
-      value: "156",
-      change: "12 ការជូនដំណឹងស្តុកតិច"
+      change: "ការជូនដំណឹងស្តុកតិច"
     },
     monthlyRevenue: {
       title: "ប្រាក់ចំណូលប្រចាំខែ",
-      value: "$18,750",
       change: "+8.1% ពីខែមុន"
     },
     salariesPaid: {
@@ -149,14 +168,17 @@ const textContent = {
     },
     activeBorrows: {
       title: "ការខ្ចីសកម្ម",
-      value: "០",
       desc: "សម្ភារៈដែលកំពុងខ្ចី"
     },
     maintenanceCosts: {
       title: "ថ្លៃថែទាំ",
       value: "$0.00",
       desc: "ចំណាយថែទាំឧបករណ៍សរុប"
-    }
+    },
+    recentActivities: "សកម្មភាពថ្មីៗ",
+    recentActivitiesItems: ["បុគ្គលិកបន្ថែម: John Doe - 2025-08-20", "ការធ្វើបច្ចុប្បន្នភាពស្តុក - 2025-08-19"],
+    lowStockAlerts: "ការជូនដំណឹងស្តុកតិច",
+    lowStockAlertsItems: ["ជី - 5 នៅសល់", "គ្រាប់ពូជ - 2 នៅសល់"]
   }
 }
 
@@ -166,7 +188,6 @@ function toggleLanguage() {
 }
 
 const store = useMaterialsStore()
-
 onMounted(() => {
   store.fetchMaterials()
 })
@@ -175,6 +196,7 @@ const staffStore = useStoreStaff()
 onMounted(() => {
   staffStore.fetchStaff()
 })
+
 const saleStore = useSalesStore()
 const materialStore = useMaterialStore()
 
@@ -182,7 +204,6 @@ const formatCurrency = (value) => {
   return `$${(value || 0).toLocaleString()}`
 }
 
-// Shared computed value for both cards
 const totalIncomeFormatted = computed(() => formatCurrency(saleStore.totalIncome))
 const totalExpenseFormatted = computed(() => formatCurrency(materialStore.totalExpenses))
 
@@ -190,5 +211,4 @@ const borrowStore = useBorrowStore()
 onMounted(() => {
   borrowStore.fetchBorrowReports()
 })
-
 </script>
