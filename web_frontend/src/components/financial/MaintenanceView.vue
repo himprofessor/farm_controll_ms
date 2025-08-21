@@ -65,7 +65,7 @@
             <div class="col-span-2 text-gray-900 font-medium">{{ maintenance.name }}</div>
             <div class="col-span-3 text-gray-600">{{ maintenance.description }}</div>
             <div class="col-span-2 text-gray-600">{{ maintenance.performed_by }}</div>
-            <div class="col-span-2 text-red-600 font-semibold">${{ maintenance.cost.toFixed(2) }}</div>
+            <div class="col-span-2 text-red-600 font-semibold">${{ maintenance.cost}}</div>
             <div class="col-span-1">
               <div class="relative">
                 <button
@@ -258,173 +258,138 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted } from "vue";
+import { useMaintenanceStore } from "@/stores/maintenances";
 
-// Reactive data
-const maintenances = ref([
-  {
-    id: 1,
-    name: 'Generator',
-    maintenance_date: '2025-08-19',
-    description: 'Regular oil change and filter replacement',
-    cost: 250.00,
-    performed_by: 'John Smith'
-  },
-  {
-    id: 2,
-    name: 'Air Compressor',
-    maintenance_date: '2025-08-18',
-    description: 'Pressure valve calibration and safety check',
-    cost: 180.50,
-    performed_by: 'Mike Johnson'
-  }
-])
+const maintenanceStore = useMaintenanceStore();
 
-const searchQuery = ref('')
-const dateFilter = ref('all')
-const showModal = ref(false)
-const showDeleteModal = ref(false)
-const isEditing = ref(false)
-const editingId = ref(null)
-const deleteId = ref(null)
-const activeActionMenu = ref(null)
+const searchQuery = ref("");
+const dateFilter = ref("all");
+const showModal = ref(false);
+const showDeleteModal = ref(false);
+const isEditing = ref(false);
+const editingId = ref(null);
+const deleteId = ref(null);
+const activeActionMenu = ref(null);
+
 
 const form = ref({
-  name: '',
-  maintenance_date: '',
-  description: '',
+  name: "",
+  maintenance_date: "",
+  description: "",
   cost: 0,
-  performed_by: ''
-})
+  performed_by: "",
+});
 
-// Computed properties
+// Load data on mount
+onMounted(() => {
+  maintenanceStore.fetchMaintenances();
+});
+
+// Computed list (search + filter)
 const filteredMaintenances = computed(() => {
-  let filtered = maintenances.value
+  let filtered = maintenanceStore.maintenances;
 
-  // Search filter
   if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(maintenance =>
-      maintenance.name.toLowerCase().includes(query) ||
-      maintenance.description.toLowerCase().includes(query) ||
-      maintenance.performed_by.toLowerCase().includes(query)
-    )
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (m) =>
+        m.name.toLowerCase().includes(query) ||
+        m.description.toLowerCase().includes(query) ||
+        m.performed_by.toLowerCase().includes(query)
+    );
   }
 
-  // Date filter
-  if (dateFilter.value !== 'all') {
-    const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    
-    filtered = filtered.filter(maintenance => {
-      const maintenanceDate = new Date(maintenance.maintenance_date)
-      
+  if (dateFilter.value !== "all") {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    filtered = filtered.filter((m) => {
+      const maintenanceDate = new Date(m.maintenance_date);
       switch (dateFilter.value) {
-        case 'today':
-          return maintenanceDate >= today
-        case 'week':
-          const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
-          return maintenanceDate >= weekAgo
-        case 'month':
-          const monthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
-          return maintenanceDate >= monthAgo
+        case "today":
+          return maintenanceDate >= today;
+        case "week":
+          return (
+            maintenanceDate >=
+            new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
+          );
+        case "month":
+          return (
+            maintenanceDate >=
+            new Date(today.getFullYear(), today.getMonth() - 1, today.getDate())
+          );
         default:
-          return true
+          return true;
       }
-    })
+    });
   }
 
-  return filtered.sort((a, b) => new Date(b.maintenance_date) - new Date(a.maintenance_date))
-})
+  return filtered.sort(
+    (a, b) => new Date(b.maintenance_date) - new Date(a.maintenance_date)
+  );
+});
 
-// Methods
 const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric'
-  })
-}
+  return new Date(dateString).toLocaleDateString("en-US");
+};
 
 const openAddModal = () => {
-  isEditing.value = false
-  editingId.value = null
-  resetForm()
-  showModal.value = true
-}
+  isEditing.value = false;
+  editingId.value = null;
+  resetForm();
+  showModal.value = true;
+};
 
 const editMaintenance = (maintenance) => {
-  isEditing.value = true
-  editingId.value = maintenance.id
-  form.value = { ...maintenance }
-  showModal.value = true
-  activeActionMenu.value = null
-}
+  isEditing.value = true;
+  editingId.value = maintenance.id;
+  form.value = { ...maintenance };
+  showModal.value = true;
+  activeActionMenu.value = null;
+};
 
 const deleteMaintenance = (id) => {
-  deleteId.value = id
-  showDeleteModal.value = true
-  activeActionMenu.value = null
-}
+  deleteId.value = id;
+  showDeleteModal.value = true;
+  activeActionMenu.value = null;
+};
 
-const confirmDelete = () => {
-  maintenances.value = maintenances.value.filter(m => m.id !== deleteId.value)
-  closeDeleteModal()
-}
+const confirmDelete = async () => {
+  await maintenanceStore.deleteMaintenance(deleteId.value);
+  closeDeleteModal();
+};
 
 const closeModal = () => {
-  showModal.value = false
-  resetForm()
-}
+  showModal.value = false;
+  resetForm();
+};
 
 const closeDeleteModal = () => {
-  showDeleteModal.value = false
-  deleteId.value = null
-}
+  showDeleteModal.value = false;
+  deleteId.value = null;
+};
 
 const resetForm = () => {
   form.value = {
-    name: '',
-    maintenance_date: '',
-    description: '',
+    name: "",
+    maintenance_date: "",
+    description: "",
     cost: 0,
-    performed_by: ''
-  }
-}
+    performed_by: "",
+  };
+};
 
-const submitForm = () => {
+const submitForm = async () => {
   if (isEditing.value) {
-    // Update existing maintenance
-    const index = maintenances.value.findIndex(m => m.id === editingId.value)
-    if (index !== -1) {
-      maintenances.value[index] = { ...form.value, id: editingId.value }
-    }
+    await maintenanceStore.updateMaintenance(editingId.value, form.value);
   } else {
-    // Add new maintenance
-    const newId = Math.max(...maintenances.value.map(m => m.id), 0) + 1
-    maintenances.value.push({ ...form.value, id: newId })
+    await maintenanceStore.addMaintenance(form.value);
   }
-  
-  closeModal()
-}
+  closeModal();
+};
 
 const toggleActionMenu = (id) => {
-  activeActionMenu.value = activeActionMenu.value === id ? null : id
-}
-
-// Close action menu when clicking outside
-const handleClickOutside = (event) => {
-  if (!event.target.closest('.relative')) {
-    activeActionMenu.value = null
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  activeActionMenu.value = activeActionMenu.value === id ? null : id;
+};
 </script>
