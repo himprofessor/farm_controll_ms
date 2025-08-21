@@ -14,7 +14,7 @@ class EquipmentMaintenanceController extends Controller
      */
     public function index()
     {
-        //
+        return EquipmentMaintenance::all();
     }
 
     /**

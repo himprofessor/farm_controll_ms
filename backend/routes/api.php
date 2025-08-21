@@ -41,7 +41,7 @@ Route::resource('materials', MaterialController::class);
 Route::put('/materials/{id}/decrease-stock', [MaterialController::class, 'decreaseStock']);
 Route::resource('expenses', ExpenseController::class);
 Route::apiResource('borrowings', BorrowingController::class);
-Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
+Route::resource('equipment_maintenances', EquipmentMaintenanceController::class);
 Route::resource('equipment', EquipmentController::class);
 Route::resource('withdrawals', WithdrawalController::class);
 Route::resource('savings', SavingController::class);
