@@ -64,7 +64,7 @@
       />
     </div>
 
-    <!-- Details Modal -->
+
     <div
       v-if="showDetailsModal"
       class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
@@ -92,7 +92,6 @@
       </div>
     </div>
 
-    <!-- Success Modal for Processing Salaries -->
     <div
       v-if="showSuccessModal"
       class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
@@ -275,5 +274,8 @@ export default {
 </script>
 
 <style scoped>
-/* Add any scoped styles if needed */
+/*responsive for mobile phone */
+
+
+
 </style>
