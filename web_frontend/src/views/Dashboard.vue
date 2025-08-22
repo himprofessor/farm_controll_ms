@@ -96,6 +96,8 @@ import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
 import { useSalesStore } from '@/stores/sale'
 import { useBorrowStore } from '@/stores/borrowing'
 import { useMaterialStore } from '@/stores/overmaterial'
+import { useMaintenanceStore } from '@/stores/maintenances';
+
 
 // Language state
 const currentLanguage = ref('en')

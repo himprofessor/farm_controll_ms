@@ -27,7 +27,6 @@ class StoreEquipmentMaintenanceRequest extends FormRequest
             'description'      => 'required|string',
             'cost'             => 'required|numeric|min:0',
             'performed_by'     => 'required|string|max:255',
-            'status'           => 'required|in:pending,in-progress,completed,scheduled',
         ];
     }
 }
