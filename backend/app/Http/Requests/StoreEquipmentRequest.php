@@ -23,8 +23,10 @@ class StoreEquipmentRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'type' => 'required|string|max:100',
-            'status' => 'required|in:available,broken,under_repair'
+            'description' => 'required|string|max:100',
+            'customer'=> 'required|string|max:100',
+            'amount'=> 'required|numeric|min:0',
+            'date'=>'required|date'
         ];
     }
 }
