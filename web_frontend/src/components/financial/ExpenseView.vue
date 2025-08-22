@@ -29,66 +29,70 @@
       
       <!-- Add Expense Button -->
       <button 
-        @click="showAddForm = !showAddForm"
-        class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200"
-      >
-        <Plus class="w-4 h-4" />
-        Add Expense
-      </button>
+  type="button"
+  @click="showAddForm = !showAddForm"
+  class="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200"
+>
+  <Plus class="w-4 h-4" />
+  Add Expense
+</button>
+
     </div>
 
-    <!-- Add Expense Form (Collapsible) -->
-    <div v-if="showAddForm" class="bg-white p-6 rounded-lg shadow-sm border">
-      <h4 class="font-medium text-gray-900 mb-4">Add New Expense</h4>
-      <form @submit.prevent="addExpense" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <input 
-          v-model="newExpense.category"
-          type="text" 
-          placeholder="Category" 
-          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          required
+    <!-- Add Expense Form (Collapsible with Transition) -->
+<Transition name="slide-fade">
+  <div v-if="showAddForm" class="bg-white p-6 rounded-lg shadow-sm border">
+    <h4 class="font-medium text-gray-900 mb-4">Add New Expense</h4>
+    <form @submit.prevent="addExpense" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <input 
+        v-model="newExpense.name"
+        type="text" 
+        placeholder="Name" 
+        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        required
+      >
+      <input 
+        v-model="newExpense.description"
+        type="text" 
+        placeholder="Description" 
+        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        required
+      >
+      <input 
+        v-model="newExpense.vendor"
+        type="text" 
+        placeholder="Vendor" 
+        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        required
+      >
+      <input 
+        v-model="newExpense.amount"
+        type="number" 
+        placeholder="Amount" 
+        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        required
+      >
+      <input 
+        v-model="newExpense.date"
+        type="date" 
+        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+        required
+      >
+      <div class="md:col-span-2 lg:col-span-5 flex gap-2">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">
+          Add Expense
+        </button>
+        <button 
+          type="button" 
+          @click="showAddForm = false"
+          class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200"
         >
-        <input 
-          v-model="newExpense.description"
-          type="text" 
-          placeholder="Description" 
-          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          required
-        >
-        <input 
-          v-model="newExpense.vendor"
-          type="text" 
-          placeholder="Vendor" 
-          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          required
-        >
-        <input 
-          v-model="newExpense.amount"
-          type="number" 
-          placeholder="Amount" 
-          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          required
-        >
-        <input 
-          v-model="newExpense.date"
-          type="date" 
-          class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          required
-        >
-        <div class="md:col-span-2 lg:col-span-5 flex gap-2">
-          <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-200">
-            Add Expense
-          </button>
-          <button 
-            type="button" 
-            @click="showAddForm = false"
-            class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 transition duration-200"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</Transition>
     
     <!-- Edit Expense Form (Modal) -->
     <div v-if="showEditForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -96,9 +100,9 @@
         <h4 class="font-medium text-gray-900 mb-4">Edit Expense</h4>
         <form @submit.prevent="updateExpense" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <input 
-            v-model="editingExpense.category"
+            v-model="editingExpense.name"
             type="text" 
-            placeholder="Category" 
+            placeholder="Name" 
             class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           >
@@ -174,7 +178,7 @@
           <thead class="bg-green-600 border-b border-gray-200">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Category</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Description</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Vendor</th>
               <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider cursor-pointer hover:bg-green-500" @click="toggleSort">
@@ -195,7 +199,7 @@
                 {{ formatDate(expense.date) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ expense.category }}
+                {{ expense.name }}
               </td>
               <td class="px-6 py-4 text-sm text-gray-900">
                 {{ expense.description }}
@@ -255,8 +259,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { Search, Plus, CreditCard, ChevronUp, ChevronDown, MoreVertical } from 'lucide-vue-next'
+import { ref, computed, onMounted } from 'vue'
+import { useExpenseStore } from '@/stores/expense'
+
+const expenseStore = useExpenseStore()
 
 const showAddForm = ref(false)
 const showEditForm = ref(false)
@@ -266,168 +272,36 @@ const timeFilter = ref('all')
 const sortOrder = ref('desc')
 const expenseToDelete = ref(null)
 const openMenuId = ref(null)
+const newExpense = ref({ name:'', description:'', vendor:'', amount:'', date:'' })
+const editingExpense = ref({ id:null, name:'', description:'', vendor:'', amount:'', date:'' })
 
-const newExpense = ref({
-  category: '',
-  description: '',
-  vendor: '',
-  amount: '',
-  date: ''
+onMounted(() => {
+  expenseStore.fetchExpenses()
 })
-
-const editingExpense = ref({
-  id: null,
-  category: '',
-  description: '',
-  vendor: '',
-  amount: '',
-  date: ''
-})
-
-const expenseHistory = ref([
-  { 
-    id: 1, 
-    category: 'Feed', 
-    description: 'Monthly pig feed supply',
-    vendor: 'Farm Supply Co.',
-    amount: 3500, 
-    date: '2024-01-14' 
-  },
-  { 
-    id: 2, 
-    category: 'Salaries', 
-    description: 'Monthly staff wages',
-    vendor: 'Payroll',
-    amount: 12000, 
-    date: '2024-01-01' 
-  },
-  { 
-    id: 3, 
-    category: 'Utilities', 
-    description: 'Electricity and water bills',
-    vendor: 'Utility Company',
-    amount: 1200, 
-    date: '2024-01-12' 
-  },
-  { 
-    id: 4, 
-    category: 'Veterinary', 
-    description: 'Routine health checkups',
-    vendor: 'Animal Health Clinic',
-    amount: 800, 
-    date: '2024-01-09' 
-  },
-  { 
-    id: 5, 
-    category: 'Equipment', 
-    description: 'Tractor maintenance',
-    vendor: 'Equipment Services',
-    amount: 2500, 
-    date: '2024-01-06' 
-  },
-  { 
-    id: 6, 
-    category: 'Insurance', 
-    description: 'Farm liability insurance',
-    vendor: 'Insurance Corp',
-    amount: 1800, 
-    date: '2024-01-03' 
-  }
-])
 
 const filteredExpenses = computed(() => {
-  let filtered = expenseHistory.value
-
-  // Apply search filter
-  if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(expense => 
-      expense.category.toLowerCase().includes(query) ||
-      expense.description.toLowerCase().includes(query) ||
-      expense.vendor.toLowerCase().includes(query)
-    )
-  }
-
-  // Apply time filter
-  const now = new Date()
-  const currentMonth = now.getMonth()
-  const currentYear = now.getFullYear()
-
-  filtered = filtered.filter(expense => {
-    const expenseDate = new Date(expense.date)
-    
-    switch (timeFilter.value) {
-      case 'this-month':
-        return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear
-      case 'last-month':
-        const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1
-        const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear
-        return expenseDate.getMonth() === lastMonth && expenseDate.getFullYear() === lastMonthYear
-      case 'this-quarter':
-        const currentQuarter = Math.floor(currentMonth / 3)
-        const expenseQuarter = Math.floor(expenseDate.getMonth() / 3)
-        return expenseQuarter === currentQuarter && expenseDate.getFullYear() === currentYear
-      case 'this-year':
-        return expenseDate.getFullYear() === currentYear
-      default:
-        return true
-    }
-  })
-
-  // Apply sorting
-  return filtered.sort((a, b) => {
-    if (sortOrder.value === 'asc') {
-      return a.amount - b.amount
-    } else {
-      return b.amount - a.amount
-    }
-  })
+  return expenseStore.filteredExpenses(searchQuery.value, timeFilter.value)
 })
 
-const addExpense = () => {
-  if (newExpense.value.category && newExpense.value.description && newExpense.value.vendor && newExpense.value.amount && newExpense.value.date) {
-    expenseHistory.value.unshift({
-      id: Date.now(),
-      category: newExpense.value.category,
-      description: newExpense.value.description,
-      vendor: newExpense.value.vendor,
-      amount: parseFloat(newExpense.value.amount),
-      date: newExpense.value.date
-    })
-    
-    // Reset form
-    newExpense.value = {
-      category: '',
-      description: '',
-      vendor: '',
-      amount: '',
-      date: ''
-    }
-    showAddForm.value = false
-  }
+const toggleSort = () => {
+  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+  expenseStore.expenses = expenseStore.sortedExpenses(sortOrder.value)
+}
+
+const addExpense = async () => {
+  await expenseStore.addExpense({ ...newExpense.value, amount: parseFloat(newExpense.value.amount) })
+  newExpense.value = { name:'', description:'', vendor:'', amount:'', date:'' }
+  showAddForm.value = false
 }
 
 const startEdit = (expense) => {
-  editingExpense.value = {
-    id: expense.id,
-    category: expense.category,
-    description: expense.description,
-    vendor: expense.vendor,
-    amount: expense.amount,
-    date: expense.date
-  }
+  editingExpense.value = { ...expense }
   showEditForm.value = true
 }
 
-const updateExpense = () => {
-  const index = expenseHistory.value.findIndex(item => item.id === editingExpense.value.id)
-  if (index !== -1) {
-    expenseHistory.value[index] = {
-      ...editingExpense.value,
-      amount: parseFloat(editingExpense.value.amount)
-    }
-    showEditForm.value = false
-  }
+const updateExpense = async () => {
+  await expenseStore.updateExpense({ ...editingExpense.value, amount: parseFloat(editingExpense.value.amount) })
+  showEditForm.value = false
 }
 
 const prepareDelete = (id) => {
@@ -435,27 +309,24 @@ const prepareDelete = (id) => {
   showDeleteConfirmation.value = true
 }
 
-const confirmDelete = () => {
-  if (expenseToDelete.value) {
-    expenseHistory.value = expenseHistory.value.filter(expense => expense.id !== expenseToDelete.value)
-    showDeleteConfirmation.value = false
-    expenseToDelete.value = null
-  }
+const confirmDelete = async () => {
+  await expenseStore.deleteExpense(expenseToDelete.value)
+  showDeleteConfirmation.value = false
+  expenseToDelete.value = null
 }
 
-const toggleSort = () => {
-  sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
-}
-
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric'
-  })
-}
-
-const toggleMenu = (id) => {
-  openMenuId.value = openMenuId.value === id ? null : id
-}
+const formatDate = (dateString) => new Date(dateString).toLocaleDateString('en-US')
+const toggleMenu = (id) => { openMenuId.value = openMenuId.value === id ? null : id }
 </script>
+<style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
+

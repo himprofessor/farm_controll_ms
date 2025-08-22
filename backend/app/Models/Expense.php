@@ -5,12 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Supplire extends Model
+class Expense extends Model
 {
     use HasFactory;
     
     protected $fillable = [
         'name',
-        'context_info'
+        'description',
+        'date',
+        'amount',
+        'vendor',
     ];
 }

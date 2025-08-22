@@ -16,9 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->date('maintenance_date');
             $table->text('description');
-            $table->decimal('cost');
+            $table->decimal('cost', 10, 2);
             $table->string('performed_by');
-            $table->enum('status', ['pending', 'in-progress', 'completed', 'scheduled'])->default('completed');
             $table->timestamps();
         });
     }

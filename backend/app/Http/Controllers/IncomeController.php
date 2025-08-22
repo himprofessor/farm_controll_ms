@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreEquipmentRequest;
 use App\Http\Requests\UpdateEquipmentRequest;
-use App\Models\Equipment;
+use App\Models\Income;
 use Illuminate\Http\Request;
 
-class EquipmentController extends Controller
+class IncomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return Equipment::all();
+        return Income::all();
     }
 
     /**
@@ -24,43 +24,43 @@ class EquipmentController extends Controller
     {
         $validated = $request->validated();
 
-        $equipment = Equipment::create($validated);
+        $income = Income::create($validated);
 
         return response()->json([
-            'message' => 'Equipment created successfully',
-            'data' => $equipment
+            'message' => 'Income created successfully',
+            'data' => $income
         ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Equipment $equipment)
+    public function show(Income $income)
     {
         return response()->json([
-            'data'=>$equipment
+            'data'=>$income
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEquipmentRequest $request, Equipment $equipment)
+    public function update(UpdateEquipmentRequest $request, Income $income)
 {
-    $equipment->update($request->validated());
+    $income->update($request->validated());
 
     return response()->json([
-        'message' => 'Equipment updated successfully',
-        'data' => $equipment
+        'message' => 'Income updated successfully',
+        'data' => $income
     ]);
 }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Equipment $equipment)
+    public function destroy(Income $income)
     {
-        $equipment->delete();
+        $income->delete();
         return response()->json([
             'message'=>'Delete successfully..!'
         ], 200);

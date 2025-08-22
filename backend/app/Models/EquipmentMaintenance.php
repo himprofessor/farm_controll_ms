@@ -15,6 +15,5 @@ class EquipmentMaintenance extends Model
         'description',
         'cost',
         'performed_by',
-        'status'
     ];
 }

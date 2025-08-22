@@ -57,9 +57,15 @@
         textColor="text-purple-700" 
       />
 
-      <StatsCard :title="texts.maintenanceCosts.title" :value="texts.maintenanceCosts.value"
-        :desc="texts.maintenanceCosts.desc" icon="settings" bg="bg-white" textColor="text-orange-700" />
+      <StatsCard 
+        title="Maintenance Costs"
+        :value=" totalMaintenanceCost"
+        desc="Total equipment maintenance expenses"
+        icon="settings" 
+        bg="bg-white" 
+        textColor="text-orange-700" />
     </div>
+
     <!-- Bottom Section -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
       <RecentActivities />
@@ -78,6 +84,8 @@ import LowStockAlerts from '@/components/dashboard/LowStockAlerts.vue'
 import { useSalesStore } from '@/stores/sale'
 import { useBorrowStore } from '@/stores/borrowing'
 import { useMaterialStore } from '@/stores/overmaterial'
+import { useMaintenanceStore } from '@/stores/maintenances';
+
 
 // Language state
 const currentLanguage = ref('en')
@@ -190,5 +198,22 @@ const borrowStore = useBorrowStore()
 onMounted(() => {
   borrowStore.fetchBorrowReports()
 })
+
+const maintenanceStore = useMaintenanceStore();
+
+// Fetch maintenance data when component mounts
+onMounted(() => {
+  maintenanceStore.fetchMaintenances();
+});
+
+// Compute total maintenance cost dynamically
+const totalMaintenanceCost = computed(() => {
+  const sum = maintenanceStore.maintenances.reduce(
+    (total, m) => total + Number(m.cost || 0),
+    0
+  );
+  return sum.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+});
+
 
 </script>
