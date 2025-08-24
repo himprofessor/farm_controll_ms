@@ -6,52 +6,32 @@
         <h1 class="text-3xl font-bold text-gray-900">Staff Management</h1>
         <p class="text-gray-600">Manage your farm staff information and roles</p>
       </div>
-      <button 
-        @click="openAddStaffModal"
-        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2"
-      >
+      <button @click="openAddStaffModal"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2">
         <PlusIcon class="w-4 h-4" />
         <span>Add Staff</span>
       </button>
     </div>
 
     <!-- Filters -->
-    <StaffFilters 
-      v-model:searchQuery="searchQuery" 
-      v-model:selectedDepartment="selectedDepartment"
-      v-model:selectedStatus="selectedStatus" 
-    />
+    <StaffFilters v-model:searchQuery="searchQuery" v-model:selectedDepartment="selectedDepartment"
+      v-model:selectedStatus="selectedStatus" />
 
     <!-- Staff Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <StaffCard 
-        v-for="staffMember in filteredStaff" 
-        :key="staffMember.id" 
-        :staff="staffMember" 
-        @view="openViewStaffModal"
-        @edit="openEditStaffModal" 
-        @delete="openDeleteConfirmDialog" 
-      />
+      <StaffCard v-for="staffMember in filteredStaff" :key="staffMember.id" :staff="staffMember"
+        @view="openViewStaffModal" @edit="openEditStaffModal" @delete="openDeleteConfirmDialog" />
     </div>
 
     <!-- Staff Form Modal -->
-    <StaffFormModal 
-      :is-visible="isFormModalVisible" 
-      :staff-to-edit="staffToEdit" 
-      @close="closeFormModal"
-      @save="handleSaveStaff" 
-    />
+    <StaffFormModal :is-visible="isFormModalVisible" :staff-to-edit="staffToEdit" @close="closeFormModal"
+      @save="handleSaveStaff" />
 
     <!-- View Staff Modal -->
-    <div 
-      v-if="isViewModalVisible"
-      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50"
-    >
+    <div v-if="isViewModalVisible"
+      class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative">
-        <button 
-          @click="isViewModalVisible = false" 
-          class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-        >
+        <button @click="isViewModalVisible = false" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
           <XIcon class="w-6 h-6" />
         </button>
         <h2 class="text-2xl font-bold mb-6 text-gray-900">Staff Details</h2>
@@ -93,10 +73,8 @@
         </div>
 
         <div class="mt-6 flex justify-end">
-          <button 
-            @click="isViewModalVisible = false"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100"
-          >
+          <button @click="isViewModalVisible = false"
+            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100">
             Close
           </button>
         </div>
@@ -104,12 +82,9 @@
     </div>
 
     <!-- Confirmation Dialog -->
-    <ConfirmationDialog 
-      :is-visible="isConfirmDialogVisible"
-      :message="`Are you sure you want to delete ${staffToDelete?.name || 'this staff member'}?`" 
-      @confirm="confirmDeleteStaff"
-      @cancel="isConfirmDialogVisible = false" 
-    />
+    <ConfirmationDialog :is-visible="isConfirmDialogVisible"
+      :message="`Are you sure you want to delete ${staffToDelete?.name || 'this staff member'}?`"
+      @confirm="confirmDeleteStaff" @cancel="isConfirmDialogVisible = false" />
   </div>
 </template>
 
@@ -148,9 +123,9 @@ onMounted(async () => {
 // Computed filtered staff
 const filteredStaff = computed(() => {
   return staff.value.filter(member => {
-    const matchesSearch = searchQuery.value 
-      ? (member.name?.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
-         member.role?.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    const matchesSearch = searchQuery.value
+      ? (member.name?.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        member.role?.toLowerCase().includes(searchQuery.value.toLowerCase()))
       : true
     const matchesDept = selectedDepartment.value ? member.department === selectedDepartment.value : true
     const matchesStatus = selectedStatus.value ? member.status === selectedStatus.value : true
@@ -251,57 +226,254 @@ const formatDate = (dateString) => {
 </script>
 
 <style scoped>
-
-/* Main container */
-.staff-container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
+/* Base styles for all devices */
+.p-6 {
+  padding: 1.5rem;
 }
 
-/* Staff card */
-.staff-card {
+.bg-gray-100 {
+  background-color: #f3f4f6;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+/* Header styles */
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-gray-900 {
+  color: #111827;
+}
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.bg-green-500 {
+  background-color: #22c55e;
+}
+
+.bg-green-600 {
+  background-color: #16a34a;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.space-x-2>*+* {
+  margin-left: 0.5rem;
+}
+
+/* Grid for staff cards */
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Modal styles */
+.fixed {
+  position: fixed;
+}
+
+.inset-0 {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.bg-gray-600 {
+  background-color: #4b5563;
+}
+
+.bg-opacity-50 {
+  background-opacity: 0.5;
+}
+
+.z-50 {
+  z-index: 50;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.w-full {
   width: 100%;
 }
 
-/* Modal */
-.staff-modal {
-  max-width: 600px;
-  width: 100%;
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
-/* 📱 Mobile */
-@media (max-width: 480px) {
-  .staff-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+.space-y-4>*+* {
+  margin-top: 1rem;
+}
+
+.border-t {
+  border-top: 1px solid #e5e7eb;
+}
+
+.border-gray-200 {
+  border-color: #e5e7eb;
+}
+
+.pt-4 {
+  padding-top: 1rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.border {
+  border: 1px solid #d1d5db;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.rounded-md {
+  border-radius: 0.375rem;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.text-gray-700 {
+  color: #374151;
+}
+
+.bg-gray-100:hover {
+  background-color: #f3f4f6;
+}
+
+/* Responsive adjustments */
+
+/* Mobile devices (up to 640px) */
+@media (max-width: 640px) {
+  .p-6 {
+    padding: 1rem;
   }
-  .staff-header h1 {
+
+  .text-3xl {
     font-size: 1.5rem;
+    line-height: 2rem;
   }
-  .staff-modal {
-    max-width: 95% !important;
-    padding: 1rem !important;
+
+  .text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
-  .staff-modal-header {
-    flex-direction: column;
-    align-items: flex-start;
+
+  .grid {
+    grid-template-columns: 1fr;
   }
-  .staff-modal button {
-    width: 100%;
-    justify-content: center;
+
+  .max-w-md {
+    max-width: 90%;
+  }
+
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .w-16 {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .w-8 {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .text-xl {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .text-sm {
+    font-size: 0.8125rem;
+  }
+
+  .mb-6 {
+    margin-bottom: 1rem;
   }
 }
 
-/* 📲 Tablet */
-@media (max-width: 768px) {
-  .staff-header h1 {
-    font-size: 2rem;
+/* Tablet devices (641px to 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  .staff-modal {
-    max-width: 90% !important;
-    padding: 1.25rem !important;
+
+  .p-6 {
+    padding: 1.25rem;
+  }
+
+  .text-3xl {
+    font-size: 1.75rem;
+  }
+
+  .max-w-md {
+    max-width: 80%;
+  }
+}
+
+/* Desktop devices (1025px and above) */
+@media (min-width: 1025px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 </style>
