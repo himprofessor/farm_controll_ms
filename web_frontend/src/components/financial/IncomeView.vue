@@ -42,7 +42,7 @@
       <h4 class="font-medium text-gray-900 mb-4">Add New Income</h4>
       <form @submit.prevent="addIncome" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <input 
-          v-model="newIncome.category"
+          v-model="newIncome.name"
           type="text" 
           placeholder="Category" 
           class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -96,7 +96,7 @@
         <h4 class="font-medium text-gray-900 mb-4">Edit Income</h4>
         <form @submit.prevent="updateIncome" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <input 
-            v-model="editingIncome.category"
+            v-model="editingIncome.name"
             type="text" 
             placeholder="Category" 
             class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -187,7 +187,7 @@
                 {{ formatDate(income.date) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ income.category }}
+                {{ income.name }}
               </td>
               <td class="px-6 py-4 text-sm text-gray-900">
                 {{ income.description }}
@@ -247,8 +247,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useIncomeStore } from '@/stores/incomeStore'
 import { Search, Plus, DollarSign, MoreVertical } from 'lucide-vue-next'
+
+const incomeStore = useIncomeStore()
 
 const showAddForm = ref(false)
 const showEditForm = ref(false)
@@ -259,7 +262,7 @@ const incomeToDelete = ref(null)
 const openMenuId = ref(null)
 
 const newIncome = ref({
-  category: '',
+  name: '',
   description: '',
   customer: '',
   amount: '',
@@ -268,69 +271,39 @@ const newIncome = ref({
 
 const editingIncome = ref({
   id: null,
-  category: '',
+  name: '',
   description: '',
   customer: '',
   amount: '',
   date: ''
 })
 
-const incomeHistory = ref([
-  { 
-    id: 1, 
-    category: 'Pig Sales', 
-    description: '50 pigs sold to local market',
-    customer: 'Local Market Co.',
-    amount: 15000, 
-    date: '2024-01-15' 
-  },
-  { 
-    id: 2, 
-    category: 'Manure Sales', 
-    description: 'Organic fertilizer sales',
-    customer: 'Garden Center',
-    amount: 800, 
-    date: '2024-01-13' 
-  },
-  { 
-    id: 3, 
-    category: 'Pig Sales', 
-    description: '30 pigs sold to restaurant chain',
-    customer: 'Restaurant Chain',
-    amount: 8500, 
-    date: '2024-01-08' 
-  },
-  { 
-    id: 4, 
-    category: 'Egg Sales', 
-    description: 'Fresh eggs weekly delivery',
-    customer: 'Local Grocery',
-    amount: 1200, 
-    date: '2024-01-05' 
-  }
-])
+// Load data from API when component mounts
+onMounted(() => {
+  incomeStore.fetchIncomes()
+})
 
+// Use store's incomes
 const filteredIncome = computed(() => {
-  let filtered = incomeHistory.value
+  let filtered = incomeStore.incomes
 
-  // Apply search filter
+  // Search filter
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(income => 
-      income.category.toLowerCase().includes(query) ||
+    filtered = filtered.filter(income =>
+      income.name.toLowerCase().includes(query) ||
       income.description.toLowerCase().includes(query) ||
       income.customer.toLowerCase().includes(query)
     )
   }
 
-  // Apply time filter
+  // Time filter
   const now = new Date()
   const currentMonth = now.getMonth()
   const currentYear = now.getFullYear()
 
   filtered = filtered.filter(income => {
     const incomeDate = new Date(income.date)
-    
     switch (timeFilter.value) {
       case 'this-month':
         return incomeDate.getMonth() === currentMonth && incomeDate.getFullYear() === currentYear
@@ -352,50 +325,21 @@ const filteredIncome = computed(() => {
   return filtered.sort((a, b) => new Date(b.date) - new Date(a.date))
 })
 
-const addIncome = () => {
-  if (newIncome.value.category && newIncome.value.description && newIncome.value.customer && newIncome.value.amount && newIncome.value.date) {
-    incomeHistory.value.unshift({
-      id: Date.now(),
-      category: newIncome.value.category,
-      description: newIncome.value.description,
-      customer: newIncome.value.customer,
-      amount: parseFloat(newIncome.value.amount),
-      date: newIncome.value.date
-    })
-    
-    // Reset form
-    newIncome.value = {
-      category: '',
-      description: '',
-      customer: '',
-      amount: '',
-      date: ''
-    }
-    showAddForm.value = false
-  }
+// CRUD actions now use store
+const addIncome = async () => {
+  await incomeStore.addIncome(newIncome.value)
+  newIncome.value = { name: '', description: '', customer: '', amount: '', date: '' }
+  showAddForm.value = false
 }
 
 const startEdit = (income) => {
-  editingIncome.value = {
-    id: income.id,
-    category: income.category,
-    description: income.description,
-    customer: income.customer,
-    amount: income.amount,
-    date: income.date
-  }
+  editingIncome.value = { ...income }
   showEditForm.value = true
 }
 
-const updateIncome = () => {
-  const index = incomeHistory.value.findIndex(item => item.id === editingIncome.value.id)
-  if (index !== -1) {
-    incomeHistory.value[index] = {
-      ...editingIncome.value,
-      amount: parseFloat(editingIncome.value.amount)
-    }
-    showEditForm.value = false
-  }
+const updateIncome = async () => {
+  await incomeStore.updateIncome(editingIncome.value.id, editingIncome.value)
+  showEditForm.value = false
 }
 
 const prepareDelete = (id) => {
@@ -403,9 +347,9 @@ const prepareDelete = (id) => {
   showDeleteConfirmation.value = true
 }
 
-const confirmDelete = () => {
+const confirmDelete = async () => {
   if (incomeToDelete.value) {
-    incomeHistory.value = incomeHistory.value.filter(income => income.id !== incomeToDelete.value)
+    await incomeStore.deleteIncome(incomeToDelete.value)
     showDeleteConfirmation.value = false
     incomeToDelete.value = null
   }
@@ -422,4 +366,5 @@ const formatDate = (dateString) => {
 const toggleMenu = (id) => {
   openMenuId.value = openMenuId.value === id ? null : id
 }
+
 </script>

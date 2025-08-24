@@ -1,9 +1,10 @@
 <?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BorrowingController;
-use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentMaintenanceController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\IncomeControllerextends;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SaleController;
@@ -42,7 +43,7 @@ Route::put('/materials/{id}/decrease-stock', [MaterialController::class, 'decrea
 Route::resource('expenses', ExpenseController::class);
 Route::apiResource('borrowings', BorrowingController::class);
 Route::resource('equipment_maintenances', EquipmentMaintenanceController::class);
-Route::resource('equipment', EquipmentController::class);
+Route::resource('incomes', IncomeController::class);
 Route::resource('withdrawals', WithdrawalController::class);
 Route::resource('savings', SavingController::class);
 Route::resource('salaries', SalaryController::class);
