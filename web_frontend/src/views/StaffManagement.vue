@@ -249,3 +249,59 @@ const formatDate = (dateString) => {
   }
 }
 </script>
+
+<style scoped>
+
+/* Main container */
+.staff-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Staff card */
+.staff-card {
+  width: 100%;
+}
+
+/* Modal */
+.staff-modal {
+  max-width: 600px;
+  width: 100%;
+}
+
+/* 📱 Mobile */
+@media (max-width: 480px) {
+  .staff-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .staff-header h1 {
+    font-size: 1.5rem;
+  }
+  .staff-modal {
+    max-width: 95% !important;
+    padding: 1rem !important;
+  }
+  .staff-modal-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .staff-modal button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* 📲 Tablet */
+@media (max-width: 768px) {
+  .staff-header h1 {
+    font-size: 2rem;
+  }
+  .staff-modal {
+    max-width: 90% !important;
+    padding: 1.25rem !important;
+  }
+}
+</style>
