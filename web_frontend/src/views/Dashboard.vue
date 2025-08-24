@@ -123,6 +123,7 @@ onMounted(() => {
   borrowStore.fetchBorrowReports()
 })
 
+
 const recentActivitiesItems = computed(() => [
   t('dashboard.recentActivitiesItems[0]'),
   t('dashboard.recentActivitiesItems[1]')

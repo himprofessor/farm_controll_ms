@@ -15,23 +15,6 @@
       <SidebarItem v-for="item in navItems" :key="item.path" :item="item" />
     </nav>
 
-<<<<<<< HEAD
-    <!-- Footer: Logout + Language -->
-    <div class="p-4 border-t flex items-center justify-between mb-8">
-      <!-- Logout -->
-      <button
-        @click="handleLogout"
-        class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-        </svg>
-        <span class="text-sm font-medium">{{ $t('sidebar.logout') }}</span>
-      </button>
-
-      <!-- Language Toggle -->
-=======
     <button
       @click="handleLogout"
       class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
@@ -44,24 +27,12 @@
 
     <!-- Language Toggle -->
     <div class="p-4 border-t">
->>>>>>> 7d26ee0786fe1222283192a2cf6ccfd0e659a530
       <LanguageToggle />
     </div>
   </div>
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { useRouter } from 'vue-router'
-import SidebarItem from './SidebarItem.vue'
-import LanguageToggle from '@/components/language/LanguageToggle.vue'
-import { useAuthStore } from '@/stores/authStore'
-import { useI18n } from 'vue-i18n'
-
-const authStore = useAuthStore()
-const router = useRouter()
-const { t } = useI18n()
-=======
 import { useRouter } from "vue-router";
 
 import SidebarItem from "./SidebarItem.vue";
@@ -70,7 +41,6 @@ import { useAuthStore } from "@/stores/authStore";
 
 const authStore = useAuthStore();
 const router = useRouter();
->>>>>>> 7d26ee0786fe1222283192a2cf6ccfd0e659a530
 
 const handleLogout = () => {
   authStore.logout();
@@ -79,39 +49,6 @@ const handleLogout = () => {
 
 const navItems = [
   {
-<<<<<<< HEAD
-    label: 'sidebar.navDashboard',
-    path: '/dashboard',
-    icon: 'dashboard',
-    iconColor: 'text-sky-500',
-  },
-  {
-    label: 'sidebar.navStaffManagement',
-    path: '/staff',
-    icon: 'group',
-    iconColor: 'text-blue-500',
-  },
-  {
-    label: 'sidebar.navSalaryManagement',
-    path: '/salary',
-    icon: 'monetization_on',
-    iconColor: 'text-yellow-500',
-  },
-  {
-    label: 'sidebar.navInventory',
-    path: '/inventory',
-    icon: 'inventory_2',
-    iconColor: 'text-purple-500',
-  },
-  {
-    label: 'sidebar.navFinancial',
-    path: '/financial',
-    icon: 'account_balance_wallet',
-    iconColor: 'text-red-500',
-  }
-]
-</script>
-=======
     label: "Dashboard",
     path: "/dashboard",
     icon: "dashboard",
@@ -224,4 +161,3 @@ const navItems = [
   }
 }
 </style>
->>>>>>> 7d26ee0786fe1222283192a2cf6ccfd0e659a530
