@@ -3,15 +3,15 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">Staff Management</h1>
-        <p class="text-gray-600">Manage your farm staff information and roles</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ $t('staff.title') }}</h1>
+        <p class="text-gray-600">{{ $t('staff.subtitle') }}</p>
       </div>
       <button 
         @click="openAddStaffModal"
         class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2"
       >
         <PlusIcon class="w-4 h-4" />
-        <span>Add Staff</span>
+        <span>{{ $t('staff.addStaff') }}</span>
       </button>
     </div>
 
@@ -54,7 +54,7 @@
         >
           <XIcon class="w-6 h-6" />
         </button>
-        <h2 class="text-2xl font-bold mb-6 text-gray-900">Staff Details</h2>
+        <h2 class="text-2xl font-bold mb-6 text-gray-900">{{ $t('staff.viewDetails') }}</h2>
         <div class="space-y-4">
           <div class="flex items-center">
             <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mr-4">
@@ -62,14 +62,14 @@
             </div>
             <div>
               <div class="flex items-center space-x-4">
-                <h3 class="text-xl font-semibold">{{ viewedStaff.name || 'N/A' }}</h3>
+                <h3 class="text-xl font-semibold">{{ viewedStaff.name || $t('staff.na') }}</h3>
                 <span class="text-gray-600">•</span>
-                <p class="text-gray-600">{{ viewedStaff.role || 'N/A' }}</p>
+                <p class="text-gray-600">{{ viewedStaff.role || $t('staff.na') }}</p>
               </div>
               <div class="flex items-center space-x-4 mt-1">
-                <p class="text-gray-600">{{ viewedStaff.email || 'N/A' }}</p>
+                <p class="text-gray-600">{{ viewedStaff.email || $t('staff.na') }}</p>
                 <span class="text-gray-600">•</span>
-                <p class="text-gray-600">{{ viewedStaff.phone || 'N/A' }}</p>
+                <p class="text-gray-600">{{ viewedStaff.phone || $t('staff.na') }}</p>
               </div>
             </div>
           </div>
@@ -77,15 +77,15 @@
           <div class="border-t border-gray-200 pt-4">
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <p class="text-sm font-medium text-gray-500">Department</p>
-                <p class="text-gray-900">{{ viewedStaff.department || 'N/A' }}</p>
+                <p class="text-sm font-medium text-gray-500">{{ $t('staff.department') }}</p>
+                <p class="text-gray-900">{{ viewedStaff.department || $t('staff.na') }}</p>
               </div>
               <div>
-                <p class="text-sm font-medium text-gray-500">Status</p>
-                <p class="text-gray-900">{{ viewedStaff.status || 'N/A' }}</p>
+                <p class="text-sm font-medium text-gray-500">{{ $t('staff.status') }}</p>
+                <p class="text-gray-900">{{ $t(`staff.status.${viewedStaff.status?.toLowerCase() || ''}`) || viewedStaff.status || $t('staff.na') }}</p>
               </div>
               <div>
-                <p class="text-sm font-medium text-gray-500">Start Date</p>
+                <p class="text-sm font-medium text-gray-500">{{ $t('staff.startDate') }}</p>
                 <p class="text-gray-900">{{ formatDate(viewedStaff.start_date) }}</p>
               </div>
             </div>
@@ -97,7 +97,7 @@
             @click="isViewModalVisible = false"
             class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-100"
           >
-            Close
+            {{ $t('staff.close') }}
           </button>
         </div>
       </div>
@@ -106,7 +106,7 @@
     <!-- Confirmation Dialog -->
     <ConfirmationDialog 
       :is-visible="isConfirmDialogVisible"
-      :message="`Are you sure you want to delete ${staffToDelete?.name || 'this staff member'}?`" 
+      :message="`Are you sure you want to delete ${staffToDelete?.name || $t('staff.thisStaff')}?`" 
       @confirm="confirmDeleteStaff"
       @cancel="isConfirmDialogVisible = false" 
     />
@@ -126,24 +126,18 @@ import API from '@/plugin/axios'
 const searchQuery = ref('')
 const selectedDepartment = ref('')
 const selectedStatus = ref('')
-const staff = ref([])
+const staff = ref([
+  { id: 1, name: 'ya', role: 'worker', email: 'ya@mailinator.com', phone: '0123456871', start_date: '2022-10-07', department: 'Administration', status: 'inactive' },
+  { id: 2, name: 'mealea', role: 'manager', email: 'rexeqefis@mailinator.com', phone: '087654345', start_date: '2024-12-29', department: 'Management', status: 'active' },
+  { id: 3, name: 'Aiko Mccarthy', role: 'manager', email: 'guzited@mailinator.com', phone: '+1 (781) 934-8385', start_date: '2004-05-03', department: 'Administration', status: 'inactive' },
+  { id: 4, name: 'ya', role: 'manager', email: 'yayaaa@gmail.com', phone: '23456789', start_date: '2025-08-23', department: 'Health', status: 'active' }
+])
 const isFormModalVisible = ref(false)
 const isViewModalVisible = ref(false)
 const staffToEdit = ref(null)
 const viewedStaff = ref({})
 const isConfirmDialogVisible = ref(false)
 const staffToDelete = ref(null)
-
-// Load initial staff data
-onMounted(async () => {
-  try {
-    const response = await API.get('/staff')
-    staff.value = response.data || []
-  } catch (error) {
-    console.error('Failed to load staff:', error)
-    staff.value = []
-  }
-})
 
 // Computed filtered staff
 const filteredStaff = computed(() => {
@@ -182,38 +176,14 @@ const closeFormModal = () => {
 // Optimistic save handler (Add/Edit)
 const handleSaveStaff = async (newStaffData) => {
   if (staffToEdit.value) {
-    // Edit: update UI immediately
     const index = staff.value.findIndex(s => s.id === staffToEdit.value.id)
     if (index !== -1) staff.value[index] = { ...staff.value[index], ...newStaffData }
   } else {
-    // Add: temporary staff object for instant UI update
     const tempId = Date.now()
     staff.value.unshift({ ...newStaffData, id: tempId })
   }
 
   closeFormModal()
-
-  try {
-    if (staffToEdit.value) {
-      // API update
-      const response = await API.put(`/staff/${staffToEdit.value.id}`, newStaffData)
-      const index = staff.value.findIndex(s => s.id === staffToEdit.value.id)
-      if (index !== -1) staff.value[index] = response.data
-    } else {
-      // API create
-      const response = await API.post('/staff', newStaffData)
-      const tempIndex = staff.value.findIndex(s => s.id === tempId)
-      if (tempIndex !== -1) staff.value[tempIndex] = response.data
-    }
-  } catch (error) {
-    console.error("Error saving staff:", error)
-    if (staffToEdit.value) {
-      const res = await API.get('/staff')
-      staff.value = res.data
-    } else {
-      staff.value = staff.value.filter(s => s.id !== tempId)
-    }
-  }
 }
 
 // Delete staff
@@ -229,18 +199,11 @@ const confirmDeleteStaff = async () => {
   staff.value = staff.value.filter(s => s.id !== deletedStaff.id)
   staffToDelete.value = null
   isConfirmDialogVisible.value = false
-
-  try {
-    await API.delete(`/staff/${deletedStaff.id}`)
-  } catch (error) {
-    console.error('Error deleting staff:', error)
-    staff.value.push(deletedStaff)
-  }
 }
 
 // Helper
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
+  if (!dateString) return $t('staff.na')
   try {
     const options = { year: 'numeric', month: 'long', day: 'numeric' }
     return new Date(dateString).toLocaleDateString(undefined, options)

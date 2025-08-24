@@ -5,18 +5,20 @@
     <span class="material-symbols-outlined text-xl" :class="[item.iconColor, isActive ? 'text-white' : '']">
       {{ item.icon }}
     </span>
-    <span>{{ item.label }}</span>
+    <span>{{ $t(item.label) }}</span>
   </router-link>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-import { computed } from 'vue';
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
   item: { type: Object, required: true }
-});
+})
 
-const route = useRoute();
-const isActive = computed(() => route.path === props.item.path);
+const route = useRoute()
+const isActive = computed(() => route.path === props.item.path)
 </script>

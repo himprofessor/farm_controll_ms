@@ -5,12 +5,12 @@
       <div class="w-8 h-8 bg-white bg-opacity-20 rounded flex items-center justify-center">
         <span class="text-lg font-bold">π</span>
       </div>
-      <span class="text-lg font-semibold">Farm Control</span>
+      <span class="text-lg font-semibold">{{ $t('sidebar.logo') }}</span>
     </div>
 
     <!-- Navigation -->
     <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-      <SidebarItem v-for="item in navItems" :key="item.label" :item="item" />
+      <SidebarItem v-for="item in navItems" :key="item.path" :item="item" />
     </nav>
 
     <!-- Footer: Logout + Language -->
@@ -24,7 +24,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
         </svg>
-        <span class="text-sm font-medium">Logout</span>
+        <span class="text-sm font-medium">{{ $t('sidebar.logout') }}</span>
       </button>
 
       <!-- Language Toggle -->
@@ -35,13 +35,14 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-
 import SidebarItem from './SidebarItem.vue'
 import LanguageToggle from '@/components/language/LanguageToggle.vue'
 import { useAuthStore } from '@/stores/authStore'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
 const router = useRouter()
+const { t } = useI18n()
 
 const handleLogout = () => {
   authStore.logout()
@@ -50,31 +51,31 @@ const handleLogout = () => {
 
 const navItems = [
   {
-    label: 'Dashboard',
+    label: 'sidebar.navDashboard',
     path: '/dashboard',
     icon: 'dashboard',
     iconColor: 'text-sky-500',
   },
   {
-    label: 'Staff Management',
+    label: 'sidebar.navStaffManagement',
     path: '/staff',
     icon: 'group',
     iconColor: 'text-blue-500',
   },
   {
-    label: 'Salary Management',
+    label: 'sidebar.navSalaryManagement',
     path: '/salary',
     icon: 'monetization_on',
     iconColor: 'text-yellow-500',
   },
   {
-    label: 'Inventory',
+    label: 'sidebar.navInventory',
     path: '/inventory',
     icon: 'inventory_2',
     iconColor: 'text-purple-500',
   },
   {
-    label: 'Financial',
+    label: 'sidebar.navFinancial',
     path: '/financial',
     icon: 'account_balance_wallet',
     iconColor: 'text-red-500',

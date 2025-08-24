@@ -1,0 +1,108 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome back! Here's what's happening at your farm today.",
+    "toggleLanguage": "ខ្មែរ",
+    "totalStaff": {
+      "title": "Total Staff",
+      "change": "+3",
+      "changeSuffix": "this month"
+    },
+    "monthlyExpenses": {
+      "title": "Monthly Expenses",
+      "change": "+5.2% from last month"
+    },
+    "inventoryItems": {
+      "title": "Inventory Items",
+      "change": "Low Stock Alerts"
+    },
+    "monthlyRevenue": {
+      "title": "Monthly Revenue",
+      "change": "+8.1% from last month"
+    },
+    "salariesPaid": {
+      "title": "Salaries Paid",
+      "value": "$0.00",
+      "desc": "Total lifetime payments to staff"
+    },
+    "activeBorrows": {
+      "title": "Active Borrows",
+      "desc": "Materials currently borrowed by staff"
+    },
+    "maintenanceCosts": {
+      "title": "Maintenance Costs",
+      "value": "$0.00",
+      "desc": "Total equipment maintenance expenses"
+    },
+    "recentActivities": "Recent Activities",
+    "recentActivitiesItems": [
+      "Staff added: John Doe - 2025-08-20",
+      "Inventory updated - 2025-08-19"
+    ],
+    "noActivities": "No recent activities",
+    "lowStockAlerts": "Low Stock Alerts",
+    "lowStockAlertsItems": [
+      "Fertilizer - 5 remaining",
+      "Seeds - 2 remaining"
+    ],
+    "itemFertilizer": "Fertilizer",
+    "itemSeeds": "Seeds",
+    "itemUnknown": "Unknown Item",
+    "statusCritical": "Critical",
+    "statusLow": "Low Stock",
+    "statusOK": "OK",
+    "lowStockCurrent": "Current: {current} | Minimum: {min}",
+    "allStockSufficient": "All materials are sufficiently stocked."
+  },
+  "sidebar": {
+    "logo": "Farm Control",
+    "logout": "Logout",
+    "navDashboard": "Dashboard",
+    "navStaffManagement": "Staff Management",
+    "navSalaryManagement": "Salary Management",
+    "navInventory": "Inventory",
+    "navFinancial": "Financial"
+  },
+  "staff": {
+    "title": "Staff Management",
+    "subtitle": "Manage your farm staff information and roles",
+    "addStaff": "Add Staff",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmAction": "Confirm Action",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "searchPlaceholder": "Search by name, role, or department...",
+    "allDepartments": "All Departments",
+    "departmentManagement": "Management",
+    "departmentHealth": "Health",
+    "departmentOperations": "Operations",
+    "departmentAdministration": "Administration",
+    "allStatuses": "All Statuses",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "statusOnLeave": "On Leave",
+    "editStaff": "Edit Staff",
+    "addStaff": "Add New Staff",
+    "name": "Name",
+    "role": "Role",
+    "email": "Email",
+    "phone": "Phone",
+    "startDate": "Start Date",
+    "department": "Department",
+    "status": "Status",
+    "selectDepartment": "Select Department",
+    "selectStatus": "Select Status",
+    "save": "Save",
+    "viewDetails": "Staff Details",
+    "na": "N/A",
+    "close": "Close",
+    "thisStaff": "this staff member",
+    "started": "Started",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    }
+  }
+}

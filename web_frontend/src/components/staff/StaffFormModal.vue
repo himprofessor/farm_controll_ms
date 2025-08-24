@@ -11,14 +11,14 @@
         <XIcon class="w-6 h-6" />
       </button>
       <h2 class="text-2xl font-bold mb-6 text-gray-900">
-        {{ staffToEdit ? "Edit Staff" : "Add New Staff" }}
+        {{ staffToEdit ? $t('staff.editStaff') : $t('staff.addStaff') }}
       </h2>
       <form @submit.prevent="$emit('save', staffData)">
         <div class="grid grid-cols-1 gap-4 mb-6">
           <!-- Name & Role in one line -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+              <label for="name" class="block text-sm font-medium text-gray-700">{{ $t('staff.name') }}</label>
               <input
                 type="text"
                 id="name"
@@ -29,7 +29,7 @@
               />
             </div>
             <div>
-              <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+              <label for="role" class="block text-sm font-medium text-gray-700">{{ $t('staff.role') }}</label>
               <input
                 type="text"
                 id="role"
@@ -44,7 +44,7 @@
           <!-- Email & Phone in one line -->
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+              <label for="email" class="block text-sm font-medium text-gray-700">{{ $t('staff.email') }}</label>
               <input
                 type="email"
                 id="email"
@@ -55,7 +55,7 @@
               />
             </div>
             <div>
-              <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+              <label for="phone" class="block text-sm font-medium text-gray-700">{{ $t('staff.phone') }}</label>
               <input
                 type="tel"
                 id="phone"
@@ -68,7 +68,7 @@
 
           <!-- Single-column fields -->
           <div>
-            <label for="startDate" class="block text-sm font-medium text-gray-700">Start Date</label>
+            <label for="startDate" class="block text-sm font-medium text-gray-700">{{ $t('staff.startDate') }}</label>
             <input
               type="date"
               id="startDate"
@@ -80,7 +80,7 @@
           </div>
 
           <div>
-            <label for="department" class="block text-sm font-medium text-gray-700">Department</label>
+            <label for="department" class="block text-sm font-medium text-gray-700">{{ $t('staff.department') }}</label>
             <select
               id="department"
               v-model="staffData.department"
@@ -88,16 +88,16 @@
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
                      focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
-              <option value="">Select Department</option>
-              <option value="Management">Management</option>
-              <option value="Health">Health</option>
-              <option value="Operations">Operations</option>
-              <option value="Administration">Administration</option>
+              <option value="">{{ $t('staff.selectDepartment') }}</option>
+              <option value="Management">{{ $t('staff.departmentManagement') }}</option>
+              <option value="Health">{{ $t('staff.departmentHealth') }}</option>
+              <option value="Operations">{{ $t('staff.departmentOperations') }}</option>
+              <option value="Administration">{{ $t('staff.departmentAdministration') }}</option>
             </select>
           </div>
 
           <div>
-            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+            <label for="status" class="block text-sm font-medium text-gray-700">{{ $t('staff.status') }}</label>
             <select
               id="status"
               v-model="staffData.status"
@@ -105,10 +105,10 @@
               class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
                      focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
-              <option value="">Select Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="onleave">Onleave</option>
+              <option value="">{{ $t('staff.selectStatus') }}</option>
+              <option value="active">{{ $t('staff.statusActive') }}</option>
+              <option value="inactive">{{ $t('staff.statusInactive') }}</option>
+              <option value="onleave">{{ $t('staff.statusOnLeave') }}</option>
             </select>
           </div>
         </div>
@@ -122,7 +122,7 @@
                    text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 
                    focus:ring-offset-2 focus:ring-green-500"
           >
-            Cancel
+            {{ $t('staff.cancel') }}
           </button>
           <button
             type="submit"
@@ -130,7 +130,7 @@
                    font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 
                    focus:ring-offset-2 focus:ring-green-500"
           >
-            Save
+            {{ $t('staff.save') }}
           </button>
         </div>
       </form>
@@ -139,15 +139,15 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { XIcon } from "lucide-vue-next";
+import { ref, watch } from "vue"
+import { XIcon } from "lucide-vue-next"
 
 const props = defineProps({
   isVisible: { type: Boolean, required: true },
   staffToEdit: { type: Object, default: null },
-});
+})
 
-const emit = defineEmits(["close", "save"]);
+const emit = defineEmits(["close", "save"])
 
 const staffData = ref({
   name: "",
@@ -157,15 +157,15 @@ const staffData = ref({
   start_date: "",
   department: "",
   status: "",
-});
+})
 
 watch(
   () => props.staffToEdit,
   (newVal) => {
     staffData.value = newVal
       ? { ...newVal }
-      : { name: "", role: "", email: "", phone: "", start_date: "", department: "", status: "" };
+      : { name: "", role: "", email: "", phone: "", start_date: "", department: "", status: "" }
   },
   { immediate: true }
-);
+)
 </script>
