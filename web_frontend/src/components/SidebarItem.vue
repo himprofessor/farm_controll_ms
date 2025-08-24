@@ -14,39 +14,20 @@
     >
       {{ item.icon }}
     </span>
-    <span>{{ item.label }}</span>
+    <span>{{ $t(item.label) }}</span>
   </router-link>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-import { computed } from "vue";
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const props = defineProps({
-  item: { type: Object, required: true },
-});
+  item: { type: Object, required: true }
+})
 
-const route = useRoute();
-const isActive = computed(() => route.path === props.item.path);
+const route = useRoute()
+const isActive = computed(() => route.path === props.item.path)
 </script>
-
-<style scoped>
-
-@media (max-width: 768px) {
-  .flex.items-center.gap-3.px-3.py-2.rounded-lg.transition-all.duration-200
-    span:last-child {
-    display: none !important; 
-  }
-
-  .flex.items-center.gap-3.px-3.py-2.rounded-lg.transition-all.duration-200 {
-    justify-content: center; 
-  }
-}
-
-@media (min-width: 769px) {
-  .flex.items-center.gap-3.px-3.py-2.rounded-lg.transition-all.duration-200
-    span:last-child {
-    display: inline !important; 
-  }
-}
-</style>

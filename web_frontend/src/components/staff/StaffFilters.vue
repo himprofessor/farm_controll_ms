@@ -10,7 +10,7 @@
           type="text"
           :value="searchQuery"
           @input="$emit('update:searchQuery', $event.target.value)"
-          placeholder="Search by name, role, or department..."
+          :placeholder="$t('staff.searchPlaceholder')"
           class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
         />
       </div>
@@ -22,11 +22,11 @@
         @change="$emit('update:selectedDepartment', $event.target.value)"
         class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent cursor-pointer w-full sm:w-auto"
       >
-        <option value="">All Departments</option>
-        <option value="Management">Management</option>
-        <option value="Health">Health</option>
-        <option value="Operations">Operations</option>
-        <option value="Administration">Administration</option>
+        <option value="">{{ $t('staff.allDepartments') }}</option>
+        <option value="Management">{{ $t('staff.departmentManagement') }}</option>
+        <option value="Health">{{ $t('staff.departmentHealth') }}</option>
+        <option value="Operations">{{ $t('staff.departmentOperations') }}</option>
+        <option value="Administration">{{ $t('staff.departmentAdministration') }}</option>
       </select>
       <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
         <ChevronDownIcon class="w-4 h-4 text-gray-400" />
@@ -39,10 +39,9 @@
         @change="$emit('update:selectedStatus', $event.target.value)"
         class="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent cursor-pointer w-full sm:w-auto"
       >
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <!-- <option value="On Leave">On Leave</option> -->
-        <option value="inactive">Inactive</option>
+        <option value="">{{ $t('staff.allStatuses') }}</option>
+        <option value="active">{{ $t('staff.statusActive') }}</option>
+        <option value="inactive">{{ $t('staff.statusInactive') }}</option>
       </select>
       <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
         <ChevronDownIcon class="w-4 h-4 text-gray-400" />

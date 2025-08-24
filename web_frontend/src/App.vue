@@ -3,6 +3,7 @@
   <div class="min-h-screen bg-blue-50">
     <NavBar v-if="isAuthenticated" @logout="logout" />
     <router-view />
+    <!-- <Sidebar /> -->
   </div>
   
 </template>
@@ -10,6 +11,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import Sidebar from './components/Sidebar.vue'
+
 
 const router = useRouter();
 const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true');
