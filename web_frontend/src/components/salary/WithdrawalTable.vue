@@ -10,7 +10,7 @@
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
               </svg>
-              Process Salary Payment
+              {{ $t('staff.salaryManagement.processSalaryPayment') }}
             </h3>
             <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -19,7 +19,7 @@
             </button>
           </div>
           <p class="text-sm text-gray-600 mt-1">
-            Process salary payment for {{ employee.name }} - {{ employee.position || employee.role }}
+            {{ $t('staff.salaryManagement.processSalaryPaymentFor') }} {{ employee.name }} - {{ $t(`staff.role.${employee.position.toLowerCase().replace(/ /g, '_')}`) || employee.position }}
           </p>
         </div>
 
@@ -35,13 +35,13 @@
             </div>
             <div class="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span class="text-gray-600">Current Balance:</span>
+                <span class="text-gray-600">{{ $t('staff.salaryManagement.currentBalance') }}:</span>
                 <div class="font-semibold" :class="{'text-green-600': employee.currentBalance >= 0, 'text-red-600': employee.currentBalance < 0}">
                   {{ formatCurrency(employee.currentBalance) }}
                 </div>
               </div>
               <div>
-                <span class="text-gray-600">Base Salary:</span>
+                <span class="text-gray-600">{{ $t('staff.salaryManagement.baseSalary') }}:</span>
                 <div class="font-semibold">{{ formatCurrency(employee.baseSalary) }}</div>
               </div>
             </div>
@@ -49,9 +49,9 @@
             <!-- New Balance Preview -->
             <div v-if="paymentAmount > 0" class="mt-3 p-2 bg-blue-50 rounded-md">
               <div class="text-sm text-gray-700">
-                <p class="font-medium">After Payment:</p>
+                <p class="font-medium">{{ $t('staff.salaryManagement.afterPayment') }}</p>
                 <div class="mt-1">
-                  New Balance: 
+                  {{ $t('staff.salaryManagement.newBalance') }}: 
                   <span :class="{
                     'text-green-600': newBalance >= 0,
                     'text-red-600': newBalance < 0
@@ -63,7 +63,7 @@
                   <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                   </svg>
-                  <span>Employee will owe {{ formatCurrency(Math.abs(newBalance)) }}</span>
+                  <span>{{ $t('staff.salaryManagement.employeeWillOwe') }} {{ formatCurrency(Math.abs(newBalance)) }}</span>
                 </div>
               </div>
             </div>
@@ -71,7 +71,7 @@
 
           <!-- Payment Amount -->
           <div class="space-y-2">
-            <label for="amount" class="text-base font-medium text-gray-700">Payment Amount</label>
+            <label for="amount" class="text-base font-medium text-gray-700">{{ $t('staff.salaryManagement.paymentAmount') }}</label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="text-gray-500 sm:text-sm">$</span>
@@ -102,7 +102,7 @@
               <svg class="w-4 h-4 mt-0.5 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
               </svg>
-              <span>Warning: This payment will create a debt of {{ formatCurrency(Math.abs(newBalance)) }}</span>
+              <span>{{ $t('staff.salaryManagement.warning') }}: {{ $t('staff.salaryManagement.paymentWillCreateDebt') }} {{ formatCurrency(Math.abs(newBalance)) }}</span>
             </div>
             
             <div class="flex space-x-2">
@@ -111,27 +111,27 @@
                 @click="setAmount(employee.currentBalance)"
                 class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:bg-green-500 hover:text-white transition-colors"
               >
-                Current Balance
+                {{ $t('staff.salaryManagement.currentBalance') }}
               </button>
               <button
                 type="button"
                 @click="setAmount(employee.baseSalary)"
                 class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:bg-green-500 hover:text-white transition-colors"
               >
-                Base Salary
+                {{ $t('staff.salaryManagement.baseSalary') }}
               </button>
             </div>
           </div>
 
           <!-- Payment Notes -->
           <div class="space-y-2">
-            <label for="notes" class="text-base font-medium text-gray-700">Payment Notes (Optional)</label>
+            <label for="notes" class="text-base font-medium text-gray-700">{{ $t('staff.salaryManagement.paymentNotes') }} ({{ $t('staff.salaryManagement.optional') }})</label>
             <textarea
               id="notes"
               v-model="paymentNote"
               rows="3"
               class="block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Add any additional notes about this payment..."
+              :placeholder="$t('staff.salaryManagement.paymentNotesPlaceholder')"
             ></textarea>
           </div>
         </div>
@@ -142,7 +142,7 @@
             @click="closeModal"
             class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Cancel
+            {{ $t('staff.salaryManagement.cancel') }}
           </button>
           <button
             @click="processPayment"
@@ -152,7 +152,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
             </svg>
-            Process Payment
+            {{ $t('staff.salaryManagement.processPayment') }}
           </button>
         </div>
       </div>
@@ -167,14 +167,13 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <input v-model="searchQuery" type="text" placeholder="Search by name, role, or department"
+          <input v-model="searchQuery" type="text" :placeholder="$t('staff.salaryManagement.searchPlaceholder')"
             class="block w-[800px] pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
         </div>
         <div class="flex space-x-4">
-          <select v-model="statusFilter"
-            class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-            <option value="All Status">All Status</option>
-            <option v-for="status in statuses" :value="status" :key="status">{{ status }}</option>
+          <select v-model="statusFilter" class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+            <option value="All Status">{{ $t('staff.allStatuses') }}</option>
+            <option v-for="status in translatedStatuses" :value="status.value" :key="status.value">{{ $t(`staff.salaryManagement.${status.key}`) }}</option>
           </select>
         </div>
       </div>
@@ -184,12 +183,12 @@
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff Member</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request Date</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('staff.salaryManagement.staffMember') }}</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('staff.salaryManagement.amount') }}</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('staff.salaryManagement.requestDate') }}</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('staff.salaryManagement.status') }}</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('staff.salaryManagement.reason') }}</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('staff.salaryManagement.actions') }}</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -206,7 +205,7 @@
             <td class="px-6 py-4 whitespace-nowrap">
               <span :class="getStatusClasses(withdrawal.status)"
                 class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                {{ withdrawal.status }}
+                {{ $t(`staff.salaryManagement.${withdrawal.status.toLowerCase()}`) }}
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -215,18 +214,18 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
               <button v-if="withdrawal.status === 'Pending'" @click="approveWithdrawal(withdrawal)"
                 class="text-green-600 hover:text-green-900">
-                Approve
+                {{ $t('staff.salaryManagement.approve') }}
               </button>
               <button v-if="withdrawal.status === 'Pending'" @click="rejectWithdrawal(withdrawal)"
                 class="text-red-600 hover:text-red-900">
-                Reject
+                {{ $t('staff.salaryManagement.reject') }}
               </button>
               <button v-if="withdrawal.status === 'Approved'" @click="completeWithdrawal(withdrawal)"
                 class="text-blue-600 hover:text-blue-900">
-                Complete
+                {{ $t('staff.salaryManagement.complete') }}
               </button>
               <span v-if="['Completed', 'Rejected'].includes(withdrawal.status)" class="text-gray-500">
-                No actions
+                {{ $t('staff.salaryManagement.noActions') }}
               </span>
             </td>
           </tr>
@@ -294,7 +293,13 @@ export default {
         reason: 'Home renovation'
       }
     ])
-    const statuses = ['Pending', 'Approved', 'Completed', 'Rejected']
+    const statuses = [
+      { value: 'Pending', key: 'pending' },
+      { value: 'Approved', key: 'approved' },
+      { value: 'Completed', key: 'completed' },
+      { value: 'Rejected', key: 'rejected' }
+    ]
+    const translatedStatuses = computed(() => statuses)
 
     // Computed Properties
     const newBalance = computed(() => {
@@ -337,12 +342,12 @@ export default {
 
     const processPayment = async () => {
       if (!paymentAmount.value || isNaN(paymentAmount.value)) {
-        alert('Please enter a valid payment amount')
+        alert($t('staff.salaryManagement.invalidPaymentAmount'))
         return
       }
 
       const amount = parseFloat(paymentAmount.value)
-      const today = new Date().toISOString().split('T')[0]
+      const today = new Date().toISOString().split('T')[0] // 2025-08-25 based on current date
 
       try {
         // Add to withdrawals as a Completed payment
@@ -352,7 +357,7 @@ export default {
           amount: amount,
           requestDate: today,
           status: 'Completed',
-          reason: paymentNote.value || 'Salary payment'
+          reason: paymentNote.value || $t('staff.salaryManagement.salaryPayment')
         })
 
         // Update employee balance
@@ -360,10 +365,10 @@ export default {
         employee.value.totalEarned += amount
         employee.value.lastPayment = today
 
-        alert('Payment processed successfully!')
+        alert($t('staff.salaryManagement.paymentProcessedSuccessfully'))
         closeModal()
       } catch (error) {
-        alert('Error processing payment: ' + error.message)
+        alert($t('staff.salaryManagement.errorProcessingPayment') + error.message)
       }
     }
 
@@ -423,6 +428,7 @@ export default {
       statusFilter,
       withdrawals,
       statuses,
+      translatedStatuses,
       filteredWithdrawals,
       approveWithdrawal,
       rejectWithdrawal,

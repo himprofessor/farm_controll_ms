@@ -13,29 +13,36 @@
       <SidebarItem v-for="item in navItems" :key="item.path" :item="item" />
     </nav>
 
-    <button
-      @click="handleLogout"
-      class="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
-    >
-      <span class="text-sm font-medium">Logout</span>
-    </button>
+    <!-- Footer: Logout + Language -->
+    <div class="p-4 border-t flex items-center justify-between mb-8">
+      <!-- Logout -->
+      <button
+        @click="handleLogout"
+        class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-red-500 transition-colors duration-200"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        <span class="text-sm font-medium">{{ $t('sidebar.logout') }}</span>
+      </button>
 
-    <!-- Language Toggle -->
-    <div class="p-4 border-t">
+      <!-- Language Toggle -->
       <LanguageToggle />
     </div>
   </div>
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router'
+import SidebarItem from './SidebarItem.vue'
+import LanguageToggle from '@/components/language/LanguageToggle.vue'
+import { useAuthStore } from '@/stores/authStore'
+import { useI18n } from 'vue-i18n'
 
-import SidebarItem from "./SidebarItem.vue";
-import LanguageToggle from "@/components/language/LanguageToggle.vue";
-import { useAuthStore } from "@/stores/authStore";
-
-const authStore = useAuthStore();
-const router = useRouter();
+const authStore = useAuthStore()
+const router = useRouter()
+const { t } = useI18n()
 
 const handleLogout = () => {
   authStore.logout();
@@ -44,210 +51,34 @@ const handleLogout = () => {
 
 const navItems = [
   {
-    label: "Dashboard",
-    path: "/dashboard",
-    icon: "dashboard",
-    iconColor: "text-sky-500",
+    label: 'sidebar.navDashboard',
+    path: '/dashboard',
+    icon: 'dashboard',
+    iconColor: 'text-sky-500',
   },
   {
-    label: "Staff Management",
-    path: "/staff",
-    icon: "group",
-    iconColor: "text-blue-500",
+    label: 'sidebar.navStaffManagement',
+    path: '/staff',
+    icon: 'group',
+    iconColor: 'text-blue-500',
   },
   {
-    label: "Salary Management",
-    path: "/salary",
-    icon: "monetization_on",
-    iconColor: "text-yellow-500",
+    label: 'sidebar.navSalaryManagement',
+    path: '/salary',
+    icon: 'monetization_on',
+    iconColor: 'text-yellow-500',
   },
   {
-    label: "Inventory",
-    path: "/inventory",
-    icon: "inventory_2",
-    iconColor: "text-purple-500",
+    label: 'sidebar.navInventory',
+    path: '/inventory',
+    icon: 'inventory_2',
+    iconColor: 'text-purple-500',
   },
   {
-    label: "Financial",
-    path: "/financial",
-    icon: "account_balance_wallet",
-    iconColor: "text-red-500",
-  },
-];
+    label: 'sidebar.navFinancial',
+    path: '/financial',
+    icon: 'account_balance_wallet',
+    iconColor: 'text-red-500',
+  }
+]
 </script>
-
-<style scoped>
-
-/* Base styles */
-.sidebar {
-  width: 16rem; /* w-64 = 16rem */
-}
-
-.bg-white {
-  background-color: #ffffff;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.bg-blue-500 {
-  background-color: #3b82f6;
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.p-4 {
-  padding: 1rem;
-}
-
-.space-x-3 > * + * {
-  margin-left: 0.75rem;
-}
-
-.w-8 {
-  width: 2rem;
-  height: 2rem;
-}
-
-.bg-opacity-20 {
-  background-opacity: 0.2;
-}
-
-.rounded {
-  border-radius: 0.25rem;
-}
-
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.font-semibold {
-  font-weight: 600;
-}
-
-.text-gray-900 {
-  color: #111827;
-}
-
-.flex-1 {
-  flex: 1 1 0%;
-}
-
-.space-y-2 > * + * {
-  margin-top: 0.5rem;
-}
-
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
-.gap-2 {
-  gap: 0.5rem;
-}
-
-.text-gray-600 {
-  color: #4b5563;
-}
-
-.hover\:text-red-500:hover {
-  color: #ef4444;
-}
-
-.transition-colors {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-}
-
-.duration-200 {
-  transition-duration: 200ms;
-}
-
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.border-t {
-  border-top: 1px solid #e5e7eb;
-}
-
-/* Tablet (≤1024px) */
-@media (max-width: 1024px) {
-  .sidebar {
-    width: 12rem;
-  }
-
-  .logo-text {
-    font-size: 0.9rem;
-  }
-
-  .p-4 {
-    padding: 0.75rem;
-  }
-}
-
-/* Mobile (≤768px) */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 4rem;
-  }
-
-  .logo-text,
-  .logout-text,
-  .sidebar__nav span,
-  .sidebar__lang span {
-    display: none !important;
-  }
-
-  .sidebar__logo {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    space-y: 0.5rem;
-  }
-
-  .logo-box {
-    display: flex !important;
-  }
-
-  .sidebar__nav,
-  .sidebar__logout {
-    justify-content: center;
-  }
-
-  .p-4 {
-    padding: 0.5rem;
-  }
-}
-
-/* Extra Small Phones (≤480px) */
-@media (max-width: 480px) {
-  .sidebar {
-    width: 3.5rem;
-  }
-
-  .material-icons {
-    font-size: 1.25rem;
-  }
-
-  .w-8 {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  .text-lg {
-    font-size: 0.875rem;
-  }
-}
-</style>
