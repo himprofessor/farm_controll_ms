@@ -5,9 +5,7 @@
       <div class="flex items-center space-x-3">
         <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
           <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
-            </path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
           </svg>
         </div>
         <div>
@@ -17,7 +15,7 @@
       </div>
       <div>
         <button @click="openSalaryPaymentModal" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-m font-bold transition duration-300 rounded-lg shadow">
-          Tranfer
+          {{ $t('staff.salaryManagement.transfer') }}
         </button>
       </div>
     </div>
@@ -25,21 +23,21 @@
     <!-- Salary Details -->
     <div class="space-y-4 mb-6">
       <div class="flex justify-between items-center">
-        <span class="text-gray-600">Base Salary:</span>
+        <span class="text-gray-600">{{ $t('staff.salaryManagement.baseSalary') }}:</span>
         <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.baseSalary) }}</span>
       </div>
       <div class="flex justify-between items-center">
-        <span class="text-gray-600">Current Balance:</span>
+        <span class="text-gray-600">{{ $t('staff.salaryManagement.currentBalance') }}:</span>
         <span :class="{'text-green-600': localEmployee.currentBalance >= 0, 'text-red-600': localEmployee.currentBalance < 0}" class="font-semibold">
           {{ formatCurrency(localEmployee.currentBalance) }}
         </span>
       </div>
       <div class="flex justify-between items-center">
-        <span class="text-gray-600">Total Earned:</span>
+        <span class="text-gray-600">{{ $t('staff.salaryManagement.totalEarned') }}:</span>
         <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.totalEarned) }}</span>
       </div>
       <div class="flex justify-between items-center">
-        <span class="text-gray-600">Last Payment:</span>
+        <span class="text-gray-600">{{ $t('staff.salaryManagement.lastPayment') }}:</span>
         <span class="font-semibold text-gray-900">{{ localEmployee.lastPayment }}</span>
       </div>
     </div>
@@ -48,41 +46,40 @@
     <div class="flex space-x-2">
       <button v-if="localEmployee.currentBalance >= 0" @click="openPaymentModal"
         class="flex items-center justify-center gap-1 flex-1 w-24 bg-green-500 hover:bg-green-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
-        Pay Salary
+        {{ $t('staff.salaryManagement.paySalary') }}
       </button>
       <button v-if="localEmployee.currentBalance < 0" @click="openPaymentModal"
         class="flex items-center justify-center gap-1 flex-1 w-24 bg-blue-500 hover:bg-blue-600 text-white font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
-        Repay Debt
+        {{ $t('staff.salaryManagement.repayDebt') }}
       </button>
       <button @click="openDetailsModal"
         class="text-blue-600 border border-blue-200 hover:bg-blue-50 bg-transparent font-medium py-1.5 px-3 rounded-md transition-colors text-sm">
-        Details
+        {{ $t('staff.salaryManagement.details') }}
       </button>
     </div>
 
-    <!-- Payment Modal (for Withdrawals) -->
-    <PaymentModal :is-open="showPaymentModal" :employee="localEmployee" @close="showPaymentModal = false"
-      @payment-processed="handlePaymentProcessed" />
+    <!-- Payment Modal -->
+    <PaymentModal :is-open="showPaymentModal" :employee="localEmployee" @close="showPaymentModal = false" @payment-processed="handlePaymentProcessed" />
 
-    <!-- Salary Payment Modal (for Base Salary Payment) -->
+    <!-- Salary Payment Modal -->
     <div v-if="showSalaryPaymentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Pay Base Salary - {{ localEmployee.name }}</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ $t('staff.salaryManagement.payBaseSalary', { name: localEmployee.name }) }}</h3>
         <form @submit.prevent="processSalaryPayment">
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Amount</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('staff.salaryManagement.amount') }}</label>
             <input v-model.number="salaryAmount" type="number" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Notes</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('staff.salaryManagement.notes') }}</label>
             <input v-model="salaryNotes" type="text" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
           </div>
           <div class="flex justify-end space-x-2">
             <button type="button" @click="closeSalaryPaymentModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-              Cancel
+              {{ $t('staff.cancel') }}
             </button>
             <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md">
-              Pay Salary
+              {{ $t('staff.salaryManagement.paySalary') }}
             </button>
           </div>
         </form>
@@ -94,7 +91,7 @@
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
         <div class="px-6 py-4 border-b border-gray-200">
           <div class="flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-900">Employee Details - {{ localEmployee.name }}</h3>
+            <h3 class="text-lg font-semibold text-gray-900">{{ $t('staff.salaryManagement.details') }} - {{ localEmployee.name }}</h3>
             <button @click="closeDetailsModal" class="text-gray-400 hover:text-gray-600">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -104,27 +101,27 @@
         </div>
         <div class="px-6 py-4 space-y-4">
           <div class="flex justify-between items-center">
-            <span class="text-gray-600">Base Salary:</span>
+            <span class="text-gray-600">{{ $t('staff.salaryManagement.baseSalary') }}:</span>
             <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.baseSalary) }}</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-gray-600">Current Balance:</span>
+            <span class="text-gray-600">{{ $t('staff.salaryManagement.currentBalance') }}:</span>
             <span :class="{'text-green-600': localEmployee.currentBalance >= 0, 'text-red-600': localEmployee.currentBalance < 0}" class="font-semibold">
               {{ formatCurrency(localEmployee.currentBalance) }}
             </span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-gray-600">Total Earned:</span>
+            <span class="text-gray-600">{{ $t('staff.salaryManagement.totalEarned') }}:</span>
             <span class="font-semibold text-gray-900">{{ formatCurrency(localEmployee.totalEarned) }}</span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-gray-600">Last Payment:</span>
+            <span class="text-gray-600">{{ $t('staff.salaryManagement.lastPayment') }}:</span>
             <span class="font-semibold text-gray-900">{{ localEmployee.lastPayment }}</span>
           </div>
         </div>
         <div class="px-6 py-4 border-t border-gray-200 flex justify-end">
           <button @click="closeDetailsModal" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-red-500 hover:text-white">
-            Close
+            {{ $t('staff.close') }}
           </button>
         </div>
       </div>
@@ -198,17 +195,11 @@ export default {
       const wasPositiveBeforePayment = localEmployee.currentBalance >= 0
 
       if (wasPositiveBeforePayment) {
-        // Salary payment - add to balance and total earned
         localEmployee.currentBalance += amount
         localEmployee.totalEarned += amount
       } else {
-        // Correct debt repayment logic:
-        // Subtract repayment amount from negative balance to reduce debt
-        // Example: -4160 - 1000 = -3160 (remaining debt)
         const repaymentAmount = Math.min(amount, Math.abs(localEmployee.currentBalance))
         localEmployee.currentBalance = localEmployee.currentBalance + repaymentAmount
-        
-        // Don't add to totalEarned when repaying debt
       }
 
       localEmployee.lastPayment = new Date().toLocaleDateString()
