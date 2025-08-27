@@ -47,19 +47,14 @@ class MaterialController extends Controller
      */
     public function update(UpdateMaterialRequest $request, Material $material)
     {
-        
         $validated = $request->validated();
-        $material->update($validated); // 👈 Not ->updated()
+        $material->update($validated);
 
         return response()->json([
             'message' => 'Material updated successfully.',
             'material' => $material
         ]);
     }
-
-
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -69,10 +64,13 @@ class MaterialController extends Controller
         $material->delete();
 
         return response()->json([
-            'message' => 'delete successfully!'
+            'message' => 'Material deleted successfully!'
         ], 200);
     }
 
+    /**
+     * Decrease material stock and update value + status.
+     */
     public function decreaseStock(Request $request, $id)
     {
         $material = Material::findOrFail($id);
@@ -85,10 +83,13 @@ class MaterialController extends Controller
             return response()->json(['message' => 'Not enough stock available'], 400);
         }
 
+        // Decrease stock
         $material->currentStock -= $request->quantity;
 
+        // Update value automatically
         $material->value = $material->currentStock * $material->pricePerUnit;
 
+        // Update stock status
         if ($material->currentStock <= 0) {
             $material->status = 'critical';
         } elseif ($material->currentStock <= $material->minStock) {
@@ -100,10 +101,8 @@ class MaterialController extends Controller
         $material->save();
 
         return response()->json([
-            'message' => 'Stock updated successfully',
+            'message' => 'Stock and value updated successfully',
             'material' => $material
         ]);
     }
-
-
 }
