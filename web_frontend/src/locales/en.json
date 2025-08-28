@@ -206,7 +206,7 @@
     "noItemsFound": "No items found",
     "noBorrowRecords": "No borrow records found",
     "notReturned": "Not Returned",
-    "return": "Return",
-    "successBorrowUpdated": "Material updated successfully!"
+    "return": "Return"
+   
   }
 }
