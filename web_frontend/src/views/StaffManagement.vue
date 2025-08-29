@@ -122,16 +122,12 @@ import ConfirmationDialog from '@/components/staff/ConfirmationDialog.vue'
 import { PlusIcon, XIcon, UserIcon } from 'lucide-vue-next'
 import API from '@/plugin/axios'
 
-// Reactive state
+// ===== Reactive State =====
 const searchQuery = ref('')
 const selectedDepartment = ref('')
 const selectedStatus = ref('')
-const staff = ref([
-  { id: 1, name: 'ya', role: 'worker', email: 'ya@mailinator.com', phone: '0123456871', start_date: '2022-10-07', department: 'Administration', status: 'inactive' },
-  { id: 2, name: 'mealea', role: 'manager', email: 'rexeqefis@mailinator.com', phone: '087654345', start_date: '2024-12-29', department: 'Management', status: 'active' },
-  { id: 3, name: 'Aiko Mccarthy', role: 'manager', email: 'guzited@mailinator.com', phone: '+1 (781) 934-8385', start_date: '2004-05-03', department: 'Administration', status: 'inactive' },
-  { id: 4, name: 'ya', role: 'manager', email: 'yayaaa@gmail.com', phone: '23456789', start_date: '2025-08-23', department: 'Health', status: 'active' }
-])
+const staff = ref([])
+
 const isFormModalVisible = ref(false)
 const isViewModalVisible = ref(false)
 const staffToEdit = ref(null)
@@ -139,12 +135,22 @@ const viewedStaff = ref({})
 const isConfirmDialogVisible = ref(false)
 const staffToDelete = ref(null)
 
-// Computed filtered staff
+// ===== Fetch Staff from API =====
+onMounted(async () => {
+  try {
+    const response = await API.get('/staff')
+    staff.value = response.data
+  } catch (error) {
+    console.error('Failed to load staff:', error)
+  }
+})
+
+// ===== Computed Filtered Staff =====
 const filteredStaff = computed(() => {
   return staff.value.filter(member => {
-    const matchesSearch = searchQuery.value 
-      ? (member.name?.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
-         member.role?.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    const matchesSearch = searchQuery.value
+      ? member.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        member.role.toLowerCase().includes(searchQuery.value.toLowerCase())
       : true
     const matchesDept = selectedDepartment.value ? member.department === selectedDepartment.value : true
     const matchesStatus = selectedStatus.value ? member.status === selectedStatus.value : true
@@ -152,7 +158,7 @@ const filteredStaff = computed(() => {
   })
 })
 
-// Modal handlers
+// ===== Modal Handlers =====
 const openAddStaffModal = () => {
   staffToEdit.value = null
   isFormModalVisible.value = true
@@ -173,8 +179,9 @@ const closeFormModal = () => {
   staffToEdit.value = null
 }
 
-// Optimistic save handler (Add/Edit)
+// ===== Add/Edit Staff =====
 const handleSaveStaff = async (newStaffData) => {
+  // Optimistic UI update
   if (staffToEdit.value) {
     const index = staff.value.findIndex(s => s.id === staffToEdit.value.id)
     if (index !== -1) staff.value[index] = { ...staff.value[index], ...newStaffData }
@@ -183,10 +190,27 @@ const handleSaveStaff = async (newStaffData) => {
     staff.value.unshift({ ...newStaffData, id: tempId })
   }
 
+  // Hide form immediately
   closeFormModal()
+
+  // Call API in background
+  try {
+    if (staffToEdit.value) {
+      await API.put(`/staff/${staffToEdit.value.id}`, newStaffData)
+    } else {
+      const response = await API.post('/staff', newStaffData)
+      // Replace temp item with real data from API
+      const tempIndex = staff.value.findIndex(s => s.id === tempId)
+      if (tempIndex !== -1) staff.value[tempIndex] = response.data
+    }
+  } catch (error) {
+    console.error('Error saving staff:', error)
+    // Optionally rollback UI change if needed
+  }
 }
 
-// Delete staff
+
+// ===== Delete Staff =====
 const openDeleteConfirmDialog = (staffMember) => {
   staffToDelete.value = staffMember
   isConfirmDialogVisible.value = true
@@ -194,16 +218,19 @@ const openDeleteConfirmDialog = (staffMember) => {
 
 const confirmDeleteStaff = async () => {
   if (!staffToDelete.value) return
-
-  const deletedStaff = staffToDelete.value
-  staff.value = staff.value.filter(s => s.id !== deletedStaff.id)
+  try {
+    await API.delete(`/staff/${staffToDelete.value.id}`)
+    staff.value = staff.value.filter(s => s.id !== staffToDelete.value.id)
+  } catch (error) {
+    console.error('Error deleting staff:', error)
+  }
   staffToDelete.value = null
   isConfirmDialogVisible.value = false
 }
 
-// Helper
+// ===== Helper =====
 const formatDate = (dateString) => {
-  if (!dateString) return $t('staff.na')
+  if (!dateString) return 'N/A'
   try {
     const options = { year: 'numeric', month: 'long', day: 'numeric' }
     return new Date(dateString).toLocaleDateString(undefined, options)

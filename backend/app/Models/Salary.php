@@ -12,10 +12,11 @@ class Salary extends Model
     protected $fillable = [
         'staff_id', // Changed from user_id
         'base_salary',
-        'paid_amount',
-        'salary_month',
-        'status',
-        'note',
+        'current_balance',
+        'total_Earned',
+        'last_payment_date'
+    
+
     ];
 
     public function staff(): BelongsTo // Changed from user

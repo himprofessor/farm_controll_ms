@@ -10,21 +10,15 @@ class Withdrawal extends Model
 {
     use HasFactory;
 
-    public function users(){
-        return $this->belongsTo(User::class);
+    public function staff(){
+        return $this->belongsTo(Staff::class);
     }
-    public function approver()
-{
-    return $this->belongsTo(User::class, 'approved_by');
-}
 
     protected $fillable = [
-        'user_id',
+        'staff_id',
         'amount',
         'request_date',
-        'approval_status',
-        'approved_by',
-        'approved_at',
-        'notes'
+        'status',
+        'reason'
     ];
 }

@@ -11,10 +11,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('staff_id')->constrained()->onDelete('cascade');
             $table->decimal('base_salary', 10, 2);
-            $table->string('salary_month'); // Removed nullable as it's required
-            $table->enum('status', ['paid', 'unpaid', 'pending'])->default('unpaid');
-            $table->decimal('paid_amount', 10, 2)->default(0);
-            $table->text('note')->nullable();
+            $table->decimal('current_balance', 10, 2)->default(0);
+            $table->decimal('total_Earned', 10,2);
+            $table->date('last_payment_date');
             $table->timestamps();
         });
     }
