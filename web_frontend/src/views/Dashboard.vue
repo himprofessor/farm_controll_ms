@@ -68,7 +68,7 @@
 
       <StatsCard
         :title="$t('dashboard.maintenanceCosts.title')"
-        :value="$t('dashboard.maintenanceCosts.value')"
+        :value="totalMaintenanceCost"
         :desc="$t('dashboard.maintenanceCosts.desc')"
         icon="settings"
         bg="bg-white"
@@ -123,6 +123,14 @@ onMounted(() => {
   borrowStore.fetchBorrowReports()
 })
 
+const maintenanceStore = useMaintenanceStore();
+const totalMaintenanceCost = computed(() => {
+  const sum = maintenanceStore.maintenances.reduce(
+    (total, m) => total + Number(m.cost || 0),
+    0
+  );
+  return sum.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+});
 
 const recentActivitiesItems = computed(() => [
   t('dashboard.recentActivitiesItems[0]'),
