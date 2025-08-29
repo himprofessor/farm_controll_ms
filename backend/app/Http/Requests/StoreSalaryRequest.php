@@ -15,10 +15,9 @@ class StoreSalaryRequest extends FormRequest
         return [
             'staff_id' => 'required|exists:staff,id',
             'base_salary' => 'required|numeric|min:0',
-            'paid_amount' => 'nullable|numeric|min:0',
-            'salary_month' => 'required|date_format:Y-m',
-            'status' => 'nullable|in:paid,pending,unpaid',
-            'note' => 'nullable|string',
+            'current_balance' => 'nullable|numeric|min:0',
+            'total_earned' => 'nullable|numeric|min:0',
+            'last_payment_date' => 'nullable|date',
         ];
     }
 

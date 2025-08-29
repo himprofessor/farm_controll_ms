@@ -16,10 +16,8 @@ return new class extends Migration
             $table->foreignId('staff_id')->constrained()->onDelete('cascade');
             $table->decimal('amount', 10, 2);
             $table->date('request_date');
-            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->foreignId('approved_by')->nullable()->constrained('staff')->nullOnDelete();
-            $table->timestamp('approved_at')->nullable();
-            $table->text('notes')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('reason')->nullable();
             $table->timestamps();
         });
     }

@@ -22,12 +22,11 @@ class UpdateSalaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|exists:users,id',
+             'staff_id' => 'required|exists:staff,id',
             'base_salary' => 'required|numeric|min:0',
-            'salary_month' => ['required', 'regex:/^\d{4}-(0[1-9]|1[0-2])$/'],
-            'status' => 'in:paid,unpaid,pending',
-            'paid_amount' => 'nullable|numeric|min:0',
-            'note' => 'nullable|string|max:1000',
+            'current_balance' => 'nullable|numeric|min:0',
+            'total_earned' => 'nullable|numeric|min:0',
+            'last_payment_date' => 'nullable|date',
         ];
     }
 }

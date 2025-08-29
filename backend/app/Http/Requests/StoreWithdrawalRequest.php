@@ -22,10 +22,9 @@ class StoreWithdrawalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'approval_status' => 'required|in:approved,rejected',
-            'approved_by' => 'required|exists:users,id',
-            'approved_at' => 'nullable|date',
-            'notes' => 'nullable|string|max:1000',
+            'staff_id' => 'required|exists:staff,id',
+            'amount' => 'required|numeric|min:1',
+            'reason' => 'nullable|string'
         ];
     }
 }
