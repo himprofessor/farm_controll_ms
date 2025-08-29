@@ -2,8 +2,8 @@
   <div class="bg-white rounded-lg shadow-sm border">
     <div class="p-6 border-b border-gray-200">
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold text-gray-900">Recent Transactions</h3>
-        <button class="text-green-600 hover:text-green-700 text-sm font-medium">View All</button>
+        <h3 class="text-lg font-semibold text-gray-900">{{ $t('financial.recentTransactions') }}</h3>
+        <button class="text-green-600 hover:text-green-700 text-sm font-medium">{{ $t('financial.viewAll') }}</button>
       </div>
     </div>
     <div class="p-6 space-y-4">
@@ -49,24 +49,20 @@ import { ref, onMounted } from 'vue'
 import API from '@/plugin/axios'
 
 const transactionsup = ref([])
-
-onMounted(async () => {
-  try {
-    const res = await API.get('/sales')
-    transactionsup.value = res.data
-  } catch (error) {
-    console.error('Error fetching transactions:', error)
-  }
-})
-
 const transactionsdown = ref([])
 
 onMounted(async () => {
   try {
-    const res = await API.get('/materials')
-    transactionsdown.value = res.data
+    const resSales = await API.get('/sales')
+    transactionsup.value = resSales.data
   } catch (error) {
-    console.error('Error fetching transactions:', error)
+    console.error('Error fetching sales transactions:', error)
+  }
+  try {
+    const resMaterials = await API.get('/materials')
+    transactionsdown.value = resMaterials.data
+  } catch (error) {
+    console.error('Error fetching material transactions:', error)
   }
 })
 </script>

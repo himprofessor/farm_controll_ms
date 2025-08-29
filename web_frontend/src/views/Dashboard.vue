@@ -1,9 +1,9 @@
 <template>
   <div class="p-6 bg-gray-100 rounded-lg shadow">
     <!-- Language Toggle Button -->
-    <div class="flex justify-end mb-4">
+    <!-- <div class="flex justify-end mb-4">
       <LanguageToggle />
-    </div>
+    </div> -->
 
     <!-- Header -->
     <div class="mb-6">

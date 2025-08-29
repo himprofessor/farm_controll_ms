@@ -1,9 +1,8 @@
-<!-- components/StatsCard.vue -->
 <template>
   <div class="bg-white p-6 rounded-lg shadow-sm border">
     <div class="flex items-center justify-between">
       <div>
-        <p class="text-sm font-medium text-gray-600 mb-1">{{ title }}</p>
+        <p class="text-sm font-medium text-gray-600 mb-1">{{ $t(title) }}</p>
         <p class="text-3xl font-bold text-gray-900">{{ value }}</p>
         <p :class="['text-sm mt-1', changeColor]">{{ change }}</p>
       </div>

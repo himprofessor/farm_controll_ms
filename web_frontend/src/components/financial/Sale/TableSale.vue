@@ -1,9 +1,9 @@
 <template>
   <div class="bg-white rounded-lg shadow-lg overflow-hidden">
     <div class="p-5 border-b border-gray-200 text-left">
-      <h2 class="text-xl font-semibold text-gray-800">Individual Sales</h2>
+      <h2 class="text-xl font-semibold text-gray-800">{{ $t('sales.individualSales') }}</h2>
       <span class="text-sm text-gray-500 block mt-1">
-        Showing {{ salesData?.length ?? 0 }} {{ (salesData?.length ?? 0) === 1 ? 'record' : 'records' }}
+        {{ $t('sales.showingRecords', { count: salesData?.length ?? 0, record: (salesData?.length ?? 0) === 1 ? $t('sales.record') : $t('sales.records') }) }}
       </span>
     </div>
 
@@ -11,13 +11,13 @@
       <table class="min-w-full divide-y divide-gray-200 text-left">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Unit Price</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-            <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('sales.date') }}</th>
+            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('sales.product') }}</th>
+            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('sales.quantity') }}</th>
+            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('sales.unitPrice') }}</th>
+            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('sales.total') }}</th>
+            <th class="px-6 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('sales.description') }}</th>
+            <th class="px-6 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $t('inventory.actions') }}</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
@@ -36,7 +36,7 @@
               <button 
                 @click="$emit('confirm-delete', index)"
                 class="text-red-600 hover:text-red-800 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200"
-                title="Delete"
+                :title="$t('staff.delete')"
               >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -53,14 +53,16 @@
 </template>
 
 <script setup>
-const props = defineProps({
+import { defineProps, defineEmits } from 'vue'
+
+defineProps({
   salesData: {
     type: Array,
-    default: () => [] // ✅ default to empty array
+    default: () => []
   }
 })
 
-const emit = defineEmits(['confirm-delete'])
+defineEmits(['confirm-delete'])
 
 function formatDateForDisplay(dateString) {
   if (!dateString) return ''

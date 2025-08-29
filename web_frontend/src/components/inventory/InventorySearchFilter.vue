@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-4 bg-white p-6 rounded-lg shadow">
-    <div class="relative flex-1 w-full">
+    <div class="relative flex-1 w-full ">
       <SearchIcon class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
       <input
         v-model="searchQuery"
-        :placeholder="$t('inventory.searchPlaceholder')"
+        placeholder="Search by name, category, status, stock, supplier..."
         class="w-full pl-8 pr-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
         @input="debouncedSearch"
       />
@@ -15,7 +15,7 @@
         class="w-full py-1 pl-3 pr-6 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
         @change="onCategoryChange"
       >
-        <option value="">{{ $t('inventory.allCategories') }}</option>
+        <option value="">All Categories</option>
         <option v-for="category in categories" :key="category" :value="category">{{ category }}</option>
       </select>
     </div>
@@ -23,22 +23,22 @@
 </template>
 
 <script setup>
-import { SearchIcon } from 'lucide-vue-next'
-import { debounce } from 'lodash'
-import { useI18n } from 'vue-i18n'
+import { SearchIcon, ChevronDownIcon } from 'lucide-vue-next'
+import { debounce } from 'lodash' // Ensure lodash is installed (npm install lodash)
 
-const { t } = useI18n()
 defineProps({ categories: Array })
 const searchQuery = defineModel('searchQuery', { type: String })
 const selectedCategory = defineModel('selectedCategory', { type: String })
 
+// Debounce the search input to limit updates
 const debouncedSearch = debounce((event) => {
-  console.log('Debounced Search Value:', event.target.value)
+  console.log('Debounced Search Value:', event.target.value) // Debug log
   searchQuery.value = event.target.value
 }, 300)
 
+// Handle category change manually
 const onCategoryChange = (event) => {
   selectedCategory.value = event.target.value
-  console.log('Category Changed:', selectedCategory.value)
+  console.log('Category Changed:', selectedCategory.value) // Debug log
 }
 </script>
