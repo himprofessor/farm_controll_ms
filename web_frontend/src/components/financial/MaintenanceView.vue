@@ -11,7 +11,7 @@
             <input
               v-model="searchQuery"
               type="text"
-              :placeholder="$t('financial.maintenance.searchPlaceholder')"
+              :placeholder="t('financial.searchPlaceholder')"
               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
           </div>
@@ -21,10 +21,10 @@
             v-model="dateFilter"
             class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
           >
-            <option value="all">{{ $t('financial.maintenance.allTime') }}</option>
-            <option value="today">{{ $t('financial.maintenance.today') }}</option>
-            <option value="week">{{ $t('financial.maintenance.thisWeek') }}</option>
-            <option value="month">{{ $t('financial.maintenance.thisMonth') }}</option>
+            <option value="all">{{ t('financial.thisMonth') }}</option>
+            <option value="today">{{ t('financial.today') }}</option>
+            <option value="week">{{ t('financial.thisWeek') }}</option>
+            <option value="month">{{ t('financial.thisMonth') }}</option>
           </select>
 
           <!-- Add Button -->
@@ -35,7 +35,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            {{ $t('financial.maintenance.addMaintenance') }}
+            {{ t('financial.addMaintenance') }}
           </button>
         </div>
       </div>
@@ -45,12 +45,12 @@
         <!-- Table Header -->
         <div class="bg-green-600 text-white">
           <div class="grid grid-cols-12 gap-4 px-6 py-3.5 font-medium ">
-            <div class="col-span-2 text-xs">{{ $t('financial.maintenance.date') }}</div>
-            <div class="col-span-2 text-xs">{{ $t('financial.maintenance.name') }}</div>
-            <div class="col-span-3 text-xs">{{ $t('financial.maintenance.description') }}</div>
-            <div class="col-span-2 text-xs">{{ $t('financial.maintenance.performedBy') }}</div>
-            <div class="col-span-2 text-xs">{{ $t('financial.maintenance.amount') }}</div>
-            <div class="col-span-1 text-xs">{{ $t('financial.maintenance.actions') }}</div>
+            <div class="col-span-2 text-xs">{{ t('financial.date') }}</div>
+            <div class="col-span-2 text-xs">{{ t('financial.name') }}</div>
+            <div class="col-span-3 text-xs">{{ t('financial.description') }}</div>
+            <div class="col-span-2 text-xs">{{ t('financial.performedBy') }}</div>
+            <div class="col-span-2 text-xs">{{ t('financial.amount') }}</div>
+            <div class="col-span-1 text-xs">{{ t('financial.actions') }}</div>
           </div>
         </div>
 
@@ -65,7 +65,7 @@
             <div class="col-span-2 text-gray-900 font-medium">{{ maintenance.name }}</div>
             <div class="col-span-3 text-gray-600">{{ maintenance.description }}</div>
             <div class="col-span-2 text-gray-600">{{ maintenance.performed_by }}</div>
-            <div class="col-span-2 text-red-600 font-semibold">${{ maintenance.cost}}</div>
+            <div class="col-span-2 text-red-600 font-semibold">${{ maintenance.cost }}</div>
             <div class="col-span-1">
               <div class="relative">
                 <button
@@ -89,7 +89,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
-                    {{ $t('staff.edit') }}
+                    {{ t('financial.edit') }}
                   </button>
                   <button
                     @click="deleteMaintenance(maintenance.id)"
@@ -98,7 +98,7 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
-                    {{ $t('staff.delete') }}
+                    {{ t('financial.delete') }}
                   </button>
                 </div>
               </div>
@@ -111,8 +111,8 @@
           <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
           </svg>
-          <h3 class="mt-2 text-sm font-medium text-gray-900">{{ $t('financial.maintenance.noMaintenanceRecords') }}</h3>
-          <p class="mt-1 text-sm text-gray-500">{{ $t('financial.maintenance.getStarted') }}</p>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">{{ t('financial.noMaintenanceRecords') }}</h3>
+          <p class="mt-1 text-sm text-gray-500">{{ t('financial.getStarted') }}</p>
         </div>
       </div>
     </div>
@@ -129,7 +129,7 @@
       >
         <div class="flex justify-between items-center mb-6">
           <h2 class="text-xl font-semibold text-gray-900">
-            {{ isEditing ? $t('financial.maintenance.editMaintenance') : $t('financial.maintenance.addNewMaintenance') }}
+            {{ isEditing ? t('financial.editMaintenance') : t('financial.addMaintenance') }}
           </h2>
           <button
             @click="closeModal"
@@ -143,18 +143,18 @@
 
         <form @submit.prevent="submitForm" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('financial.maintenance.equipmentName') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('financial.equipmentName') }}</label>
             <input
               v-model="form.name"
               type="text"
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              :placeholder="$t('financial.maintenance.enterEquipmentName')"
+              :placeholder="t('financial.enterEquipmentName')"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('financial.maintenance.maintenanceDate') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('financial.maintenanceDate') }}</label>
             <input
               v-model="form.maintenance_date"
               type="date"
@@ -164,18 +164,18 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('financial.maintenance.description') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('financial.description') }}</label>
             <textarea
               v-model="form.description"
               required
               rows="3"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              :placeholder="$t('financial.maintenance.describeMaintenance')"
+              :placeholder="t('financial.describeMaintenance')"
             ></textarea>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('financial.maintenance.cost') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('financial.cost') }}</label>
             <input
               v-model.number="form.cost"
               type="number"
@@ -183,18 +183,18 @@
               min="0"
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="0.00"
+              :placeholder="t('financial.enterCost')"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $t('financial.maintenance.performedBy') }}</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">{{ t('financial.performedBy') }}</label>
             <input
               v-model="form.performed_by"
               type="text"
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              :placeholder="$t('financial.maintenance.enterTechnicianName')"
+              :placeholder="t('financial.enterTechnician')"
             />
           </div>
 
@@ -204,13 +204,13 @@
               @click="closeModal"
               class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              {{ $t('staff.cancel') }}
+              {{ t('financial.cancel') }}
             </button>
             <button
               type="submit"
               class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
-              {{ isEditing ? $t('financial.maintenance.update') : $t('financial.maintenance.add') }} {{ $t('financial.maintenance.maintenance') }}
+              {{ isEditing ? t('financial.update') : t('financial.add') }} {{ t('financial.maintenance') }}
             </button>
           </div>
         </form>
@@ -234,8 +234,8 @@
             </svg>
           </div>
           <div>
-            <h3 class="text-lg font-medium text-gray-900">{{ $t('financial.maintenance.deleteMaintenanceRecord') }}</h3>
-            <p class="text-sm text-gray-500 mt-1">{{ $t('financial.maintenance.deleteConfirmation') }}</p>
+            <h3 class="text-lg font-medium text-gray-900 mt-4">{{ t('financial.deleteMaintenanceRecord') }}</h3>
+            <p class="text-sm text-gray-500 mt-1">{{ t('financial.deleteMaintenanceConfirmation') }}</p>
           </div>
         </div>
 
@@ -244,13 +244,13 @@
             @click="closeDeleteModal"
             class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
           >
-            {{ $t('staff.cancel') }}
+            {{ t('financial.cancel') }}
           </button>
           <button
             @click="confirmDelete"
             class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
           >
-            {{ $t('staff.delete') }}
+            {{ t('financial.delete') }}
           </button>
         </div>
       </div>
@@ -260,7 +260,9 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useMaintenanceStore } from "@/stores/maintenances";
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const maintenanceStore = useMaintenanceStore();
 
 const searchQuery = ref("");
@@ -271,7 +273,6 @@ const isEditing = ref(false);
 const editingId = ref(null);
 const deleteId = ref(null);
 const activeActionMenu = ref(null);
-
 
 const form = ref({
   name: "",

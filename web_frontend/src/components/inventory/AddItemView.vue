@@ -1,4 +1,3 @@
-// AddItemView.vue
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-xl w-full max-w-2xl overflow-y-auto max-h-[90vh]">
@@ -21,7 +20,7 @@
           <label class="block text-sm font-medium mb-1">{{ $t('inventory.category') }}</label>
           <select v-model="form.category" class="input" required>
             <option disabled value="">{{ $t('inventory.selectCategory') }}</option>
-            <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
+            <option v-for="cat in categories" :key="cat.value" :value="cat.value">{{ cat.label }}</option>
           </select>
         </div>
 
@@ -86,7 +85,7 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const props = defineProps({
   item: Object,
-  categories: Array
+  categories: Array // Expecting array of { value: 'seeds', label: 'translated label' }
 })
 const emit = defineEmits(['close', 'material-added', 'material-updated', 'success', 'error'])
 

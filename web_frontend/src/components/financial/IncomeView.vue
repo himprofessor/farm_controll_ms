@@ -1,3 +1,4 @@
+
 <template>
   <div class="space-y-6">
     <!-- Header Controls -->
@@ -95,7 +96,7 @@
       <div class="bg-white rounded-lg shadow-sm border p-6 w-full max-w-2xl">
         <h4 class="font-medium text-gray-900 mb-4">Edit Income</h4>
         <form @submit.prevent="updateIncome" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <input 
+          <input
             v-model="editingIncome.name"
             type="text" 
             placeholder="Category" 
