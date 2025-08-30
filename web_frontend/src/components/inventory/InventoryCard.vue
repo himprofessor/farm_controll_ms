@@ -23,7 +23,7 @@
     </div>
     <div class="bg-white rounded-lg shadow-sm p-4 flex items-center justify-between pl-6">
       <div>
-        <p class="text-gray-500 text-xl">{{ $t('inventory.categories') }}</p>
+        <p class="text-gray-500 text-xl">{{ $t('Categories') }}</p>
         <p class="text-3xl font-bold text-gray-900">{{ uniqueCategoriesCount }}</p>
       </div>
       <BoxesIcon class="w-10 h-10 text-purple-500" />
