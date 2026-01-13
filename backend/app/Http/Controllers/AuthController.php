@@ -5,23 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    // 🔐 Register
     public function register(Request $request)
     {
-        $fields = $request->validate([
-            'name' => 'required|string',
-            'role' => 'required|in:admin',
-            'email' => 'required|string|email|unique:auth,email',
-            'password' => 'required|string|confirmed',
+        $validated = $request->validate([
+            'name' => 'required|string|unique:auth,name',
+            'password' => 'required|string|confirmed', // ensures password_confirmation is present and matches
         ]);
 
         $auth = Auth::create([
-            'name' => $fields['name'],
-            'role' => $fields['role'],
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password']),
+            'name' => $validated['name'],
+            'password' => Hash::make($validated['password']),
         ]);
 
         $token = $auth->createToken('apptoken')->plainTextToken;
@@ -32,21 +30,18 @@ class AuthController extends Controller
         ], 201);
     }
 
+    // 🔐 Login
     public function login(Request $request)
     {
         $fields = $request->validate([
-            'email' => 'required|string|email',
+            'name' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        $auth = Auth::where('email', $fields['email'])->first();
+        $auth = Auth::where('name', $fields['name'])->first();
 
         if (!$auth || !Hash::check($fields['password'], $auth->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
-        }
-
-        if ($auth->role !== 'admin') {
-            return response()->json(['message' => 'Access denied. Admins only.'], 403);
         }
 
         $token = $auth->createToken('apptoken')->plainTextToken;
@@ -57,6 +52,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // 🔐 Logout (requires Sanctum token)
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
@@ -64,28 +60,28 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
+    // 🔄 Update name and/or password
     public function update(Request $request)
     {
         $auth = $request->user();
 
-        if ($auth->role !== 'admin') {
-            return response()->json(['message' => 'Only admins can update profile'], 403);
-        }
-
         $fields = $request->validate([
-            'name' => 'sometimes|string',
-            'email' => 'sometimes|string|email|unique:auth,email,' . $auth->id,
+            'name' => 'sometimes|string|unique:auth,name,' . $auth->id,
             'password' => 'sometimes|string|confirmed',
         ]);
 
-        if (isset($fields['name'])) $auth->name = $fields['name'];
-        if (isset($fields['email'])) $auth->email = $fields['email'];
-        if (isset($fields['password'])) $auth->password = bcrypt($fields['password']);
+        if (isset($fields['name'])) {
+            $auth->name = $fields['name'];
+        }
+
+        if (isset($fields['password'])) {
+            $auth->password = Hash::make($fields['password']);
+        }
 
         $auth->save();
 
         return response()->json([
-            'message' => 'Admin profile updated successfully',
+            'message' => 'Profile updated successfully',
             'auth' => $auth,
         ]);
     }

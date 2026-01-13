@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreStaffRequest;
+use App\Http\Requests\UpdateStaffRequest;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -19,17 +21,13 @@ class StaffController extends Controller
     /**
      * Store a newly created staff member.
      */
-    public function store(Request $request)
+    public function store(StoreStaffRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|unique:staff,phone',
-            'role' => 'required|in:manager,worker',
-        ]);
+        $validated = $request->validated();
 
-        if (!empty($validated['phone'])) {
-            $validated['phone'] = Hash::make($validated['phone']);
-        }
+        // if (!empty($validated['phone'])) {
+        //     $validated['phone'] = Hash::make($validated['phone']);
+        // }
 
         $staff = Staff::create($validated);
 
@@ -53,17 +51,13 @@ class StaffController extends Controller
     /**
      * Update the specified staff member.
      */
-    public function update(Request $request, Staff $staff)
+    public function update(UpdateStaffRequest $request, Staff $staff)
     {
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'phone' => 'sometimes|string|unique:staff,phone,' . $staff->id,
-            'role' => 'sometimes|in:manager,worker',
-        ]);
+        $validated = $request->validated();
 
-        if (isset($validated['phone']) && !empty($validated['phone'])) {
-            $validated['phone'] = Hash::make($validated['phone']);
-        }
+        // if (isset($validated['phone']) && !empty($validated['phone'])) {
+        //     $validated['phone'] = Hash::make($validated['phone']);
+        // }
 
         $staff->update($validated);
 
@@ -76,12 +70,22 @@ class StaffController extends Controller
     /**
      * Remove the specified staff member.
      */
-    public function destroy(Staff $staff)
-    {
-        $staff->delete();
+    // public function destroy(Staff $staff)
+    // {
+    //     $staff->delete();
 
-        return response()->json([
-            'message' => 'Staff deleted successfully.'
-        ], 200);
+    //     return response()->json([
+    //         'message' => 'Staff deleted successfully.'
+    //     ], 200);
+    // }
+
+    public function destroy($id)
+    {
+        $staff = Staff::find($id);
+        if (!$staff) {
+            return response()->json(['message' => 'Staff not found'], 404);
+        }
+        $staff->delete();
+        return response()->json(['message' => 'Staff deleted successfully']);
     }
 }

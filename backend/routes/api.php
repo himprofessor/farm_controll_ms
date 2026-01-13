@@ -1,14 +1,14 @@
 <?php
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BorrowingController;
-use App\Http\Controllers\EquipmentController;
 use App\Http\Controllers\EquipmentMaintenanceController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\IncomeControllerextends;
 use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\MaterialPurchaseController;
 use App\Http\Controllers\SalaryController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SavingController;
-use App\Http\Controllers\SupplireController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WithdrawalController;
@@ -27,61 +27,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-// Public routes
+// authentication
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// Authenticated routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/admin/update', [AuthController::class, 'update']);
-});
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
+
 
 // Resources
 Route::resource('users', UserController::class);
 Route::resource('staff', StaffController::class);
 Route::resource('materials', MaterialController::class);
-Route::resource('supplires', SupplireController::class);
-Route::resource('material_purchases', MaterialPurchaseController::class);
-Route::resource('borrowings', BorrowingController::class);
-Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
-Route::resource('equipment', EquipmentController::class);
+Route::put('/materials/{id}/decrease-stock', [MaterialController::class, 'decreaseStock']);
+Route::resource('expenses', ExpenseController::class);
+Route::apiResource('borrowings', BorrowingController::class);
+Route::resource('equipment_maintenances', EquipmentMaintenanceController::class);
+Route::resource('incomes', IncomeController::class);
 Route::resource('withdrawals', WithdrawalController::class);
 Route::resource('savings', SavingController::class);
 Route::resource('salaries', SalaryController::class);
 Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
+Route::resource('sales', SaleController::class);
 
 
-// // authentication
-// Route::post('/register', [AuthController::class, 'register']);
-// Route::post('/login', [AuthController::class, 'login']);
-
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/logout', [AuthController::class, 'logout']);
-
-// });
-
-// Route::resource('users', UserController::class);
-//     Route::put('/admin/update', [AuthController::class, 'update']);
-// });
-
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/logout', [AuthController::class, 'logout']);
-
-// });
-
-// Route::resource('staff', StaffController::class);
-// Route::resource('materials', MaterialController::class);
-// Route::resource('supplires', SupplireController::class);
-// Route::resource('material_purchases', MaterialPurchaseController::class);
-// Route::resource('borrowings', BorrowingController::class);
-// Route::resource('equipment_maintenance', EquipmentMaintenanceController::class);
-// Route::resource('equipment', EquipmentController::class);
-// Route::resource('withdrawals', WithdrawalController::class);
-// Route::resource('savings', SavingController::class);
-// Route::resource('salaries', SalaryController::class);
-// // Optional: custom pay route
-// Route::post('/salaries/{salary}/pay', [SalaryController::class, 'pay']);
 
 
 

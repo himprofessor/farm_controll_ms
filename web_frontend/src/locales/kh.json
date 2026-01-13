@@ -1,0 +1,168 @@
+{
+  "dashboard": {
+    "title": "ផ្ទាំងគ្រប់គ្រង",
+    "subtitle": "សូមស្វាគមន៍វិញ! នេះជាអ្វីដែលកំពុងកើតឡើងនៅក្នុងចម្ការរបស់អ្នកថ្ងៃនេះ។",
+    "toggleLanguage": "English",
+    "totalStaff": {
+      "title": "បុគ្គលិកសរុប",
+      "change": "+3",
+      "changeSuffix": "ក្នុងខែនេះ"
+    },
+    "monthlyExpenses": {
+      "title": "ចំណាយប្រចាំខែ",
+      "change": "+5.2% ពីខែមុន"
+    },
+    "inventoryItems": {
+      "title": "ស្តុកទំនិញ",
+      "change": "ការជូនដំណឹងស្តុកតិច"
+    },
+    "monthlyRevenue": {
+      "title": "ប្រាក់ចំណូលប្រចាំខែ",
+      "change": "+8.1% ពីខែមុន"
+    },
+    "salariesPaid": {
+      "title": "ប្រាក់ខែបានបង់",
+      "value": "$0.00",
+      "desc": "ការទូទាត់សរុបចំពោះបុគ្គលិក"
+    },
+    "activeBorrows": {
+      "title": "ការខ្ចីសកម្ម",
+      "desc": "សម្ភារៈដែលកំពុងខ្ចី"
+    },
+    "maintenanceCosts": {
+      "title": "ថ្លៃថែទាំ",
+      "value": "$0.00",
+      "desc": "ចំណាយថែទាំឧបករណ៍សរុប"
+    },
+    "recentActivities": "សកម្មភាពថ្មីៗ",
+    "recentActivitiesItems": [
+      "បុគ្គលិកបន្ថែម: John Doe - 2025-08-20",
+      "ការធ្វើបច្ចុប្បន្នភាពស្តុក - 2025-08-19"
+    ],
+    "noActivities": "គ្មានសកម្មភាពថ្មីៗ",
+    "lowStockAlerts": "ការជូនដំណឹងស្តុកតិច",
+    "lowStockAlertsItems": [
+      "ជី - 5 នៅសល់",
+      "គ្រាប់ពូជ - 2 នៅសល់"
+    ],
+    "itemFertilizer": "ជី",
+    "itemSeeds": "គ្រាប់ពូជ",
+    "itemUnknown": "ទំនិញមិនស្គាល់",
+    "statusCritical": "គ្រោះថ្នាក់",
+    "statusLow": "ស្តុកទាប",
+    "statusOK": "ល្អ",
+    "lowStockCurrent": "បច្ចុប្បន្ន: {current} | អប្បបរមា: {min}",
+    "allStockSufficient": "គ្រប់សម្ភារៈមានស្តុកគ្រប់គ្រាន់។"
+  },
+  "sidebar": {
+    "logo": "ការគ្រប់គ្រងកសិដ្ឋាន",
+    "logout": "ចេញ",
+    "navDashboard": "ផ្ទាំងគ្រប់គ្រង",
+    "navStaffManagement": "ការគ្រប់គ្រងបុគ្គលិក",
+    "navSalaryManagement": "ការគ្រប់គ្រងប្រាក់ខែ",
+    "navInventory": "ស្តុកទំនិញ",
+    "navFinancial": "ហិរញ្ញវត្ថុ"
+  },
+  "staff": {
+    "title": "ការគ្រប់គ្រងបុគ្គលិក",
+    "subtitle": "គ្រប់គ្រងព័ត៌មាននិងតួនាទីរបស់បុគ្គលិកឡូតរបស់អ្នក",
+    "addStaff": "បន្ថែមបុគ្គលិក",
+    "view": "មើល",
+    "edit": "កែប្រែ",
+    "delete": "លុប",
+    "confirmAction": "បញ្ជាក់សកម្មភាព",
+    "cancel": "បោះបង់",
+    "confirm": "បញ្ជាក់",
+    "searchPlaceholder": "ស្វែងរកតាមឈ្មោះ តួនាទី ឬនាយកដ្ឋាន...",
+    "allDepartments": "គ្រប់នាយកដ្ឋាន",
+    "departmentManagement": "ការគ្រប់គ្រង",
+    "departmentHealth": "សុខភាព",
+    "departmentOperations": "ប្រតិបត្តិការ",
+    "departmentAdministration": "គ្រប់គ្រងការងារ",
+    "allStatuses": "គ្រប់ស្ថានភាព",
+    "statusActive": "សកម្ម",
+    "statusInactive": "អសកម្ម",
+    "statusOnLeave": "ឈប់សម្រាក",
+    "editStaff": "កែប្រែបុគ្គលិក",
+    "addStaff": "បន្ថែមបុគ្គលិកថ្មី",
+    "name": "ឈ្មោះ",
+    "role": "តួនាទី",
+    "email": "អ៊ីមែល",
+    "phone": "ទូរស័ព្ទ",
+    "startDate": "កាលបរិច្ឆេទចាប់ផ្តើម",
+    "department": "នាយកដ្ឋាន",
+    "status": "ស្ថានភាព",
+    "selectDepartment": "ជ្រើសរើសនាយកដ្ឋាន",
+    "selectStatus": "ជ្រើសរើសស្ថានភាព",
+    "save": "រក្សាទុក",
+    "viewDetails": "ព័ត៌មានលម្អិតបុគ្គលិក",
+    "na": "មិនមាន",
+    "close": "បិទ",
+    "thisStaff": "បុគ្គលិកនេះ",
+    "started": "ចាប់ផ្តើម",
+    "status": {
+      "active": "សកម្ម",
+      "inactive": "អសកម្ម"
+    },
+    "salaryManagement": {
+      "title": "ការគ្រប់គ្រងប្រាក់ខែ",
+      "subtitle": "គ្រប់គ្រងប្រាក់ខែបុគ្គលិក និងសំណើដកប្រាក់",
+      "staffSalaries": "ប្រាក់ខែបុគ្គលិក",
+      "withdrawalRequests": "សំណើដកប្រាក់",
+      "searchPlaceholder": "ស្វែងរកបុគ្គលិកតាមឈ្មោះ តួនាទី ឬប្រាក់ខែ...",
+      "processAllSalaries": "ដំណើរការប្រាក់ខែទាំងអស់",
+      "details": "ព័ត៌មានលម្អិត",
+      "id": "អត្តលេខ",
+      "position": "តួនាទី",
+      "baseSalary": "ប្រាក់ខែគោល",
+      "currentBalance": "សមតុល្យបច្ចុប្បន្ន",
+      "totalEarned": "ប្រាក់ចំណូលសរុប",
+      "lastPayment": "ការទូទាត់ចុងក្រោយ",
+      "acresManaged": "ផ្ទៃដីដែលគ្រប់គ្រង",
+      "cropsOverseen": "ដាំដុះដែលត្រួតពិនិត្យ",
+      "workHours": "ម៉ោងធ្វើការ (ខែមុន)",
+      "hrs": "ម៉ោង",
+      "salaryProcessingComplete": "ការដំណើរការប្រាក់ខែបានបញ្ចប់",
+      "allStaffProcessed": "ប្រាក់ខែរបស់បុគ្គលិកទាំងអស់ត្រូវបានដំណើរការនៅថ្ងៃ {date}។",
+      "paid": "បានបង់",
+      "transfer": "ផ្ទេរ",
+      "paySalary": "បង់ប្រាក់ខែ",
+      "repayDebt": "សងរំលស់",
+      "payBaseSalary": "បង់ប្រាក់ខែគោល - {name}",
+      "amount": "ចំនួន",
+      "notes": "ចំណាំ",
+      "processSalaryPayment": "ដំណើរការការទូទាត់ប្រាក់ខែ",
+      "processSalaryPaymentFor": "ដំណើរការការទូទាត់ប្រាក់ខែសម្រាប់",
+      "afterPayment": "បន្ទាប់ពីការទូទាត់:",
+      "newBalance": "សមតុល្យថ្មី",
+      "paymentAmount": "ចំនួនការទូទាត់",
+      "paymentNotes": "ចំណាំការទូទាត់",
+      "paymentNotesPlaceholder": "បន្ថែមចំណាំបន្ថែមណាមួយអំពីការទូទាត់នេះ...",
+      "optional": "ជម្រើស",
+      "cancel": "បោះបង់",
+      "processPayment": "ដំណើរការការទូទាត់",
+      "warning": "ព្រមាន",
+      "employeeWillOwe": "បុគ្គលិកនឹងជំពាក់",
+      "paymentWillCreateDebt": "ទូទាត់នេះនឹងបង្កើតបំណុលនៃ",
+      "staffMember": "សមាជិកបុគ្គលិក",
+      "requestDate": "កាលបរិច្ឆេទស្នើសុំ",
+      "status": "ស្ថានភាព",
+      "reason": "មូលហេតុ",
+      "actions": "សកម្មភាព",
+      "approve": "អនុម័ត",
+      "reject": "បដិសេធ",
+      "complete": "បញ្ចប់",
+      "noActions": "គ្មានសកម្មភាព",
+      "invalidPaymentAmount": "សូមបញ្ចូលចំនួនទូទាត់ដែលត្រឹមត្រូវ",
+      "paymentProcessedSuccessfully": "ការទូទាត់បានដំណើរការដោយជោគជ័យ!",
+      "errorProcessingPayment": "កំហុសក្នុងការដំណើរការការទូទាត់: ",
+      "salaryPayment": "ការទូទាត់ប្រាក់ខែ",
+      "pending": "កំពុងរង់ចាំ",
+      "approved": "បានអនុម័ត",
+      "completed": "បានបញ្ចប់",
+      "rejected": "បានបដិសេធ"
+    }
+  }
+  
+
+}

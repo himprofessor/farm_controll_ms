@@ -9,15 +9,11 @@ class EquipmentMaintenance extends Model
 {
     use HasFactory;
 
-    public function equipments(){
-        return $this->belongsTo(Equipment::class);
-    }
-
     protected $fillable = [
+        'name',
         'maintenance_date',
         'description',
         'cost',
         'performed_by',
-        'material_id'
     ];
 }

@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,7 +11,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('phone')->unique()->nullable();
-            $table->enum('role', ['manager', 'worker']);
+            $table->string('email')->unique()->nullable();
+            $table->enum('role', ['manager', 'staff']);
+            $table->string('department')->nullable();
+            $table->enum('status', ['active', 'inactive', 'onleave'])->nullable();
+            $table->date('start_date')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -11,120 +11,126 @@
         <XIcon class="w-6 h-6" />
       </button>
       <h2 class="text-2xl font-bold mb-6 text-gray-900">
-        {{ staffData.id ? "Edit Staff" : "Add New Staff" }}
+        {{ staffToEdit ? $t('staff.editStaff') : $t('staff.addStaff') }}
       </h2>
-      <form @submit.prevent="saveStaff">
+      <form @submit.prevent="$emit('save', staffData)">
         <div class="grid grid-cols-1 gap-4 mb-6">
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700"
-              >Name</label
-            >
-            <input
-              type="text"
-              id="name"
-              v-model="staffData.name"
-              required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-            />
+          <!-- Name & Role in one line -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700">{{ $t('staff.name') }}</label>
+              <input
+                type="text"
+                id="name"
+                v-model="staffData.name"
+                required
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label for="role" class="block text-sm font-medium text-gray-700">{{ $t('staff.role') }}</label>
+              <input
+                type="text"
+                id="role"
+                v-model="staffData.role"
+                required
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              />
+            </div>
           </div>
-          <div>
-            <label for="role" class="block text-sm font-medium text-gray-700"
-              >Role</label
-            >
-            <input
-              type="text"
-              id="role"
-              v-model="staffData.role"
-              required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-            />
+
+          <!-- Email & Phone in one line -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700">{{ $t('staff.email') }}</label>
+              <input
+                type="email"
+                id="email"
+                v-model="staffData.email"
+                required
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              />
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-medium text-gray-700">{{ $t('staff.phone') }}</label>
+              <input
+                type="tel"
+                id="phone"
+                v-model="staffData.phone"
+                class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                       focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              />
+            </div>
           </div>
+
+          <!-- Single-column fields -->
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700"
-              >Email</label
-            >
-            <input
-              type="email"
-              id="email"
-              v-model="staffData.email"
-              required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700"
-              >Phone</label
-            >
-            <input
-              type="tel"
-              id="phone"
-              v-model="staffData.phone"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-            />
-          </div>
-          <div>
-            <label
-              for="startDate"
-              class="block text-sm font-medium text-gray-700"
-              >Start Date</label
-            >
+            <label for="startDate" class="block text-sm font-medium text-gray-700">{{ $t('staff.startDate') }}</label>
             <input
               type="date"
               id="startDate"
-              v-model="staffData.startDate"
+              v-model="staffData.start_date"
               required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                     focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             />
           </div>
+
           <div>
-            <label
-              for="department"
-              class="block text-sm font-medium text-gray-700"
-              >Department</label
-            >
+            <label for="department" class="block text-sm font-medium text-gray-700">{{ $t('staff.department') }}</label>
             <select
               id="department"
               v-model="staffData.department"
               required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                     focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
-              <option value="">Select Department</option>
-              <option value="Management">Management</option>
-              <option value="Health">Health</option>
-              <option value="Operations">Operations</option>
-              <option value="Administration">Administration</option>
+              <option value="">{{ $t('staff.selectDepartment') }}</option>
+              <option value="Management">{{ $t('staff.departmentManagement') }}</option>
+              <option value="Health">{{ $t('staff.departmentHealth') }}</option>
+              <option value="Operations">{{ $t('staff.departmentOperations') }}</option>
+              <option value="Administration">{{ $t('staff.departmentAdministration') }}</option>
             </select>
           </div>
+
           <div>
-            <label for="status" class="block text-sm font-medium text-gray-700"
-              >Status</label
-            >
+            <label for="status" class="block text-sm font-medium text-gray-700">{{ $t('staff.status') }}</label>
             <select
               id="status"
               v-model="staffData.status"
               required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 
+                     focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
             >
-              <option value="">Select Status</option>
-              <option value="Active">Active</option>
-              <option value="On Leave">On Leave</option>
-              <option value="Inactive">Inactive</option>
+              <option value="">{{ $t('staff.selectStatus') }}</option>
+              <option value="active">{{ $t('staff.statusActive') }}</option>
+              <option value="inactive">{{ $t('staff.statusInactive') }}</option>
+              <option value="onleave">{{ $t('staff.statusOnLeave') }}</option>
             </select>
           </div>
         </div>
+
+        <!-- Buttons -->
         <div class="flex justify-end space-x-3">
           <button
             type="button"
             @click="$emit('close')"
-            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium 
+                   text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 
+                   focus:ring-offset-2 focus:ring-green-500"
           >
-            Cancel
+            {{ $t('staff.cancel') }}
           </button>
           <button
             type="submit"
-            class="px-4 py-2 bg-green-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            class="px-4 py-2 bg-green-600 border border-transparent rounded-md shadow-sm text-sm 
+                   font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 
+                   focus:ring-offset-2 focus:ring-green-500"
           >
-            Save
+            {{ $t('staff.save') }}
           </button>
         </div>
       </form>
@@ -133,57 +139,33 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { XIcon } from "lucide-vue-next";
+import { ref, watch } from "vue"
+import { XIcon } from "lucide-vue-next"
 
 const props = defineProps({
-  isVisible: {
-    type: Boolean,
-    required: true,
-  },
-  staffToEdit: {
-    type: Object,
-    default: null,
-  },
-});
+  isVisible: { type: Boolean, required: true },
+  staffToEdit: { type: Object, default: null },
+})
 
-const emit = defineEmits(["close", "save"]);
+const emit = defineEmits(["close", "save"])
 
 const staffData = ref({
-  id: null,
   name: "",
   role: "",
   email: "",
   phone: "",
-  startDate: "",
+  start_date: "",
   department: "",
   status: "",
-});
+})
 
 watch(
   () => props.staffToEdit,
   (newVal) => {
-    if (newVal) {
-      // Deep copy to avoid mutating prop directly
-      staffData.value = { ...newVal };
-    } else {
-      // Reset form for new staff
-      staffData.value = {
-        id: null,
-        name: "",
-        role: "",
-        email: "",
-        phone: "",
-        startDate: "",
-        department: "",
-        status: "",
-      };
-    }
+    staffData.value = newVal
+      ? { ...newVal }
+      : { name: "", role: "", email: "", phone: "", start_date: "", department: "", status: "" }
   },
   { immediate: true }
-);
-
-const saveStaff = () => {
-  emit("save", staffData.value);
-};
+)
 </script>
