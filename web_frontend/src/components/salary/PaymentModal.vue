@@ -1,228 +1,164 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto">
-      <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-semibold text-gray-900 flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-            </svg>
-            Process Salary Payment
-          </h3>
-          <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
+  <div
+    v-if="isOpen"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+  >
+    <div
+      class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto"
+    >
+      <!-- Header -->
+      <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">Process Payment - {{ employee?.name }}</h2>
+        <button @click="$emit('close')" class="text-gray-500 hover:text-gray-700">✖</button>
+      </div>
+
+      <!-- Body -->
+      <div class="px-6 py-4 space-y-4">
+        <p><strong>Base Salary:</strong> {{ formatCurrency(employee?.baseSalary) }}</p>
+        <p><strong>Current Balance:</strong> {{ formatCurrency(employee?.currentBalance) }}</p>
+        <p><strong>Total Earned:</strong> {{ formatCurrency(employee?.totalEarned) }}</p>
+
+        <!-- Withdrawal -->
+        <div>
+          <label class="block text-sm font-medium">Withdrawal Amount</label>
+          <input
+            v-model.number="amount"
+            type="number"
+            class="w-full px-3 py-2 border rounded-md"
+            placeholder="Enter withdrawal amount"
+          />
+        </div>
+
+        <!-- Base Salary Override -->
+        <div>
+          <label class="block text-sm font-medium">Base Salary (Optional)</label>
+          <input
+            v-model.number="baseSalaryInput"
+            type="number"
+            class="w-full px-3 py-2 border rounded-md"
+            placeholder="Enter base salary"
+          />
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="px-6 py-4 border-t border-gray-200 flex justify-between space-x-2">
+        <button @click="$emit('close')" class="px-4 py-2 bg-gray-200 rounded-md">Cancel</button>
+
+        <div class="flex space-x-2">
+          <!-- Base Salary Payment -->
+          <button
+            @click="payBaseSalary"
+            :disabled="loading"
+            class="px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
+            <span v-if="loadingType === 'base'" class="loader mr-2"></span>
+            {{ loadingType === 'base' ? 'Processing...' : 'Pay Base Salary' }}
+          </button>
+
+          <!-- Withdrawal Request -->
+          <button
+            @click="withdrawRequest"
+            :disabled="loading"
+            class="px-4 py-2 bg-green-600 text-white rounded-md"
+          >
+            <span v-if="loadingType === 'withdraw'" class="loader mr-2"></span>
+            {{ loadingType === 'withdraw' ? 'Processing...' : 'Withdraw' }}
           </button>
         </div>
-        <p class="text-sm text-gray-600 mt-1">
-          Process salary payment for {{ employee.name }} - {{ employee.position || employee.role }}
-        </p>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="px-6 py-4 space-y-6">
-        <!-- Employee Info Summary -->
-        <div class="bg-gray-50 p-4 rounded-lg">
-          <div class="flex items-center space-x-3 mb-3">
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-            </svg>
-            <span class="font-medium">{{ employee.name }}</span>
-          </div>
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <span class="text-gray-600">Current Balance:</span>
-              <div class="font-semibold text-green-600">{{ formatCurrency(employee.currentBalance) }}</div>
-            </div>
-            <div>
-              <span class="text-gray-600">Base Salary:</span>
-              <div class="font-semibold">{{ formatCurrency(employee.baseSalary) }}</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Payment Amount -->
-        <div class="space-y-2">
-          <label for="amount" class="text-base font-medium text-gray-700">Payment Amount</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-500 sm:text-sm">$</span>
-            </div>
-            <input
-              id="amount"
-              type="number"
-              v-model="paymentAmount"
-              class="block w-full pl-7 pr-12 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="0.00"
-              step="0.01"
-              min="0"
-            >
-          </div>
-          <div class="flex space-x-2">
-            <button
-              type="button"
-              @click="setAmount(employee.currentBalance)"
-              class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:bg-green-500 hover:text-white transition-colors"
-            >
-              Current Balance
-            </button>
-            <button
-              type="button"
-              @click="setAmount(employee.baseSalary)"
-              class="px-3 py-1 text-xs border border-gray-300 rounded-md hover:bg-green-500 hover:text-white transition-colors"
-            >
-              Base Salary
-            </button>
-          </div>
-        </div>
-
-        <!-- Payment Notes -->
-        <div class="space-y-2">
-          <label for="notes" class="text-base font-medium text-gray-700">Payment Notes (Optional)</label>
-          <textarea
-            id="notes"
-            v-model="paymentNote"
-            rows="3"
-            class="block w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Add any additional notes about this payment..."
-          ></textarea>
-        </div>
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
-        <button
-          @click="closeModal"
-          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Cancel
-        </button>
-        <button
-          @click="processPayment"
-          class="px-4 py-2 text-sm font-medium text-white bg-green-500 border border-transparent rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-          </svg>
-          Process Payment
-        </button>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { ref, watch } from 'vue'
+<script setup>
+import { ref } from "vue";
+import API from "@/plugin/axios";
 
-export default {
-  name: 'PaymentModal',
-  props: {
-    isOpen: {
-      type: Boolean,
-      default: false
-    },
-    employee: {
-      type: Object,
-      required: true,
-      default: () => ({
-        id: '',
-        name: '',
-        position: '',
-        role: '',
-        currentBalance: 0,
-        baseSalary: 0,
-        totalEarned: 0,
-        lastPayment: ''
-      })
-    }
-  },
-  emits: ['close', 'payment-processed'],
-  setup(props, { emit }) {
-    const paymentAmount = ref(0)
-    const paymentNote = ref('')
+const props = defineProps({
+  isOpen: Boolean,
+  employee: Object,
+});
 
-    watch(() => props.isOpen, (newVal) => {
-      if (newVal) {
-        paymentAmount.value = props.employee.baseSalary
-        paymentNote.value = ''
-      }
-    })
+const emit = defineEmits(["close", "payment-processed"]);
 
-    const closeModal = () => {
-      emit('close')
-    }
+const amount = ref(0);
+// Set default base salary to 400 if not provided
+const baseSalaryInput = ref(props.employee?.baseSalary ?? 400);
+const loading = ref(false);
+const loadingType = ref("");
 
-    const setAmount = (amount) => {
-      paymentAmount.value = amount
-    }
+const formatCurrency = (value) => {
+  if (!value) return "$0.00";
+  return `$${parseFloat(value).toFixed(2)}`;
+};
 
-    const processPayment = async () => {
-      if (!paymentAmount.value || isNaN(paymentAmount.value) || paymentAmount.value <= 0) {
-        alert('Please enter a valid payment amount')
-        return
-      }
-
-      const amount = parseFloat(paymentAmount.value)
-      const today = new Date().toISOString().split('T')[0]
-
-      try {
-        // Simulate API call
-        const response = await mockApiCall({
-          employeeId: props.employee.id,
-          amount: amount,
-          note: paymentNote.value,
-          date: today
-        })
-
-        if (response.success) {
-          // Emit the complete updated employee data
-          emit('payment-processed', {
-            ...props.employee,
-            currentBalance: props.employee.currentBalance + amount,
-            totalEarned: props.employee.totalEarned + amount,
-            lastPayment: today
-          })
-          
-          alert('Payment processed successfully!')
-          closeModal()
-        } else {
-          alert('Payment failed: ' + response.message)
-        }
-      } catch (error) {
-        alert('Error processing payment: ' + error.message)
-      }
-    }
-
-    // Mock API function (replace with your actual API call)
-    const mockApiCall = (paymentData) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            success: true,
-            message: 'Payment successful',
-            data: paymentData
-          })
-        }, 500)
-      })
-    }
-
-    const formatCurrency = (amount) => {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-      }).format(amount)
-    }
-
-    return {
-      paymentAmount,
-      paymentNote,
-      closeModal,
-      setAmount,
-      processPayment,
-      formatCurrency
-    }
+// Pay Base Salary
+const payBaseSalary = async () => {
+  const salary = baseSalaryInput.value ;
+  if (!salary || salary <= 0) {
+    alert("Base salary is required");
+    return;
   }
-}
+  await processPayment(salary, "base");
+};
+
+// Withdrawal Request
+const withdrawRequest = async () => {
+  if (!amount.value || amount.value <= 0) {
+    alert("Please enter a valid withdrawal amount");
+    return;
+  }
+  const newBalance = (props.employee.currentBalance || 0) - amount.value;
+  if (newBalance < 0) {
+    alert("Withdrawal exceeds current balance!");
+    return;
+  }
+  await processPayment(amount.value, "withdraw");
+};
+
+// Core Payment Logic
+const processPayment = async (paymentAmount, type) => {
+  try {
+    loading.value = true;
+    loadingType.value = type;
+
+    const today = new Date().toISOString().split("T")[0];
+
+    let updatedBalance = props.employee.currentBalance || 0;
+    let updatedTotalEarned = props.employee.totalEarned || 0;
+
+    if (type === "base") {
+      updatedBalance += paymentAmount;
+      updatedTotalEarned += paymentAmount;
+    } else {
+      updatedBalance -= paymentAmount;
+    }
+
+    const response = await API.post("/salaries", {
+      staff_id: props.employee.id,
+      base_salary: baseSalaryInput.value || 400,
+      current_balance: updatedBalance,
+      total_Earned: updatedTotalEarned,
+      amount: paymentAmount,
+      last_payment_date: today,
+    });
+
+    emit("payment-processed", response.data);
+    emit("close");
+
+    // Reset form
+    amount.value = 0;
+    baseSalaryInput.value = props.employee?.baseSalary ?? 400;
+  } catch (error) {
+    console.error("Error processing payment:", error.response?.data || error);
+    alert(
+      "Failed to process payment: " +
+        (error.response?.data?.message || "Unknown error")
+    );
+  } finally {
+    loading.value = false;
+    loadingType.value = "";
+  }
+};
 </script>

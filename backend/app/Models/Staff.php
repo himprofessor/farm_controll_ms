@@ -14,12 +14,21 @@ class Staff extends Authenticatable
     protected $fillable = [
         'name',
         'phone',
+        'email',
         'role',
+        'department',
+        'status',
+        'start_date',
     ];
 
     protected $hidden = [
         'remember_token',
     ];
+
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
 
     public function salaries()
     {

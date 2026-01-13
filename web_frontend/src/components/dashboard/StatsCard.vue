@@ -11,7 +11,7 @@
     <!-- Main Value -->
     <div class="text-2xl font-bold mb-1" :class="textColor">{{ value }}</div>
 
-    <!-- Either 'change' or 'desc' shown -->
+
     <p class="text-sm opacity-90" :class="textColor">
       {{ change || desc }}
     </p>

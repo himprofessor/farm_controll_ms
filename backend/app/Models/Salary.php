@@ -1,25 +1,26 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Salary extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'staff_id', // Changed from user_id
         'base_salary',
-        'salary_month',
-        'status',
-        'paid_amount',
-        'note',
+        'current_balance',
+        'total_Earned',
+        'last_payment_date'
+    
+
     ];
 
-    public function user()
+    public function staff(): BelongsTo // Changed from user
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Staff::class, 'staff_id');
     }
 }

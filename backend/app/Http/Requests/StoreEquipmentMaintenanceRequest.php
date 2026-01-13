@@ -22,11 +22,11 @@ class StoreEquipmentMaintenanceRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name'             => 'required|string|max:255',
             'maintenance_date' => 'required|date',
-            'description' => 'required|string',
-            'cost' => 'required|numeric|min:0',
-            'performed_by' => 'required|string|max:255',
-            'equipment_id' => 'required|exists:equipment,id'
+            'description'      => 'required|string',
+            'cost'             => 'required|numeric|min:0',
+            'performed_by'     => 'required|string|max:255',
         ];
     }
 }

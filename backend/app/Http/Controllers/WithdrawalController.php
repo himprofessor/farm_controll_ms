@@ -26,8 +26,6 @@ class WithdrawalController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['approval_status'] = 'pending';
-
         $withdrawal = Withdrawal::create($validated);
 
         return response()->json([
@@ -43,7 +41,7 @@ class WithdrawalController extends Controller
     {
         return response()->json([
             'message' => 'Withdrawal found!',
-            'data' => $withdrawal->load(['user', 'approver'])
+            'data' => $withdrawal
         ], 200);
     }
 
@@ -54,8 +52,6 @@ class WithdrawalController extends Controller
     public function update(UpdateWithdrawalRequest $request, Withdrawal $withdrawal)
     {
         $validated = $request->validated();
-
-        $validated['approved_at'] = $validated['approved_at'] ?? now();
 
         $withdrawal->update($validated);
 
